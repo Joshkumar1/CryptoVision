@@ -38,7 +38,7 @@ function PriceChart({ data, days }: { data: ChartDataPoint[]; days: string }) {
   };
 
   const isUp = (data[data.length - 1]?.price ?? 0) >= (data[0]?.price ?? 0);
-  const strokeColor = isUp ? "#2dd4a7" : "#f25c5c";
+  const strokeColor = isUp ? "#f5c542" : "#f43f5e"; // Imperial Gold on upward / Rose on downward
   const gradId = `price-grad-${days}-${isUp ? "up" : "down"}`;
 
   return (
@@ -46,22 +46,22 @@ function PriceChart({ data, days }: { data: ChartDataPoint[]; days: string }) {
       <AreaChart data={data} margin={{ top: 10, right: 10, bottom: 0, left: 10 }}>
         <defs>
           <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={strokeColor} stopOpacity={0.35} />
+            <stop offset="0%" stopColor={strokeColor} stopOpacity={0.45} />
             <stop offset="85%" stopColor={strokeColor} stopOpacity={0.0} />
           </linearGradient>
         </defs>
-        <CartesianGrid stroke="#182d50" strokeDasharray="3 3" vertical={false} />
+        <CartesianGrid stroke="#361b6c" strokeDasharray="3 3" vertical={false} />
         <XAxis
           dataKey="timestamp"
           tickFormatter={formatDate}
-          tick={{ fill: "#4d6a96", fontSize: 11, fontWeight: 500 }}
+          tick={{ fill: "#9e7dc7", fontSize: 11, fontWeight: 600 }}
           axisLine={false}
           tickLine={false}
           minTickGap={45}
         />
         <YAxis
           domain={["auto", "auto"]}
-          tick={{ fill: "#4d6a96", fontSize: 11, fontWeight: 500 }}
+          tick={{ fill: "#9e7dc7", fontSize: 11, fontWeight: 600 }}
           axisLine={false}
           tickLine={false}
           tickFormatter={(v: number) => formatPrice(v)}
@@ -70,11 +70,11 @@ function PriceChart({ data, days }: { data: ChartDataPoint[]; days: string }) {
         />
         <Tooltip
           contentStyle={{
-            background: "#091428",
-            border: "1px solid #182d50",
+            background: "#100722",
+            border: "1px solid rgba(245, 197, 66, 0.4)",
             borderRadius: "12px",
             fontSize: 12,
-            boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.8)",
           }}
           labelFormatter={(label: any) => formatDate(label as number)}
           formatter={(value: any) => [formatPrice(value as number), "Price"]}

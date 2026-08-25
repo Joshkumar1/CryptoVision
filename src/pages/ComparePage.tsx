@@ -17,7 +17,7 @@ import {
 } from "recharts";
 import type { Coin, ChartDataPoint } from "@/types";
 
-const CHART_COLORS = ["#3b82f6", "#34d399", "#f59e0b", "#f472b6"];
+const CHART_COLORS = ["#f5c542", "#c084fc", "#10b981", "#fb923c"];
 const MAX_COMPARE = 4;
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
@@ -336,26 +336,24 @@ export function ComparePage() {
             ) : normSeries.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={normSeries} margin={{ top: 4, right: 8, bottom: 0, left: 4 }}>
-                  <CartesianGrid stroke="#1e3158" strokeDasharray="3 3" vertical={false} />
+                  <CartesianGrid stroke="#361b6c" strokeDasharray="3 3" vertical={false} />
                   <XAxis
                     dataKey="timestamp"
                     tickFormatter={formatDate}
-                    tick={{ fill: "#506090", fontSize: 11 }}
+                    tick={{ fill: "#9e7dc7", fontSize: 11, fontWeight: 600 }}
                     axisLine={false}
                     tickLine={false}
                     minTickGap={50}
                   />
                   <YAxis
-                    tick={{ fill: "#506090", fontSize: 11 }}
+                    tick={{ fill: "#9e7dc7", fontSize: 11, fontWeight: 600 }}
                     axisLine={false}
                     tickLine={false}
-                    tickFormatter={(v) => `${v.toFixed(0)}`}
-                    width={48}
+                    tickFormatter={(v: number) => `${v.toFixed(0)}`}
+                    width={40}
                   />
                   <Tooltip
                     contentStyle={{
-                      background: "#0d1a35",
-                      border: "1px solid #1e3158",
                       borderRadius: "8px",
                       fontSize: 12,
                     }}

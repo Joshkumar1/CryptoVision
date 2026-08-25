@@ -42,20 +42,20 @@ const pageNames: Record<string, string> = {
 
 const regimeStyles = {
   BULLISH: {
-    bg: "bg-positive/10 border-positive/30 text-positive shadow-[0_0_12px_rgba(45,212,167,0.15)]",
+    bg: "bg-positive/15 border-positive/30 text-positive shadow-[0_0_16px_rgba(16,185,129,0.20)]",
     dot: "bg-positive animate-pulse",
   },
   BEARISH: {
-    bg: "bg-negative/10 border-negative/30 text-negative shadow-[0_0_12px_rgba(242,92,92,0.15)]",
+    bg: "bg-negative/15 border-negative/30 text-negative shadow-[0_0_16px_rgba(244,63,94,0.20)]",
     dot: "bg-negative animate-pulse",
   },
   HIGH_VOLATILITY: {
-    bg: "bg-warning/10 border-warning/30 text-warning shadow-[0_0_12px_rgba(240,164,41,0.15)]",
-    dot: "bg-warning animate-ping",
+    bg: "bg-gold/15 border-gold/40 text-gold shadow-[0_0_16px_rgba(245,197,66,0.25)]",
+    dot: "bg-gold animate-ping",
   },
   NEUTRAL: {
-    bg: "bg-accent/10 border-accent/30 text-accent shadow-[0_0_12px_rgba(79,142,247,0.15)]",
-    dot: "bg-accent",
+    bg: "bg-gold/15 border-gold/40 text-gold shadow-[0_0_16px_rgba(245,197,66,0.20)]",
+    dot: "bg-gold animate-pulse",
   },
 };
 
@@ -100,14 +100,14 @@ function NotificationDropdown() {
         className={cn(
           "relative p-2 rounded-xl border transition-all",
           open || alerts.length > 0
-            ? "bg-surface-1 border-border text-text-primary"
+            ? "bg-surface-1 border-gold/40 text-gold shadow-gold"
             : "border-transparent text-text-tertiary hover:text-text-primary hover:bg-surface-1"
         )}
         title="Alert Notifications"
       >
         <Bell className="h-4 w-4" />
         {alerts.length > 0 && (
-          <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent text-white text-[9px] font-extrabold flex items-center justify-center shadow-xs">
+          <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-gold text-surface-0 text-[9px] font-black flex items-center justify-center shadow-md">
             {alerts.length}
           </span>
         )}

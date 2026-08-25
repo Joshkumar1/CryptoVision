@@ -673,24 +673,24 @@ export function BacktestPage() {
               <AreaChart data={result.equityCurve} margin={{ top: 10, right: 10, bottom: 0, left: 10 }}>
                 <defs>
                   <linearGradient id="stratGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#4f8ef7" stopOpacity={0.3} />
-                    <stop offset="85%" stopColor="#4f8ef7" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#f5c542" stopOpacity={0.45} />
+                    <stop offset="85%" stopColor="#f5c542" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="benchGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#8ba3cc" stopOpacity={0.15} />
-                    <stop offset="85%" stopColor="#8ba3cc" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#c084fc" stopOpacity={0.25} />
+                    <stop offset="85%" stopColor="#c084fc" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="#182d50" strokeDasharray="3 3" vertical={false} />
+                <CartesianGrid stroke="#361b6c" strokeDasharray="3 3" vertical={false} />
                 <XAxis
                   dataKey="date"
-                  tick={{ fill: "#4d6a96", fontSize: 11 }}
+                  tick={{ fill: "#9e7dc7", fontSize: 11, fontWeight: 600 }}
                   axisLine={false}
                   tickLine={false}
                   minTickGap={40}
                 />
                 <YAxis
-                  tick={{ fill: "#4d6a96", fontSize: 11 }}
+                  tick={{ fill: "#9e7dc7", fontSize: 11, fontWeight: 600 }}
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={(v) => formatPrice(v)}
@@ -699,24 +699,24 @@ export function BacktestPage() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#091428",
-                    border: "1px solid #182d50",
+                    background: "#100722",
+                    border: "1px solid rgba(245, 197, 66, 0.4)",
                     borderRadius: "12px",
                     fontSize: 12,
-                    boxShadow: "0 8px 30px rgba(0,0,0,0.6)",
+                    boxShadow: "0 8px 30px rgba(0,0,0,0.8)",
                   }}
                   formatter={(val: any, name: any) => [
                     formatPrice(Number(val)),
-                    name === "strategyEquity" ? "Strategy Portfolio" : "HODL Benchmark",
+                    name === "strategyEquity" ? "Active Strategy (Gold)" : "HODL Benchmark (Purple)",
                   ]}
                 />
                 <Legend
-                  formatter={(value) => (value === "strategyEquity" ? "Active Strategy" : "Buy & Hold Benchmark")}
+                  formatter={(value) => (value === "strategyEquity" ? "Active Strategy (Gold)" : "Buy & Hold Benchmark (Purple)")}
                 />
                 <Area
                   type="monotone"
                   dataKey="strategyEquity"
-                  stroke="#4f8ef7"
+                  stroke="#f5c542"
                   strokeWidth={2.5}
                   fill="url(#stratGrad)"
                   name="strategyEquity"
@@ -725,8 +725,8 @@ export function BacktestPage() {
                 <Area
                   type="monotone"
                   dataKey="benchmarkEquity"
-                  stroke="#8ba3cc"
-                  strokeWidth={1.5}
+                  stroke="#c084fc"
+                  strokeWidth={1.8}
                   strokeDasharray="4 4"
                   fill="url(#benchGrad)"
                   name="benchmarkEquity"

@@ -15,15 +15,15 @@ export function ScoreRing({ score, size = 64, strokeWidth = 5, label, className 
 
   const gradId = `score-grad-${Math.round(score)}-${size}`;
 
-  // Select gradient colors based on score threshold
+  // Select gradient colors based on score threshold in Gold & Deep Purple theme
   const gradColors =
     score >= 80
-      ? { start: "#2dd4a7", stop: "#6ee7d0", glow: "rgba(45, 212, 167, 0.3)" }
+      ? { start: "#f5c542", stop: "#fef08a", glow: "rgba(245, 197, 66, 0.45)" } // Imperial Gold
       : score >= 60
-      ? { start: "#4f8ef7", stop: "#9abcff", glow: "rgba(79, 142, 247, 0.3)" }
+      ? { start: "#a855f7", stop: "#e9d5ff", glow: "rgba(168, 85, 247, 0.40)" } // Amethyst Purple
       : score >= 40
-      ? { start: "#f0a429", stop: "#fbbe4d", glow: "rgba(240, 164, 41, 0.3)" }
-      : { start: "#f25c5c", stop: "#ff8c8c", glow: "rgba(242, 92, 92, 0.3)" };
+      ? { start: "#d97706", stop: "#fbbf24", glow: "rgba(217, 119, 6, 0.35)" } // Amber
+      : { start: "#f43f5e", stop: "#fda4af", glow: "rgba(244, 63, 94, 0.35)" }; // Rose Crimson
 
   return (
     <div className={cn("relative inline-flex flex-col items-center gap-1.5", className)}>
