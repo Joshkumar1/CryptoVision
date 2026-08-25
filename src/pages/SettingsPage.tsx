@@ -4,19 +4,15 @@ import { useAppStore } from "@/stores/appStore";
 import { useCoins } from "@/hooks/useMarketData";
 import { SUPPORTED_CURRENCIES, SUPPORTED_LANGUAGES } from "@/types";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { formatPrice, formatPercentage, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   Settings,
   Globe,
   DollarSign,
   CheckCircle,
   Palette,
-  Info,
   ArrowRightLeft,
-  Coins,
-  RefreshCw,
 } from "lucide-react";
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };

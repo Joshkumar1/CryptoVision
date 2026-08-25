@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCoins } from "@/hooks/useMarketData";
@@ -9,7 +8,7 @@ import { AssetAvatar } from "@/components/shared/AssetAvatar";
 import { ChangeIndicator } from "@/components/shared/ChangeIndicator";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatPrice, formatMarketCap, cn } from "@/lib/utils";
+import { formatPrice, cn } from "@/lib/utils";
 import { ShieldAlert, AlertTriangle, Info, ChevronRight, ShieldCheck, AlertOctagon } from "lucide-react";
 import type { Coin, RedFlag, RedFlagSeverity } from "@/types";
 import type { Variants } from "framer-motion";

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useAppStore } from "@/stores/appStore";
 import { useCoins } from "@/hooks/useMarketData";
 import { AssetAvatar } from "@/components/shared/AssetAvatar";
@@ -15,21 +15,11 @@ import { formatPrice, formatMarketCap, formatPercentage, cn } from "@/lib/utils"
 import {
   Star,
   Trash2,
-  TrendingUp,
-  TrendingDown,
-  ArrowRight,
-  BarChart2,
   Briefcase,
   Plus,
-  DollarSign,
-  PieChart as PieIcon,
-  Layers,
-  Sparkles,
-  History,
   Clock,
-  Zap,
 } from "lucide-react";
-import type { Coin, PortfolioHolding } from "@/types";
+import type { Coin } from "@/types";
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
 const fadeUp = {

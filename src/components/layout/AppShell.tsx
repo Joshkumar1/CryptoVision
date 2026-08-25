@@ -10,12 +10,12 @@ export function AppShell() {
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Ambient background glow */}
+      {/* Ambient background glow — Deep Purple & Imperial Gold */}
       <div
         className="pointer-events-none fixed inset-0 z-0"
         style={{
           background:
-            "radial-gradient(ellipse 90% 40% at 50% 0%, rgba(79,142,247,0.055) 0%, transparent 70%)",
+            "radial-gradient(ellipse 90% 50% at 50% -5%, rgba(168,85,247,0.12) 0%, rgba(245,197,66,0.06) 40%, transparent 75%)",
         }}
       />
 

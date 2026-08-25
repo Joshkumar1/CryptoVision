@@ -8,12 +8,7 @@ import {
   Lock,
   Scale,
   FileCheck2,
-  AlertOctagon,
-  Sparkles,
   Info,
-  CheckCircle2,
-  ExternalLink,
-  BookOpen,
 } from "lucide-react";
 
 const TRUST_PILLARS = [
