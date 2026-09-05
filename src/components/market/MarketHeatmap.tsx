@@ -68,64 +68,64 @@ function getHeatmapColor(change: number | undefined): {
 } {
   if (change == null) {
     return {
-      bg: "bg-surface-2/60",
-      border: "border-border",
+      bg: "bg-surface-2/40 backdrop-blur-xl",
+      border: "border-white/10",
       text: "text-text-tertiary",
-      badge: "bg-surface-3 text-text-tertiary",
+      badge: "bg-white/5 text-text-tertiary border border-white/10",
       glow: "",
     };
   }
   if (change >= 10) {
     return {
-      bg: "bg-gradient-to-br from-emerald-500/25 to-emerald-600/10",
-      border: "border-emerald-400/40",
+      bg: "bg-gradient-to-br from-emerald-500/25 via-emerald-600/15 to-[#05140d]/80 backdrop-blur-xl",
+      border: "border-emerald-400/50 hover:border-emerald-300",
       text: "text-emerald-300",
-      badge: "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30",
-      glow: "shadow-[0_0_20px_rgba(16,185,129,0.18)]",
+      badge: "bg-emerald-500/25 text-emerald-300 border border-emerald-400/40 backdrop-blur-md shadow-sm",
+      glow: "shadow-[0_8px_25px_rgba(0,220,130,0.22),inset_0_1px_0_rgba(255,255,255,0.25)]",
     };
   }
   if (change >= 3) {
     return {
-      bg: "bg-gradient-to-br from-emerald-500/15 to-emerald-500/5",
-      border: "border-emerald-500/30",
+      bg: "bg-gradient-to-br from-emerald-500/18 via-emerald-600/10 to-[#07130e]/75 backdrop-blur-xl",
+      border: "border-emerald-500/35 hover:border-emerald-400/60",
       text: "text-emerald-400",
-      badge: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20",
-      glow: "",
+      badge: "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 backdrop-blur-md",
+      glow: "shadow-[0_4px_20px_rgba(0,220,130,0.14),inset_0_1px_0_rgba(255,255,255,0.18)]",
     };
   }
   if (change > 0) {
     return {
-      bg: "bg-emerald-500/10",
-      border: "border-emerald-500/20",
+      bg: "bg-emerald-500/10 backdrop-blur-xl hover:bg-emerald-500/15",
+      border: "border-emerald-500/25 hover:border-emerald-500/45",
       text: "text-emerald-400",
-      badge: "bg-emerald-500/10 text-emerald-400",
-      glow: "",
+      badge: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20",
+      glow: "shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
     };
   }
   if (change <= -10) {
     return {
-      bg: "bg-gradient-to-br from-red-500/25 to-red-600/10",
-      border: "border-red-400/40",
-      text: "text-red-300",
-      badge: "bg-red-500/20 text-red-300 border border-red-400/30",
-      glow: "shadow-[0_0_20px_rgba(239,68,68,0.18)]",
+      bg: "bg-gradient-to-br from-rose-500/25 via-rose-600/15 to-[#160608]/80 backdrop-blur-xl",
+      border: "border-rose-400/50 hover:border-rose-300",
+      text: "text-rose-300",
+      badge: "bg-rose-500/25 text-rose-300 border border-rose-400/40 backdrop-blur-md shadow-sm",
+      glow: "shadow-[0_8px_25px_rgba(255,91,91,0.22),inset_0_1px_0_rgba(255,255,255,0.25)]",
     };
   }
   if (change <= -3) {
     return {
-      bg: "bg-gradient-to-br from-red-500/15 to-red-500/5",
-      border: "border-red-500/30",
-      text: "text-red-400",
-      badge: "bg-red-500/15 text-red-400 border border-red-500/20",
-      glow: "",
+      bg: "bg-gradient-to-br from-rose-500/18 via-rose-600/10 to-[#14080a]/75 backdrop-blur-xl",
+      border: "border-rose-500/35 hover:border-rose-400/60",
+      text: "text-rose-400",
+      badge: "bg-rose-500/20 text-rose-300 border border-rose-500/30 backdrop-blur-md",
+      glow: "shadow-[0_4px_20px_rgba(255,91,91,0.14),inset_0_1px_0_rgba(255,255,255,0.18)]",
     };
   }
   return {
-    bg: "bg-red-500/10",
-    border: "border-red-500/20",
-    text: "text-red-400",
-    badge: "bg-red-500/10 text-red-400",
-    glow: "",
+    bg: "bg-rose-500/10 backdrop-blur-xl hover:bg-rose-500/15",
+    border: "border-rose-500/25 hover:border-rose-500/45",
+    text: "text-rose-400",
+    badge: "bg-rose-500/15 text-rose-400 border border-rose-500/20",
+    glow: "shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]",
   };
 }
 
@@ -147,6 +147,7 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
     const val = period === "24h" ? c.price_change_percentage_24h : c.price_change_percentage_7d_in_currency ?? 0;
     return val > 0;
   });
+
   const losers = filteredCoins.filter((c) => {
     const val = period === "24h" ? c.price_change_percentage_24h : c.price_change_percentage_7d_in_currency ?? 0;
     return val < 0;
@@ -154,9 +155,9 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
 
   return (
     <div className="space-y-4">
-      {/* ── Heatmap Stats Bar ── */}
+      {/* ── Heatmap Stats Bar (Glassmorphic Specular Cards) ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3.5 rounded-2xl bg-surface-1 border border-border card-highlight">
+        <div className="p-3.5 rounded-2xl glass-surface border border-white/10 card-highlight shadow-lg hover:border-white/20 transition-all">
           <div className="text-[10px] font-bold uppercase tracking-wider text-text-tertiary">
             Visualized Assets
           </div>
@@ -164,7 +165,7 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
             {filteredCoins.length} Coins
           </div>
         </div>
-        <div className="p-3.5 rounded-2xl bg-surface-1 border border-positive/30 card-highlight">
+        <div className="p-3.5 rounded-2xl glass-surface border border-positive/30 card-highlight glass-glow-emerald hover:border-positive/50 shadow-lg transition-all">
           <div className="text-[10px] font-bold uppercase tracking-wider text-positive">
             Advancing Tokens ({period.toUpperCase()})
           </div>
@@ -172,7 +173,7 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
             {gainers.length} Assets
           </div>
         </div>
-        <div className="p-3.5 rounded-2xl bg-surface-1 border border-negative/30 card-highlight">
+        <div className="p-3.5 rounded-2xl glass-surface border border-negative/30 card-highlight glass-glow-rose hover:border-negative/50 shadow-lg transition-all">
           <div className="text-[10px] font-bold uppercase tracking-wider text-negative">
             Declining Tokens ({period.toUpperCase()})
           </div>
@@ -180,7 +181,7 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
             {losers.length} Assets
           </div>
         </div>
-        <div className="p-3.5 rounded-2xl bg-surface-1 border border-accent/30 card-highlight">
+        <div className="p-3.5 rounded-2xl glass-surface border border-accent/30 card-highlight glass-glow-emerald hover:border-accent/50 shadow-lg transition-all">
           <div className="text-[10px] font-bold uppercase tracking-wider text-accent">
             Sector Breadth
           </div>
@@ -190,8 +191,8 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
         </div>
       </div>
 
-      {/* ── Heatmap Controls ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-1/90 p-3.5 rounded-2xl border border-border card-highlight">
+      {/* ── Heatmap Controls (Frosted Glass Control Dock) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 glass-surface p-3.5 rounded-2xl border border-white/10 card-highlight shadow-xl">
         {/* Sector Tabs */}
         <div className="flex flex-wrap gap-1.5">
           {(Object.keys(SECTORS) as SectorFilter[]).map((s) => (
@@ -201,8 +202,8 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
               className={cn(
                 "text-xs font-bold px-3 py-1.5 rounded-xl transition-all",
                 sector === s
-                  ? "bg-accent text-white shadow-sm"
-                  : "text-text-tertiary hover:text-text-primary hover:bg-surface-2"
+                  ? "bg-accent/20 text-accent border border-accent/40 shadow-sm backdrop-blur-md"
+                  : "text-text-tertiary hover:text-text-primary hover:bg-white/[0.06] border border-transparent"
               )}
             >
               {SECTORS[s].label}
@@ -211,14 +212,14 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
         </div>
 
         {/* Period Selector */}
-        <div className="flex items-center gap-1 bg-surface-0 p-1 rounded-xl border border-border self-start sm:self-auto">
+        <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-xl border border-white/10 backdrop-blur-md self-start sm:self-auto shadow-inner">
           <button
             onClick={() => setPeriod("24h")}
             className={cn(
               "text-xs font-bold px-3 py-1 rounded-lg transition-all",
               period === "24h"
-                ? "bg-surface-2 text-text-primary border border-border shadow-xs"
-                : "text-text-tertiary hover:text-text-primary"
+                ? "bg-white/[0.12] text-white border border-white/20 shadow-xs backdrop-blur-sm"
+                : "text-text-tertiary hover:text-white"
             )}
           >
             24H Heatmap
@@ -228,8 +229,8 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
             className={cn(
               "text-xs font-bold px-3 py-1 rounded-lg transition-all",
               period === "7d"
-                ? "bg-surface-2 text-text-primary border border-border shadow-xs"
-                : "text-text-tertiary hover:text-text-primary"
+                ? "bg-white/[0.12] text-white border border-white/20 shadow-xs backdrop-blur-sm"
+                : "text-text-tertiary hover:text-white"
             )}
           >
             7D Trend Map
@@ -237,7 +238,7 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
         </div>
       </div>
 
-      {/* ── Dynamic Treemap Tiles ── */}
+      {/* ── Dynamic Treemap Tiles (Frosted Glass Tiles with Specular Sheen) ── */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 min-h-[500px]">
         {filteredCoins.map((coin, index) => {
           const changeVal =
@@ -247,7 +248,7 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
 
           const color = getHeatmapColor(changeVal);
 
-          // Top market cap coins span larger visual grids
+          // Top market cap coins span wider visual grids
           const isTopTier = index === 0;
           const isSecondTier = index === 1 || index === 2;
 
@@ -256,12 +257,13 @@ export function MarketHeatmap({ coins }: MarketHeatmapProps) {
               key={coin.id}
               layout
               className={cn(
-                "relative rounded-2xl p-4 border transition-all duration-200 group cursor-pointer flex flex-col justify-between overflow-hidden card-highlight hover:scale-[1.02] hover:z-20",
+                "relative rounded-2xl p-4 border transition-all duration-300 group cursor-pointer flex flex-col justify-between overflow-hidden card-highlight glass-sheen hover:scale-[1.02] hover:z-20 shadow-lg",
                 color.bg,
                 color.border,
-                color.glow,
-                isTopTier && "col-span-2 row-span-2 min-h-[220px]",
-                isSecondTier && "sm:col-span-2 min-h-[160px]"
+                color.glow,               color.glow,
+                isTopTier && "col-span-2 sm:col-span-2 min-h-[165px]",
+                isSecondTier && "col-span-2 sm:col-span-2 min-h-[165px]",
+                !isTopTier && !isSecondTier && "min-h-[145px]"
               )}
             >
               <Link to={`/asset/${coin.id}`} className="absolute inset-0 z-10">

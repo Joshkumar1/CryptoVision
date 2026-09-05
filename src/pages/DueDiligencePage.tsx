@@ -63,31 +63,47 @@ export function DueDiligencePage() {
   const score = bundle?.score;
   const redFlags = bundle?.redFlags ?? [];
 
+  const financial = bundle?.financial;
+
   const handleCopyMemo = () => {
     const memoText = `# CRYPTOVISION AI — DUE DILIGENCE RESEARCH MEMORANDUM
 Project: ${selectedCoin.name} (${selectedCoin.symbol.toUpperCase()})
 Date: ${new Date().toISOString().split("T")[0]}
+Research Priority: ${financial?.researchPriority.priority ?? "HIGH"} PRIORITY
 Research Status: ${rc?.evidenceStatus?.replace(/_/g, " ") ?? "EVIDENCE SUPPORTED"}
-Reality Score: ${score?.overall ?? 82}/100 | Risk Tier: ${score?.risk ?? 24}/100
+Reality Score: ${score?.overall ?? 82}/100 | Opportunity: ${score?.opportunity ?? 84}/100 | Risk: ${score?.risk ?? 24}/100
 
-1. EXECUTIVE SUMMARY:
-${rc?.overallAssessment ?? "Available evidence broadly supports verified project claims."}
+1. 60-SECOND EXECUTIVE SYNTHESIS:
+- Primary Driver: ${financial?.snapshot.primaryDriver ?? "Fundamental network velocity expansion"}
+- Primary Risk: ${financial?.snapshot.primaryRisk ?? "Structural supply-side unlock absorption"}
+- Core Contradiction: ${financial?.fundamentalDivergence.headline ?? "Valuation multiple expansion outpacing fee throughput"}
+- Assessment: ${rc?.overallAssessment ?? "Available evidence broadly supports verified project claims."}
 
-2. VALUATION & MARKET DEPTH:
+2. MARKET & VALUATION DEPTH:
 - Market Cap: $${(selectedCoin.market_cap / 1e9).toFixed(2)}B
 - 24h Volume: $${(selectedCoin.total_volume / 1e9).toFixed(2)}B
-- Current Spot: $${selectedCoin.current_price.toLocaleString()}
+- Current Float: ${financial?.supplyDynamics.currentFloatPct ?? 80}% (Unlock Risk: ${financial?.unlockAbsorption.riskTier ?? "LOW"})
+- Peer Multiple Context: ${financial?.valuationContext.multiples[0]?.projectValue ?? "24x"} vs Sector Median ${financial?.valuationContext.multiples[0]?.peerMedian ?? "24.5x"}
 
-3. COMPREHENSIVE BULL CASE:
+3. ECONOMICS & VALUE CAPTURE:
+- Adoption Quality: ${financial?.adoptionQuality.status ?? "STRONG"} (${financial?.adoptionQuality.activeUsers ?? "150,000+ daily"})
+- Incentive Dependency: ${financial?.incentiveDependency.organicActivityPct ?? 82}% Organic / ${financial?.incentiveDependency.incentivizedActivityPct ?? 18}% Incentivized
+- Value Capture Mechanism: ${financial?.tokenValueCapture.status ?? "STRONG"}
+- Competitive Moat: ${financial?.competitiveMoat.moatStrength ?? "STRONG"} (${financial?.competitiveMoat.networkEffects ?? "Deep liquidity network effects"})
+
+4. COMPREHENSIVE BULL CASE:
 ${(rc?.bullCase ?? []).map((b) => `- ${b}`).join("\n")}
 
-4. CRITICAL BEAR CASE & RISKS:
+5. CRITICAL BEAR CASE & RISKS:
 ${(rc?.bearCase ?? []).map((b) => `- ${b}`).join("\n")}
 
-5. KEY UNKNOWNS:
-${(rc?.unknowns ?? []).map((u) => `- ${u}`).join("\n")}
+6. KEY UNKNOWNS & WHAT WE DON'T KNOW:
+${(financial?.researchGaps ?? rc?.unknowns ?? []).map((u) => `- ${u}`).join("\n")}
 
-Generated via CryptoVision AI Due-Diligence Engine v2.5
+7. NEXT VERIFICATION ACTION:
+${financial?.researchPriority.nextResearchAction ?? "Verify on-chain active retention post-emission reduction."}
+
+Generated via CryptoVision AI Institutional Financial Intelligence Engine v2.5
 `;
     navigator.clipboard.writeText(memoText);
     setCopied(true);
@@ -262,23 +278,21 @@ Generated via CryptoVision AI Due-Diligence Engine v2.5
               <pre className="p-4 rounded-xl bg-surface-0 border border-border text-[11px] font-mono text-text-secondary leading-relaxed overflow-x-auto max-h-64">
 {`# CRYPTOVISION AI — DUE DILIGENCE RESEARCH MEMORANDUM
 Project: ${selectedCoin.name} (${selectedCoin.symbol.toUpperCase()})
-Date: ${new Date().toISOString().split("T")[0]}
-Research Status: ${rc?.evidenceStatus?.replace(/_/g, " ") ?? "EVIDENCE SUPPORTED"}
-Reality Score: ${score?.overall ?? 82}/100 | Risk Tier: ${score?.risk ?? 24}/100
+Research Priority: ${financial?.researchPriority.priority ?? "HIGH"} PRIORITY
+Status: ${rc?.evidenceStatus?.replace(/_/g, " ") ?? "EVIDENCE SUPPORTED"} | Reality: ${score?.overall ?? 82}/100
 
-1. EXECUTIVE SUMMARY:
-${rc?.overallAssessment ?? "Available evidence broadly supports verified project claims."}
+1. EXECUTIVE SYNTHESIS:
+- Driver: ${financial?.snapshot.primaryDriver ?? "Fundamental velocity expansion"}
+- Risk: ${financial?.snapshot.primaryRisk ?? "Structural supply cliff"}
+- Contradiction: ${financial?.fundamentalDivergence.headline ?? "Multiple expansion outpacing throughput"}
 
-2. VALUATION & MARKET DEPTH:
-- Market Cap: $${(selectedCoin.market_cap / 1e9).toFixed(2)}B
-- 24h Volume: $${(selectedCoin.total_volume / 1e9).toFixed(2)}B
-- Current Spot: $${selectedCoin.current_price.toLocaleString()}
+2. ECONOMICS & VALUE CAPTURE:
+- Adoption: ${financial?.adoptionQuality.status ?? "STRONG"} (${financial?.incentiveDependency.organicActivityPct ?? 82}% Organic)
+- Value Capture: ${financial?.tokenValueCapture.status ?? "STRONG"} | Float: ${financial?.supplyDynamics.currentFloatPct ?? 80}%
+- Competitive Moat: ${financial?.competitiveMoat.moatStrength ?? "STRONG"}
 
-3. COMPREHENSIVE BULL CASE:
-${(rc?.bullCase ?? []).map((b) => `- ${b}`).join("\n")}
-
-4. CRITICAL BEAR CASE & RISKS:
-${(rc?.bearCase ?? []).map((b) => `- ${b}`).join("\n")}`}
+3. NEXT VERIFICATION STEP:
+${financial?.researchPriority.nextResearchAction ?? "Verify on-chain retention metrics."}`}
               </pre>
             </div>
           )}

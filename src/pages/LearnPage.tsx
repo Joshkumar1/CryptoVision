@@ -69,7 +69,7 @@ const MODULES: MasterclassModule[] = [
     summary:
       "A 50% loss requires a 100% gain to break even. Sizing every position according to predefined dollar risk prevents catastrophic account drawdowns.",
     keyTakeaways: [
-      "Never risk more than 1%–2% of total portfolio equity on any single trade.",
+      "Size positions dynamically using your tolerated loss, volatility tier, stop distance, and liquidity depth instead of arbitrary static rules.",
       "Determine position size from your invalidation stop-loss, not arbitrary round numbers.",
       "Aim for a minimum 2:1 Reward-to-Risk ratio to maintain positive expectancy.",
     ],
@@ -120,12 +120,15 @@ export function LearnPage() {
   const [tokenAPriceChange, setTokenAPriceChange] = useState(100);
   const [tokenBPriceChange, setTokenBPriceChange] = useState(0);
 
-  // Position Sizing State
-  const [accountSize, setAccountSize] = useState(10000);
-  const [riskPercent, setRiskPercent] = useState(2);
+  // Risk Simulator State (Educational Simulation)
+  const [accountSize, setAccountSize] = useState(25000);
+  const [maxToleratedLossPct, setMaxToleratedLossPct] = useState(2.0);
+  const [volatilityTier, setVolatilityTier] = useState<"LOW" | "MODERATE" | "HIGH">("MODERATE");
+  const [stopDistancePct, setStopDistancePct] = useState(6.0);
+  const [liquidityTier, setLiquidityTier] = useState<"DEEP" | "MODERATE" | "THIN">("MODERATE");
+  const [portfolioCorrelation, setPortfolioCorrelation] = useState(0.65);
+  const [scenarioDrawdownPct, setScenarioDrawdownPct] = useState(35);
   const [entryPrice, setEntryPrice] = useState(50000);
-  const [stopLossPrice, setStopLossPrice] = useState(47500);
-  const [targetPrice, setTargetPrice] = useState(57500);
 
   // Staking APY State
   const [stakedAmount, setStakedAmount] = useState(5000);
@@ -141,14 +144,22 @@ export function LearnPage() {
   const poolValueRatio = Math.sqrt(priceRatio) * rB;
   const impermanentLossPct = ((poolValueRatio - holdValueRatio) / holdValueRatio) * 100;
 
-  // Calculations: Position Sizing
-  const riskAmountDollars = accountSize * (riskPercent / 100);
-  const stopLossDistanceDollars = Math.abs(entryPrice - stopLossPrice);
-  const stopLossDistancePct = (stopLossDistanceDollars / entryPrice) * 100;
-  const targetDistanceDollars = Math.abs(targetPrice - entryPrice);
-  const riskRewardRatio = stopLossDistanceDollars > 0 ? (targetDistanceDollars / stopLossDistanceDollars).toFixed(2) : "0";
-  const positionUnits = stopLossDistanceDollars > 0 ? riskAmountDollars / stopLossDistanceDollars : 0;
-  const totalPositionSizeDollars = positionUnits * entryPrice;
+  // Calculations: Dynamic Risk Simulator
+  const maxToleratedLossDollars = accountSize * (maxToleratedLossPct / 100);
+  const volMultiplier = volatilityTier === "HIGH" ? 0.75 : volatilityTier === "LOW" ? 1.15 : 1.0;
+  const liqMultiplier = liquidityTier === "THIN" ? 0.70 : liquidityTier === "DEEP" ? 1.0 : 0.88;
+  const corrMultiplier = Math.max(0.7, 1 - (portfolioCorrelation * 0.25));
+  const basePositionDollars = stopDistancePct > 0 ? (maxToleratedLossDollars / (stopDistancePct / 100)) : 0;
+  const illustrativePositionDollars = Math.min(accountSize * 0.4, basePositionDollars * volMultiplier * liqMultiplier * corrMultiplier);
+  const positionUnits = entryPrice > 0 ? illustrativePositionDollars / entryPrice : 0;
+  const potentialLossDollars = illustrativePositionDollars * (stopDistancePct / 100);
+  const stressCaseLossDollars = illustrativePositionDollars * (scenarioDrawdownPct / 100);
+  const liquidityNotes =
+    liquidityTier === "THIN"
+      ? "High slippage vulnerability: 2.5%–4.0% estimated slippage upon market liquidation."
+      : liquidityTier === "MODERATE"
+      ? "Moderate depth: execute with limit orders to avoid crossing wide spreads."
+      : "Deep institutional orderbook: minimal execution slippage expected.";
 
   // Calculations: Staking APY
   const periodsPerYear = compoundFrequency === "daily" ? 365 : compoundFrequency === "weekly" ? 52 : 12;
@@ -230,7 +241,7 @@ export function LearnPage() {
           <div className="flex gap-1 bg-surface-0 p-1 rounded-xl border border-border">
             {[
               { id: "impermanent_loss", label: "Impermanent Loss" },
-              { id: "position_sizing", label: "Position Risk Sizer" },
+              { id: "position_sizing", label: "Risk Simulator" },
               { id: "staking_apy", label: "Staking APY Yield" },
             ].map((t) => (
               <button
@@ -325,19 +336,32 @@ export function LearnPage() {
             </div>
           )}
 
-          {/* Tool 2: Position Sizing & Risk Management Calculator */}
+          {/* Tool 2: Risk Simulator (Educational Simulation) */}
           {activeTool === "position_sizing" && (
             <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-3 p-5 rounded-2xl bg-surface-0/60 border border-border">
+              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30">
+                <div className="flex items-center gap-2 text-xs text-amber-300 font-semibold">
+                  <ShieldAlert className="h-4 w-4 flex-shrink-0" />
+                  <span>
+                    <strong>EDUCATIONAL SIMULATION:</strong> This simulator illustrates how volatility, liquidity depth, correlation, and tail-risk drawdowns interact with sizing. It does not dictate rigid static rules (such as a hardcoded 1% limit).
+                  </span>
+                </div>
+                <Badge variant="warning" className="font-mono text-[10px] uppercase font-bold flex-shrink-0">
+                  Educational Simulation
+                </Badge>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Inputs */}
+                <div className="space-y-4 p-5 rounded-2xl bg-surface-0/60 border border-border">
                   <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
-                    <Scale className="h-4 w-4 text-accent" /> Portfolio & Trade Parameters
+                    <Scale className="h-4 w-4 text-accent" /> Simulation Parameters
                   </h3>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[11px] font-semibold uppercase text-text-tertiary block mb-1">
-                        Total Portfolio ($)
+                      <label className="text-[10px] font-bold uppercase text-text-tertiary block mb-1">
+                        Portfolio Size ($)
                       </label>
                       <Input
                         type="number"
@@ -347,79 +371,167 @@ export function LearnPage() {
                       />
                     </div>
                     <div>
-                      <label className="text-[11px] font-semibold uppercase text-text-tertiary block mb-1">
-                        Risk Per Trade (%)
+                      <label className="text-[10px] font-bold uppercase text-text-tertiary block mb-1">
+                        Max Tolerated Loss (%)
                       </label>
                       <Input
                         type="number"
                         step="0.5"
-                        value={riskPercent}
-                        onChange={(e) => setRiskPercent(Number(e.target.value))}
+                        value={maxToleratedLossPct}
+                        onChange={(e) => setMaxToleratedLossPct(Number(e.target.value))}
                         className="h-9 text-xs font-bold text-negative"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 pt-2">
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] font-semibold uppercase text-text-tertiary block mb-1">Entry ($)</label>
+                      <label className="text-[10px] font-bold uppercase text-text-tertiary block mb-1">
+                        Volatility Profile
+                      </label>
+                      <div className="flex gap-1">
+                        {(["LOW", "MODERATE", "HIGH"] as const).map((v) => (
+                          <button
+                            key={v}
+                            type="button"
+                            onClick={() => setVolatilityTier(v)}
+                            className={cn(
+                              "flex-1 py-1 text-[10px] font-mono font-bold rounded-lg border transition-all",
+                              volatilityTier === v
+                                ? "bg-accent text-white border-accent"
+                                : "bg-surface-1 text-text-muted border-border hover:bg-surface-2"
+                            )}
+                          >
+                            {v}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-bold uppercase text-text-tertiary block mb-1">
+                        Stop Distance (%)
+                      </label>
                       <Input
                         type="number"
-                        value={entryPrice}
-                        onChange={(e) => setEntryPrice(Number(e.target.value))}
+                        step="0.5"
+                        value={stopDistancePct}
+                        onChange={(e) => setStopDistancePct(Number(e.target.value))}
                         className="h-9 text-xs font-bold"
                       />
                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] font-semibold uppercase text-negative block mb-1">Stop Loss ($)</label>
-                      <Input
-                        type="number"
-                        value={stopLossPrice}
-                        onChange={(e) => setStopLossPrice(Number(e.target.value))}
-                        className="h-9 text-xs font-bold text-negative"
-                      />
+                      <label className="text-[10px] font-bold uppercase text-text-tertiary block mb-1">
+                        Liquidity Profile
+                      </label>
+                      <div className="flex gap-1">
+                        {(["DEEP", "MODERATE", "THIN"] as const).map((l) => (
+                          <button
+                            key={l}
+                            type="button"
+                            onClick={() => setLiquidityTier(l)}
+                            className={cn(
+                              "flex-1 py-1 text-[10px] font-mono font-bold rounded-lg border transition-all",
+                              liquidityTier === l
+                                ? "bg-accent text-white border-accent"
+                                : "bg-surface-1 text-text-muted border-border hover:bg-surface-2"
+                            )}
+                          >
+                            {l}
+                          </button>
+                        ))}
+                      </div>
                     </div>
+
                     <div>
-                      <label className="text-[10px] font-semibold uppercase text-positive block mb-1">Target ($)</label>
-                      <Input
-                        type="number"
-                        value={targetPrice}
-                        onChange={(e) => setTargetPrice(Number(e.target.value))}
-                        className="h-9 text-xs font-bold text-positive"
+                      <label className="text-[10px] font-bold uppercase text-text-tertiary block mb-1">
+                        Correlation ({portfolioCorrelation.toFixed(2)})
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value={portfolioCorrelation}
+                        onChange={(e) => setPortfolioCorrelation(Number(e.target.value))}
+                        className="w-full accent-accent mt-2"
                       />
                     </div>
                   </div>
+
+                  <div>
+                    <label className="text-[10px] font-bold uppercase text-rose-400 block mb-1">
+                      Stress-Case Scenario Drawdown ({scenarioDrawdownPct}%)
+                    </label>
+                    <input
+                      type="range"
+                      min="10"
+                      max="75"
+                      step="5"
+                      value={scenarioDrawdownPct}
+                      onChange={(e) => setScenarioDrawdownPct(Number(e.target.value))}
+                      className="w-full accent-rose-500"
+                    />
+                  </div>
                 </div>
 
-                {/* Sizing Results */}
-                <div className="p-5 rounded-2xl bg-surface-0/90 border border-border flex flex-col justify-between">
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="p-3 rounded-xl bg-surface-1 border border-border">
-                        <div className="text-[10px] font-bold uppercase text-text-tertiary">Max Allowed Risk ($)</div>
-                        <div className="text-xl font-extrabold text-negative tabular mt-0.5">
-                          {formatPrice(riskAmountDollars)}
-                        </div>
+                {/* Sizing & Stress Results */}
+                <div className="p-5 rounded-2xl bg-surface-0/90 border border-border flex flex-col justify-between space-y-4">
+                  <div className="space-y-3">
+                    <div className="p-4 rounded-xl bg-accent/10 border border-accent/30">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-accent block mb-0.5">
+                        Illustrative Position Size
+                      </span>
+                      <div className="flex items-baseline gap-2 font-mono">
+                        <span className="text-2xl sm:text-3xl font-extrabold text-text-primary">
+                          {formatPrice(illustrativePositionDollars)}
+                        </span>
+                        <span className="text-xs text-text-muted">
+                          ({((illustrativePositionDollars / accountSize) * 100).toFixed(1)}% of portfolio)
+                        </span>
                       </div>
-                      <div className="p-3 rounded-xl bg-surface-1 border border-border">
-                        <div className="text-[10px] font-bold uppercase text-text-tertiary">Reward / Risk Ratio</div>
-                        <div className="text-xl font-extrabold text-positive tabular mt-0.5">
-                          {riskRewardRatio} R:R
-                        </div>
+                      <div className="text-[11px] text-text-secondary mt-1">
+                        Sized dynamically against {volatilityTier.toLowerCase()} volatility and {liquidityTier.toLowerCase()} liquidity.
                       </div>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-accent/10 border border-accent/30">
-                      <div className="text-xs font-bold uppercase tracking-wider text-accent mb-0.5">
-                        Recommended Position Sizing
+                    <div className="grid grid-cols-2 gap-3 font-mono text-xs">
+                      <div className="p-3 rounded-xl bg-surface-1 border border-border">
+                        <span className="text-[10px] font-bold uppercase text-text-muted block font-sans">
+                          Potential Loss (at Stop)
+                        </span>
+                        <span className="text-base font-extrabold text-negative mt-0.5 block">
+                          -{formatPrice(potentialLossDollars)}
+                        </span>
+                        <span className="text-[10px] text-text-tertiary">
+                          {((potentialLossDollars / accountSize) * 100).toFixed(1)}% of account
+                        </span>
                       </div>
-                      <div className="text-2xl font-extrabold text-text-primary tabular">
-                        {formatPrice(totalPositionSizeDollars)}
-                      </div>
-                      <div className="text-xs text-text-secondary mt-1">
-                        Exact Quantity: <strong className="text-text-primary font-mono">{positionUnits.toFixed(4)} Units</strong> (Stop loss distance: {stopLossDistancePct.toFixed(1)}%)
+
+                      <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30">
+                        <span className="text-[10px] font-bold uppercase text-rose-300 block font-sans">
+                          Stress-Case Loss ({scenarioDrawdownPct}%)
+                        </span>
+                        <span className="text-base font-extrabold text-rose-400 mt-0.5 block">
+                          -{formatPrice(stressCaseLossDollars)}
+                        </span>
+                        <span className="text-[10px] text-text-tertiary">
+                          {((stressCaseLossDollars / accountSize) * 100).toFixed(1)}% of account
+                        </span>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-surface-1 border border-border space-y-1 text-xs">
+                    <span className="font-bold text-text-primary block text-[11px]">
+                      Liquidity &amp; Execution Considerations:
+                    </span>
+                    <p className="text-text-secondary text-[11px] leading-relaxed">
+                      {liquidityNotes}
+                    </p>
                   </div>
                 </div>
               </div>

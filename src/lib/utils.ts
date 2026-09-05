@@ -57,6 +57,12 @@ export function formatPercentage(value: number | null | undefined): string {
   return `${sign}${value.toFixed(2)}%`;
 }
 
+export function formatConfidence(value: number | null | undefined): string {
+  if (value == null) return "—";
+  const normalized = value <= 1 ? value * 100 : value;
+  return `${Math.round(Math.min(100, Math.max(0, normalized)))}%`;
+}
+
 export function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US").format(value);
 }

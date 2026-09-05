@@ -46,13 +46,47 @@ const TrustCenterPage = lazy(() =>
 const DueDiligencePage = lazy(() =>
   import("@/pages/DueDiligencePage").then((m) => ({ default: m.DueDiligencePage }))
 );
+const LoginPage = lazy(() =>
+  import("@/pages/LoginPage").then((m) => ({ default: m.LoginPage }))
+);
+const FlagshipLandingPage = lazy(() =>
+  import("@/pages/FlagshipLandingPage").then((m) => ({ default: m.FlagshipLandingPage }))
+);
 
 export const router = createBrowserRouter([
+  // ── Flagship Institutional Landing Page (abtc.com-style reference) ──
   {
     path: "/",
+    element: (
+      <Suspense fallback={<LoadingState message="Connecting to CryptoVision Institutional..." />}>
+        <FlagshipLandingPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/home",
+    element: <Navigate to="/" replace />,
+  },
+  {
+    path: "/institutional",
+    element: <Navigate to="/" replace />,
+  },
+  {
+    path: "/app",
+    element: <Navigate to="/overview" replace />,
+  },
+  {
+    path: "/login",
+    element: (
+      <Suspense fallback={<LoadingState message="Connecting to Terminal Auth..." />}>
+        <LoginPage />
+      </Suspense>
+    ),
+  },
+  // ── Pro Terminal Workspace Routes (wrapped in AppShell) ──
+  {
     element: <AppShell />,
     children: [
-      { index: true, element: <Navigate to="/overview" replace /> },
       // ── Core Navigation Routes ──
       {
         path: "overview",
@@ -79,6 +113,8 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      { path: "newsreel", element: <Navigate to="/news?tab=newsreel" replace /> },
+
       {
         path: "projects",
         element: (
@@ -173,5 +209,9 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "*",
+    element: <Navigate to="/" replace />,
   },
 ]);

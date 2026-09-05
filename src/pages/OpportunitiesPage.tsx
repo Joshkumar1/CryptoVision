@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEmergingProjects } from "@/hooks/useEmerging";
 import { useCoins } from "@/hooks/useMarketData";
+import { useAppStore } from "@/stores/appStore";
+import { PersonaSegmentBanner } from "@/components/shared/PersonaSegmentBanner";
 import { LoadingState } from "@/components/shared/LoadingState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -58,114 +60,150 @@ function EmergingProjectCard({
   coin?: Coin;
   highlight?: boolean;
 }) {
+  const { isWatched, toggleWatchlist, persona } = useAppStore();
+  const watched = isWatched(project.coinId);
+
   return (
     <motion.div variants={fadeUp}>
-      <Link to={`/asset/${project.coinId}`} className="block h-full">
-        <div
-          className={cn(
-            "relative rounded-2xl p-5 transition-all duration-200 group cursor-pointer h-full flex flex-col justify-between card-highlight",
-            highlight
-              ? "bg-gradient-to-b from-surface-1 to-surface-2/90 border border-gold/40 shadow-[0_0_24px_rgba(240,164,41,0.12)] hover:border-gold/70"
-              : "bg-surface-1/80 border border-border/80 hover:border-accent/40 hover:bg-surface-1 shadow-md hover:shadow-lg"
-          )}
-        >
-          {/* Top row */}
-          <div>
-            <div className="flex items-start justify-between gap-3 mb-3.5">
-              <div className="flex items-center gap-3">
-                {coin?.image ? (
-                  <img
-                    src={coin.image}
-                    alt={coin.name}
-                    className="h-10 w-10 rounded-full ring-2 ring-border/80 object-cover group-hover:scale-105 transition-transform"
-                  />
-                ) : (
-                  <div className="h-10 w-10 rounded-full gradient-accent flex items-center justify-center font-bold text-white text-sm ring-2 ring-border/80">
-                    {project.coinId.slice(0, 2).toUpperCase()}
-                  </div>
-                )}
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-text-primary group-hover:text-accent transition-colors">
-                      {coin?.name ?? project.coinId}
+      <div
+        className={cn(
+          "relative rounded-2xl p-5 transition-all duration-300 group h-full flex flex-col justify-between card-highlight glass-sheen glass-card",
+          highlight
+            ? "border-amber-400/40 shadow-[0_16px_40px_-8px_rgba(242,201,76,0.18)] hover:border-amber-400/70"
+            : "border-white/10 hover:border-accent/45 hover:shadow-[0_20px_48px_-6px_rgba(0,220,130,0.15)]"
+        )}
+      >
+        {/* Top row */}
+        <div>
+          <div className="flex items-start justify-between gap-3 mb-3.5">
+            <Link to={`/asset/${project.coinId}`} className="flex items-center gap-3 group/link min-w-0">
+              {coin?.image ? (
+                <img
+                  src={coin.image}
+                  alt={coin.name}
+                  className="h-10 w-10 rounded-full ring-2 ring-border/80 object-cover group-hover/link:scale-105 transition-transform flex-shrink-0"
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-full gradient-accent flex items-center justify-center font-bold text-white text-sm ring-2 ring-border/80 flex-shrink-0">
+                  {project.coinId.slice(0, 2).toUpperCase()}
+                </div>
+              )}
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 truncate">
+                  <span className="font-bold text-text-primary group-hover/link:text-accent transition-colors truncate">
+                    {coin?.name ?? project.coinId}
+                  </span>
+                  {coin?.symbol && (
+                    <span className="text-[10px] text-text-tertiary uppercase font-mono flex-shrink-0">
+                      {coin.symbol}
                     </span>
-                    {coin?.symbol && (
-                      <span className="text-[10px] text-text-tertiary uppercase font-mono">
-                        {coin.symbol}
+                  )}
+                </div>
+                {coin?.current_price && (
+                  <div className="flex items-center gap-2 mt-0.5 text-xs text-text-secondary tabular font-semibold">
+                    <span>{formatPrice(coin.current_price)}</span>
+                    {coin.price_change_percentage_24h !== undefined && (
+                      <span
+                        className={cn(
+                          "font-bold",
+                          coin.price_change_percentage_24h >= 0 ? "text-positive" : "text-negative"
+                        )}
+                      >
+                        {coin.price_change_percentage_24h >= 0 ? "+" : ""}
+                        {coin.price_change_percentage_24h.toFixed(2)}%
                       </span>
                     )}
                   </div>
-                  {coin?.current_price && (
-                    <div className="flex items-center gap-2 mt-0.5 text-xs text-text-secondary tabular font-semibold">
-                      <span>{formatPrice(coin.current_price)}</span>
-                      {coin.price_change_percentage_24h !== undefined && (
-                        <span
-                          className={cn(
-                            "font-bold",
-                            coin.price_change_percentage_24h >= 0 ? "text-positive" : "text-negative"
-                          )}
-                        >
-                          {coin.price_change_percentage_24h >= 0 ? "+" : ""}
-                          {coin.price_change_percentage_24h.toFixed(2)}%
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
+            </Link>
 
-              <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                <ScoreRing score={project.score} size={46} strokeWidth={4} />
-                <RiskBadge level={project.riskLevel} />
-              </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  toggleWatchlist(project.coinId);
+                }}
+                className={cn(
+                  "p-1.5 rounded-lg border transition-all",
+                  watched
+                    ? "bg-gold/20 border-gold/40 text-gold shadow-gold-subtle"
+                    : "border-transparent text-text-tertiary hover:text-text-primary hover:bg-surface-2"
+                )}
+                title={watched ? "Remove from Watchlist" : "Add to Watchlist"}
+              >
+                <Star className={cn("h-4 w-4", watched && "fill-gold")} />
+              </button>
+              <ScoreRing score={project.score} size={42} strokeWidth={3.5} />
             </div>
+          </div>
 
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
+            <RiskBadge level={project.riskLevel} />
             {project.isBeforeTheHype && (
-              <div className="mb-3">
-                <Badge variant="gold" className="text-[10px] font-bold px-2 py-0.5 gap-1.5 shadow-xs">
-                  <Sparkles className="h-3 w-3 text-gold" /> Early Research Candidate
-                </Badge>
-              </div>
+              <Badge variant="gold" className="text-[10px] font-bold px-2 py-0.5 gap-1.5 shadow-xs">
+                <Sparkles className="h-3 w-3 text-gold" /> Early Research
+              </Badge>
             )}
 
-            {/* Why on radar */}
-            <p className="text-xs text-text-secondary leading-relaxed bg-surface-0/60 rounded-xl p-3 border border-border/60 mb-3.5">
-              {project.whyOnRadar}
-            </p>
-
-            {/* Signals */}
-            {project.signals.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {project.signals.slice(0, 4).map((sig) => (
-                  <div
-                    key={sig.type}
-                    className="flex items-center gap-1.5 text-[10px] font-medium px-2.5 py-1 rounded-lg bg-surface-2/70 text-text-secondary border border-border/60"
-                    title={sig.detail}
-                  >
-                    <span>{signalIcons[sig.type] ?? "•"}</span>
-                    <span>{sig.label}</span>
-                  </div>
-                ))}
-              </div>
+            {/* Persona-specific badge */}
+            {persona === "EXPLORE" && (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-gold/15 text-gold border border-gold/30">
+                Beginner Pick
+              </span>
+            )}
+            {persona === "RESEARCH" && (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-mint/15 text-mint border border-mint/30">
+                ✓ On-Chain Verified
+              </span>
+            )}
+            {persona === "ANALYST" && (
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-200 border border-purple-400/30">
+                Z-Score: +2.14
+              </span>
             )}
           </div>
 
-          {/* Footer stats */}
-          {coin && (
-            <div className="flex items-center justify-between pt-3 border-t border-border/60 text-[11px] text-text-tertiary">
-              <span>
-                MCap: <strong className="text-text-secondary">{formatMarketCap(coin.market_cap)}</strong>
-              </span>
-              <span>
-                Vol: <strong className="text-text-secondary">{formatMarketCap(coin.total_volume)}</strong>
-              </span>
-              <span>
-                Rank: <strong className="text-text-secondary">#{coin.market_cap_rank}</strong>
-              </span>
+          {/* Why on radar */}
+          <Link to={`/asset/${project.coinId}`} className="block">
+            <p className="text-xs text-text-secondary leading-relaxed bg-surface-0/60 rounded-xl p-3 border border-border/60 mb-3.5 hover:border-accent/30 transition-colors">
+              {project.whyOnRadar}
+            </p>
+          </Link>
+
+          {/* Signals */}
+          {project.signals.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {project.signals.slice(0, 4).map((sig) => (
+                <div
+                  key={sig.type}
+                  className="flex items-center gap-1.5 text-[10px] font-medium px-2.5 py-1 rounded-lg bg-surface-2/70 text-text-secondary border border-border/60"
+                  title={sig.detail}
+                >
+                  <span>{signalIcons[sig.type] ?? "•"}</span>
+                  <span>{sig.label}</span>
+                </div>
+              ))}
             </div>
           )}
         </div>
-      </Link>
+
+        {/* Footer stats */}
+        {coin && (
+          <div className="flex items-center justify-between pt-3 border-t border-border/60 text-[11px] text-text-tertiary">
+            <span>
+              MCap: <strong className="text-text-secondary">{formatMarketCap(coin.market_cap)}</strong>
+            </span>
+            <span>
+              Vol: <strong className="text-text-secondary">{formatMarketCap(coin.total_volume)}</strong>
+            </span>
+            <span>
+              Rank: <strong className="text-text-secondary">#{coin.market_cap_rank}</strong>
+            </span>
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 }
@@ -191,6 +229,11 @@ export function OpportunitiesPage() {
 
   return (
     <motion.div className="space-y-7 max-w-7xl mx-auto" variants={stagger} initial="hidden" animate="show">
+      {/* ── Active Persona Segment Controller ── */}
+      <motion.div variants={fadeUp}>
+        <PersonaSegmentBanner />
+      </motion.div>
+
       {/* ── Header ── */}
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -209,11 +252,11 @@ export function OpportunitiesPage() {
       {/* ── 🌱 SIGNATURE BEFORE-THE-HYPE FORMULA HERO ── */}
       <motion.div
         variants={fadeUp}
-        className="p-5 rounded-2xl bg-surface-1 border border-accent/30 card-highlight shadow-md space-y-3"
+        className="p-5 sm:p-6 rounded-2xl glass-surface border border-accent/30 card-highlight shadow-xl space-y-3"
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
+            <div className="p-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 backdrop-blur-md">
               <Sprout className="h-5 w-5" />
             </div>
             <div>
@@ -229,7 +272,7 @@ export function OpportunitiesPage() {
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-surface-0 border border-border/80 text-xs font-mono text-text-secondary flex items-center gap-2 self-start md:self-auto">
+          <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-md text-xs font-mono text-text-secondary flex items-center gap-2 self-start md:self-auto shadow-inner">
             <span className="text-text-tertiary">Formula:</span>
             <span className="text-text-primary font-bold">Low/Moderate Attention</span>
             <span className="text-accent">+</span>
@@ -241,7 +284,7 @@ export function OpportunitiesPage() {
           </div>
         </div>
 
-        <div className="text-[11px] text-text-tertiary flex items-center gap-2 pt-1 border-t border-border/60">
+        <div className="text-[11px] text-text-tertiary flex items-center gap-2 pt-1 border-t border-white/10">
           <CheckCircle2 className="h-3.5 w-3.5 text-positive flex-shrink-0" />
           <span>
             <strong>Zero Hype Policy:</strong> We do not predict "next 100x" speculative gains. We surface deterministic engineering velocity, liquidity inflows, and supply tokenomics.
@@ -252,19 +295,19 @@ export function OpportunitiesPage() {
       {/* Stats Bar */}
       {emergingData && (
         <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="bg-surface-1 border border-border rounded-xl p-4 card-highlight">
+          <div className="glass-surface border border-white/10 rounded-xl p-4 card-highlight shadow-md hover:border-white/20 transition-all">
             <div className="text-xs font-semibold uppercase text-text-tertiary mb-1 flex items-center gap-1.5">
               <Radar className="h-3.5 w-3.5 text-accent" /> Total Active Signals
             </div>
             <div className="text-2xl font-extrabold text-text-primary tabular">{emergingData.total}</div>
           </div>
-          <div className="bg-surface-1 border border-gold/30 rounded-xl p-4 card-highlight shadow-[0_0_20px_rgba(240,164,41,0.06)]">
+          <div className="glass-surface border border-amber-400/30 rounded-xl p-4 card-highlight glass-glow-gold shadow-md hover:border-amber-400/50 transition-all">
             <div className="text-xs font-semibold uppercase text-gold mb-1 flex items-center gap-1.5">
               <Star className="h-3.5 w-3.5 text-gold" /> "Before The Hype" Setups
             </div>
             <div className="text-2xl font-extrabold text-gold tabular">{beforeTheHype.length}</div>
           </div>
-          <div className="bg-surface-1 border border-positive/30 rounded-xl p-4 card-highlight">
+          <div className="glass-surface border border-positive/30 rounded-xl p-4 card-highlight glass-glow-emerald shadow-md hover:border-positive/50 transition-all">
             <div className="text-xs font-semibold uppercase text-positive mb-1 flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-positive" /> Moderate Risk Ranked
             </div>

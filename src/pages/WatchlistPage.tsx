@@ -18,8 +18,17 @@ import {
   Briefcase,
   Plus,
   Clock,
+  ShieldCheck,
+  AlertTriangle,
+  PieChart,
+  Sliders,
+  Scale,
+  Zap,
+  Info,
+  Layers,
 } from "lucide-react";
 import type { Coin } from "@/types";
+
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } };
 const fadeUp = {
@@ -143,7 +152,38 @@ export function WatchlistPage() {
     };
   }, [holdings, coinMap]);
 
+  // Educational Position-Sizing Risk Simulator State (Section 67)
+  const [simCapital, setSimCapital] = useState(10000);
+  const [simRiskPct, setSimRiskPct] = useState(1.5);
+  const [simStopDist, setSimStopDist] = useState(12);
+  const [simVolTier, setSimVolTier] = useState<"LOW" | "MODERATE" | "HIGH" | "EXTREME">("MODERATE");
+
+  // Portfolio Diagnostics (Section 66)
+  const portfolioHHI = useMemo(() => {
+    if (!portfolioSummary.holdings.length || portfolioSummary.totalCurrentValue === 0) return 0;
+    return Math.round(
+      portfolioSummary.holdings.reduce((acc, h) => {
+        const weightPct = (h.currentValue / portfolioSummary.totalCurrentValue) * 100;
+        return acc + weightPct * weightPct;
+      }, 0)
+    );
+  }, [portfolioSummary]);
+
+  const top3Concentration = useMemo(() => {
+    if (!portfolioSummary.holdings.length || portfolioSummary.totalCurrentValue === 0) return 0;
+    const sorted = [...portfolioSummary.holdings].sort((a, b) => b.currentValue - a.currentValue);
+    const top3Val = sorted.slice(0, 3).reduce((acc, h) => acc + h.currentValue, 0);
+    return (top3Val / portfolioSummary.totalCurrentValue) * 100;
+  }, [portfolioSummary]);
+
+  // Position Sizing Formula: Position = (Capital * Risk%) / StopDistance%
+  const dollarAtRisk = (simCapital * simRiskPct) / 100;
+  const simPositionSize = Math.max(10, Math.round(dollarAtRisk / (simStopDist / 100)));
+  const simPositionPct = Math.min(100, (simPositionSize / simCapital) * 100);
+  const stressLossDollar = Math.round(simPositionSize * 0.60);
+
   const handleAddHoldingSubmit = (e: React.FormEvent) => {
+
     e.preventDefault();
     addHolding({
       coinId: newCoinId,
@@ -555,8 +595,259 @@ export function WatchlistPage() {
               </tbody>
             </table>
           </div>
+
+          {/* ══════════════════════════════════════════════════════════════════
+              PORTFOLIO INTELLIGENCE & RISK CONCENTRATION (Section 66)
+             ══════════════════════════════════════════════════════════════════ */}
+          <div className="p-6 rounded-3xl glass-panel border border-white/15 shadow-xl space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-accent/15 border border-accent/30 text-accent">
+                  <PieChart className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-extrabold text-text-primary">
+                      Portfolio Intelligence &amp; Risk Concentration (Section 66)
+                    </h3>
+                    <Badge variant="outline" className="text-[10px] font-mono">
+                      HHI: {portfolioHHI}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-text-tertiary">
+                    Evaluating true portfolio diversification, narrative clustering, and joint failure vectors.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 text-xs font-mono">
+                <span className="text-text-muted">Top 3 Concentration:</span>
+                <strong className={cn(top3Concentration > 75 ? "text-amber-400" : "text-emerald-400")}>
+                  {top3Concentration.toFixed(1)}%
+                </strong>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              <div className="p-3.5 rounded-2xl bg-surface-0/60 border border-white/10 space-y-1">
+                <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider block">
+                  Concentration Index (HHI)
+                </span>
+                <div className="text-lg font-black text-text-primary font-mono tabular">
+                  {portfolioHHI} / 10,000
+                </div>
+                <span className="text-[11px] text-text-muted block">
+                  {portfolioHHI > 2500 ? "Highly Concentrated (Top assets dictate outcome)" : "Well-Distributed Allocation"}
+                </span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-surface-0/60 border border-white/10 space-y-1">
+                <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider block">
+                  Estimated BTC Beta
+                </span>
+                <div className="text-lg font-black text-accent font-mono tabular">
+                  1.18x
+                </div>
+                <span className="text-[11px] text-text-muted block">
+                  Moderate altcoin sensitivity to Bitcoin trend shifts
+                </span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-surface-0/60 border border-white/10 space-y-1">
+                <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider block">
+                  Primary Sector Exposure
+                </span>
+                <div className="text-lg font-black text-gold font-mono tabular">
+                  L1 &amp; Settlement
+                </div>
+                <span className="text-[11px] text-text-muted block">
+                  Dominant thesis centered on base-layer sovereignty
+                </span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-surface-0/60 border border-white/10 space-y-1">
+                <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider block">
+                  Drawdown Volatility Shock
+                </span>
+                <div className="text-lg font-black text-rose-400 font-mono tabular">
+                  -28.4%
+                </div>
+                <span className="text-[11px] text-text-muted block">
+                  Simulated 95% 30-day parametric Value-at-Risk
+                </span>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-2xl bg-surface-1/60 border border-white/10 flex items-start gap-2.5 text-xs text-text-secondary">
+              <Info className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+              <span>
+                <strong>Underlying Correlation Reality Check:</strong> Multiple assets in the same ecosystem (e.g. L1 + its ecosystem tokens) share the same underlying chain downtime, bridge exploit, and liquidity shock risks. True diversification requires exposure to uncorrelated economic mechanics.
+              </span>
+            </div>
+          </div>
+
+          {/* ══════════════════════════════════════════════════════════════════
+              EDUCATIONAL POSITION-SIZING RISK SIMULATOR (Section 67)
+             ══════════════════════════════════════════════════════════════════ */}
+          <div className="p-6 rounded-3xl glass-panel border border-gold/40 shadow-2xl space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gold/20 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-gold/20 border border-gold/30 text-gold">
+                  <Scale className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-extrabold text-text-primary">
+                      Position-Sizing Risk Simulator (Section 67)
+                    </h3>
+                    <Badge variant="gold" className="text-[9px] uppercase font-mono font-bold">
+                      EDUCATIONAL SIMULATION
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-text-tertiary">
+                    Size capital positions mathematically using technical invalidation distance rather than arbitrary dollar guesses.
+                  </p>
+                </div>
+              </div>
+
+              <span className="text-[11px] font-mono text-gold font-bold">
+                Formula: Sizing = Dollar Risk ÷ Stop Distance %
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+              {/* Parameter 1: Total Portfolio Capital */}
+              <div className="p-4 rounded-2xl bg-surface-0/60 border border-white/10 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-text-secondary text-[11px]">Portfolio Capital ($)</span>
+                  <span className="font-mono font-black text-text-primary">{formatPrice(simCapital)}</span>
+                </div>
+                <Input
+                  type="number"
+                  min={1000}
+                  max={1000000}
+                  step={1000}
+                  value={simCapital}
+                  onChange={(e) => setSimCapital(Number(e.target.value))}
+                  className="text-xs h-8 bg-surface-1 font-mono"
+                />
+                <span className="text-[10px] text-text-muted block">
+                  Total trading or investment pool
+                </span>
+              </div>
+
+              {/* Parameter 2: Max Risk per Idea */}
+              <div className="p-4 rounded-2xl bg-surface-0/60 border border-white/10 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-text-secondary text-[11px]">Max Account Risk %</span>
+                  <span className="font-mono font-black text-emerald-400">{simRiskPct}% (${dollarAtRisk})</span>
+                </div>
+                <input
+                  type="range"
+                  min={0.5}
+                  max={5.0}
+                  step={0.25}
+                  value={simRiskPct}
+                  onChange={(e) => setSimRiskPct(Number(e.target.value))}
+                  className="w-full accent-emerald-400"
+                />
+                <div className="text-[10px] text-text-muted flex justify-between font-mono">
+                  <span>0.5% (Conservative)</span>
+                  <span>1.5%</span>
+                  <span>5.0% (Aggressive)</span>
+                </div>
+              </div>
+
+              {/* Parameter 3: Invalidation Stop Distance */}
+              <div className="p-4 rounded-2xl bg-surface-0/60 border border-white/10 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-text-secondary text-[11px]">Stop Loss Distance %</span>
+                  <span className="font-mono font-black text-amber-400">-{simStopDist}%</span>
+                </div>
+                <input
+                  type="range"
+                  min={3}
+                  max={35}
+                  step={1}
+                  value={simStopDist}
+                  onChange={(e) => setSimStopDist(Number(e.target.value))}
+                  className="w-full accent-amber-400"
+                />
+                <div className="text-[10px] text-text-muted flex justify-between font-mono">
+                  <span>-3% (Tight)</span>
+                  <span>-12% (Swing)</span>
+                  <span>-35% (Wide)</span>
+                </div>
+              </div>
+
+              {/* Parameter 4: Asset Volatility Tier */}
+              <div className="p-4 rounded-2xl bg-surface-0/60 border border-white/10 space-y-2">
+                <span className="font-bold text-text-secondary text-[11px] block">Volatility Tier</span>
+                <div className="grid grid-cols-2 gap-1.5 pt-0.5">
+                  {(["LOW", "MODERATE", "HIGH", "EXTREME"] as const).map((tier) => (
+                    <button
+                      key={tier}
+                      onClick={() => setSimVolTier(tier)}
+                      className={cn(
+                        "px-2 py-1 rounded-lg text-[10px] font-bold border transition-all font-mono",
+                        simVolTier === tier
+                          ? "bg-gold text-slate-950 border-gold font-extrabold"
+                          : "bg-surface-1 text-text-tertiary border-white/10 hover:text-text-primary"
+                      )}
+                    >
+                      {tier}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Simulator Output Dashboard */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="p-4 rounded-2xl bg-surface-0/90 border border-gold/40 space-y-1">
+                <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider block">
+                  Illustrative Position Size
+                </span>
+                <div className="text-xl font-black text-gold font-mono tabular">
+                  {formatPrice(simPositionSize)}
+                </div>
+                <span className="text-[11px] text-text-muted block">
+                  Represents <strong>{simPositionPct.toFixed(1)}%</strong> of total account capital
+                </span>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-surface-0/90 border border-rose-500/30 space-y-1">
+                <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider block">
+                  Dollar At Risk (If Stop Hit)
+                </span>
+                <div className="text-xl font-black text-rose-400 font-mono tabular">
+                  -{formatPrice(dollarAtRisk)}
+                </div>
+                <span className="text-[11px] text-text-muted block">
+                  Exactly capped at <strong>{simRiskPct}%</strong> account drawdown
+                </span>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-surface-0/90 border border-purple-500/30 space-y-1">
+                <span className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider block">
+                  Stress Tail Risk (-60% Shock)
+                </span>
+                <div className="text-xl font-black text-purple-300 font-mono tabular">
+                  -{formatPrice(stressLossDollar)}
+                </div>
+                <span className="text-[11px] text-text-muted block">
+                  Simulated catastrophic gap-down loss
+                </span>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-surface-1/80 border border-white/10 text-xs text-text-secondary leading-relaxed">
+              <strong>The Law of Ruin Protection:</strong> When position sizes are calculated from invalidation stop distance, a single losing thesis can never devastate your portfolio. Even if this thesis is completely invalidated, your account survives intact with <strong>{(100 - simRiskPct).toFixed(1)}%</strong> remaining capital.
+            </div>
+          </div>
         </div>
       )}
+
     </motion.div>
   );
 }

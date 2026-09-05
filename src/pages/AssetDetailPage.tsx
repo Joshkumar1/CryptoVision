@@ -3,8 +3,11 @@ import { useParams, Link } from "react-router-dom";
 import { useAppStore } from "@/stores/appStore";
 import { motion } from "framer-motion";
 import { useCoinDetail, useCoinChart } from "@/hooks/useMarketData";
+import { useFinancialIntelligence } from "@/hooks/useIntelligence";
 import { TechnicalSection } from "@/components/asset/TechnicalSection";
 import { IntelligenceSection } from "@/components/asset/IntelligenceSection";
+import { ResearchSnapshotCard } from "@/components/asset/ResearchSnapshotCard";
+import { FinancialIntelligenceSection } from "@/components/asset/FinancialIntelligenceSection";
 import { LoadingState } from "@/components/shared/LoadingState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Metric } from "@/components/shared/Metric";
@@ -16,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatPrice, formatMarketCap, formatPercentage, cn } from "@/lib/utils";
 import { ArrowLeft, Star, Globe, Code, LineChart as ChartIcon, Sparkles } from "lucide-react";
+
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
@@ -120,6 +124,7 @@ export function AssetDetailPage() {
   const [days, setDays] = useState("7");
   const { data: coin, isLoading, error, refetch } = useCoinDetail(coinId || "");
   const { data: chartData, isLoading: chartLoading } = useCoinChart(coinId || "", days);
+  const { data: financial } = useFinancialIntelligence(coinId || "");
 
   if (isLoading) return <LoadingState message="Fetching deep asset intelligence..." />;
   if (error || !coin) {
@@ -151,12 +156,12 @@ export function AssetDetailPage() {
       </Link>
 
       {/* ── Asset Header Hero ── */}
-      <div className="flex items-start justify-between flex-wrap gap-4 p-6 rounded-2xl bg-surface-1 border border-border/80 card-highlight">
+      <div className="flex items-start justify-between flex-wrap gap-4 p-6 rounded-3xl glass-panel border border-white/12 card-highlight shadow-2xl border-t-white/20">
         <div className="flex items-center gap-4">
           <img
             src={coin.image.large}
             alt={coin.name}
-            className="h-16 w-16 rounded-full ring-2 ring-border/80 shadow-md flex-shrink-0"
+            className="h-16 w-16 rounded-2xl ring-2 ring-gold/40 shadow-xl flex-shrink-0"
           />
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
@@ -171,7 +176,7 @@ export function AssetDetailPage() {
               </Badge>
             </div>
             <div className="flex items-baseline gap-3 mt-1.5">
-              <span className="text-3xl sm:text-4xl font-extrabold text-text-primary tabular">
+              <span className="text-3xl sm:text-4xl font-black text-text-primary tabular">
                 {formatPrice(price)}
               </span>
               <ChangeIndicator value={md.price_change_percentage_24h} />
@@ -191,13 +196,17 @@ export function AssetDetailPage() {
         </div>
       </div>
 
+      {/* ── 60-Second Analyst Snapshot ── */}
+      {financial && <ResearchSnapshotCard financial={financial} />}
+
       {/* ── Price Chart Section ── */}
       <Card className="card-highlight">
-        <CardHeader className="flex-row items-center justify-between pb-3 border-b border-border/60">
+        <CardHeader className="flex-row items-center justify-between pb-3 border-b border-white/10">
           <CardTitle className="flex items-center gap-2 text-base font-bold">
             <ChartIcon className="h-4 w-4 text-accent" /> Price Trajectory
           </CardTitle>
-          <div className="flex gap-1 bg-surface-0/60 p-1 rounded-xl border border-border/60">
+          <div className="flex gap-1 glass-pill p-1 rounded-xl">
+
             {timeframes.map((tf) => (
               <button
                 key={tf.value}
@@ -289,6 +298,9 @@ export function AssetDetailPage() {
 
       {/* ── Multi-Signal Intelligence Analysis Section ── */}
       <IntelligenceSection coinId={coinId || ""} />
+
+      {/* ── Professional Crypto Finance Intelligence Expansion ── */}
+      {financial && <FinancialIntelligenceSection financial={financial} />}
 
       {/* ── Developer Activity ── */}
       {coin.developer_data && coin.developer_data.commit_count_4_weeks > 0 && (

@@ -5,6 +5,7 @@ import { computeIntelligenceScore } from "../services/intelligence.js";
 import { generateRealityCheck } from "../services/realityCheck.js";
 import { detectRedFlags } from "../services/redFlags.js";
 import { getTVL } from "../services/defiLlama.js";
+import { computeFinancialIntelligence } from "../services/financialIntelligence.js";
 import NodeCache from "node-cache";
 
 const router = Router();
@@ -115,7 +116,7 @@ router.get("/:coinId/reality-check", async (req, res) => {
 router.get("/:coinId/red-flags", async (req, res) => {
   try {
     const { coinId } = req.params;
-    const cacheKey = `rf:${coinId}`;
+    const cacheKey = `flags:${coinId}`;
     const cached = cache.get(cacheKey);
     if (cached) return res.json({ success: true, data: cached });
 
@@ -128,6 +129,48 @@ router.get("/:coinId/red-flags", async (req, res) => {
   } catch (err) {
     console.error("Red flags error:", err);
     res.status(500).json({ success: false, message: "Failed to detect red flags" });
+  }
+});
+
+// GET /api/intelligence/:coinId/financial
+router.get("/:coinId/financial", async (req, res) => {
+  try {
+    const { coinId } = req.params;
+    const cacheKey = `financial:${coinId}`;
+    const cached = cache.get(cacheKey);
+    if (cached) return res.json({ success: true, data: cached });
+
+    const assembled = await assembleScoringInput(coinId);
+    if (!assembled) return res.status(404).json({ success: false, message: "Coin not found" });
+
+    const score = computeIntelligenceScore(assembled.scoringInput);
+    const financial = computeFinancialIntelligence({
+      coinId,
+      name: assembled.coinData.name,
+      marketCap: assembled.scoringInput.marketCap,
+      fdv: assembled.scoringInput.fdv,
+      volume24h: assembled.scoringInput.volume24h,
+      priceChange24h: assembled.scoringInput.priceChange24h,
+      priceChange7d: assembled.scoringInput.priceChange7d,
+      priceChange30d: assembled.scoringInput.priceChange30d,
+      circulatingSupply: assembled.scoringInput.circulatingSupply,
+      totalSupply: assembled.scoringInput.totalSupply,
+      maxSupply: assembled.scoringInput.maxSupply,
+      rsi: assembled.scoringInput.rsi,
+      tvl: assembled.scoringInput.tvl,
+      commitCount4Weeks: assembled.scoringInput.commitCount4Weeks,
+      stars: assembled.scoringInput.stars,
+      forks: assembled.scoringInput.forks,
+      overallIntelligenceScore: score.overall,
+      riskScore: score.risk,
+      evidenceQuality: score.evidenceQuality,
+    });
+
+    cache.set(cacheKey, financial);
+    res.json({ success: true, data: financial });
+  } catch (err) {
+    console.error("Financial intelligence error:", err);
+    res.status(500).json({ success: false, message: "Failed to compute financial intelligence" });
   }
 });
 
@@ -148,7 +191,29 @@ router.get("/:coinId", async (req, res) => {
       detectRedFlags(assembled.scoringInput),
     ]);
 
-    const bundle = { score, realityCheck, redFlags, coinId };
+    const financial = computeFinancialIntelligence({
+      coinId,
+      name: assembled.coinData.name,
+      marketCap: assembled.scoringInput.marketCap,
+      fdv: assembled.scoringInput.fdv,
+      volume24h: assembled.scoringInput.volume24h,
+      priceChange24h: assembled.scoringInput.priceChange24h,
+      priceChange7d: assembled.scoringInput.priceChange7d,
+      priceChange30d: assembled.scoringInput.priceChange30d,
+      circulatingSupply: assembled.scoringInput.circulatingSupply,
+      totalSupply: assembled.scoringInput.totalSupply,
+      maxSupply: assembled.scoringInput.maxSupply,
+      rsi: assembled.scoringInput.rsi,
+      tvl: assembled.scoringInput.tvl,
+      commitCount4Weeks: assembled.scoringInput.commitCount4Weeks,
+      stars: assembled.scoringInput.stars,
+      forks: assembled.scoringInput.forks,
+      overallIntelligenceScore: score.overall,
+      riskScore: score.risk,
+      evidenceQuality: score.evidenceQuality,
+    });
+
+    const bundle = { score, realityCheck, redFlags, financial, coinId };
     cache.set(cacheKey, bundle);
     res.json({ success: true, data: bundle });
   } catch (err) {

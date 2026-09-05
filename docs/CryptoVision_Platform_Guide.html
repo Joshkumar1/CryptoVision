@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoVision — Institutional Platform Architecture & Executive User Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+    @page {
+      size: A4 portrait;
+      margin: 12mm 14mm 14mm 14mm;
+      @bottom-right {
+        content: "Page " counter(page) " of " counter(pages);
+        font-family: 'Inter', sans-serif;
+        font-size: 7.5pt;
+        color: #64748b;
+        font-weight: 500;
+      }
+      @bottom-left {
+        content: "CryptoVision Platform Architecture & Executive Due Diligence Dossier";
+        font-family: 'Inter', sans-serif;
+        font-size: 7.5pt;
+        color: #64748b;
+        font-weight: 500;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1e293b;
+      background-color: #ffffff;
+      line-height: 1.45;
+      font-size: 8.8pt;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .no-break {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* ── COVER PAGE ── */
+    .cover-container {
+      min-height: 260mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px 8px 10px 8px;
+    }
+
+    .cover-top {
+      border-bottom: 3px solid #f5c542;
+      padding-bottom: 22px;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #120924;
+      color: #f5c542;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 7.5pt;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+    }
+
+    .cover-title {
+      font-size: 26pt;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.15;
+      letter-spacing: -0.6px;
+      margin-bottom: 12px;
+    }
+
+    .cover-title span {
+      color: #7c3aed;
+      background: linear-gradient(135deg, #7c3aed 0%, #f5c542 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cover-subtitle {
+      font-size: 11.5pt;
+      color: #475569;
+      font-weight: 400;
+      max-width: 620px;
+      line-height: 1.45;
+    }
+
+    .cover-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 28px 0;
+      padding: 16px 18px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-label {
+      font-size: 7pt;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #64748b;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .meta-value {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .cover-pillars {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .pillar-card {
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .pillar-card h4 {
+      font-size: 9.2pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pillar-card p {
+      font-size: 8pt;
+      color: #64748b;
+      line-height: 1.35;
+    }
+
+    .cover-footer {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 7.5pt;
+      color: #94a3b8;
+    }
+
+    /* ── HEADINGS ── */
+    h2.section-header {
+      font-size: 13.5pt;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h2.section-header .sec-num {
+      background: #7c3aed;
+      color: #ffffff;
+      font-size: 8.5pt;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    h3.sub-header {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+
+    p {
+      margin-bottom: 6px;
+      color: #334155;
+    }
+
+    /* ── GRIDS & MODULE CARDS ── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin: 6px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 6px 0;
+    }
+
+    .feature-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 7px;
+      padding: 9px 11px;
+      margin-bottom: 7px;
+      break-inside: avoid;
+    }
+
+    .feature-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .feature-title {
+      font-size: 8.8pt;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .feature-route {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6.8pt;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    .feature-desc {
+      font-size: 8pt;
+      color: #475569;
+      line-height: 1.35;
+    }
+
+    .feature-bullets {
+      margin-top: 4px;
+      padding-left: 14px;
+      font-size: 7.7pt;
+      color: #334155;
+    }
+
+    .feature-bullets li {
+      margin-bottom: 2px;
+    }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-block;
+      font-size: 7pt;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-green {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .badge-yellow {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+
+    .badge-red {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .badge-blue {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+
+    .badge-purple {
+      background: #f3e8ff;
+      color: #7e22ce;
+      border: 1px solid #e9d5ff;
+    }
+
+    /* ── TABLES ── */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 10px 0;
+      font-size: 7.8pt;
+      break-inside: avoid;
+    }
+
+    table.data-table th {
+      background: #f1f5f9;
+      color: #1e293b;
+      font-weight: 700;
+      text-align: left;
+      padding: 6px 8px;
+      border-bottom: 2px solid #cbd5e1;
+      border-top: 1px solid #e2e8f0;
+      text-transform: uppercase;
+      font-size: 6.8pt;
+      letter-spacing: 0.5px;
+    }
+
+    table.data-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+      vertical-align: top;
+      line-height: 1.35;
+    }
+
+    table.data-table tr:nth-child(even) td {
+      background: #fcfcfd;
+    }
+
+    /* ── CALLOUT BOXES ── */
+    .callout {
+      border-left: 3.5px solid #7c3aed;
+      background: #fbf8ff;
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      margin: 8px 0;
+      font-size: 8pt;
+      break-inside: avoid;
+    }
+
+    .callout-gold {
+      border-left-color: #f5c542;
+      background: #fffdf5;
+    }
+
+    .callout-red {
+      border-left-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .callout-green {
+      border-left-color: #10b981;
+      background: #f0fdf4;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      font-size: 8.5pt;
+      margin-bottom: 2px;
+      color: #0f172a;
+    }
+
+    /* ── PERSONA CARDS ── */
+    .persona-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 7px;
+      padding: 10px 12px;
+      background: #ffffff;
+      break-inside: avoid;
+    }
+
+    .persona-card.analyst {
+      border-top: 3px solid #7c3aed;
+    }
+    .persona-card.explore {
+      border-top: 3px solid #10b981;
+    }
+
+    .persona-name {
+      font-size: 9.2pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 1px;
+    }
+
+    .persona-target {
+      font-size: 6.8pt;
+      color: #64748b;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── LISTS ── */
+    .check-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0;
+    }
+
+    .check-list li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 4px;
+      font-size: 7.8pt;
+      color: #334155;
+      line-height: 1.35;
+    }
+
+    .check-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #10b981;
+      font-weight: 800;
+      font-size: 8.5pt;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- PAGE 1: COVER PAGE                                          -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="cover-container">
+    <div class="cover-top">
+      <div class="brand-badge">⚡ CRYPTOVISION ARCHITECTURE &amp; VALUE SPECIFICATION</div>
+      <h1 class="cover-title">CryptoVision: <span>Institutional Intelligence</span> Platform Guide</h1>
+      <p class="cover-subtitle">
+        A definitive handbook detailing platform elements, quantitative due diligence engines, multi-persona utility, and tangible value for both institutional professionals and everyday retail investors.
+      </p>
+    </div>
+
+    <div class="cover-meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">System Classification</span>
+        <span class="meta-value">Quantitative Due-Diligence Terminal</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Core Engine Version</span>
+        <span class="meta-value">CryptoVision v2.5 Suite</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Analytical Standard</span>
+        <span class="meta-value">Deterministic On-Chain Grounding</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Supported Personas</span>
+        <span class="meta-value">Explore, Research, Analyst</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Data Provenance</span>
+        <span class="meta-value">CoinGecko, DeFiLlama, GitHub, RPCs</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Document Purpose</span>
+        <span class="meta-value">Comprehensive Feature &amp; Utility Audit</span>
+      </div>
+    </div>
+
+    <div class="cover-pillars">
+      <div class="pillar-card">
+        <h4>🛡️ Anti-Hype Reality Checks</h4>
+        <p>Cross-examines promotional whitepaper claims directly against empirical blockchain telemetry, active addresses, commit velocity, and TVL stability.</p>
+      </div>
+      <div class="pillar-card">
+        <h4>🔬 12-Step Due Diligence</h4>
+        <p>End-to-end structured investigation framework from consensus architecture to token vesting cliffs, producing exportable IC research memorandums.</p>
+      </div>
+      <div class="pillar-card">
+        <h4>📈 Algorithmic Backtest Lab</h4>
+        <p>Simulates DCA, trend following, RSI mean reversion, and channel breakouts with Sharpe ratios, profit factors, win rates, and maximum drawdowns.</p>
+      </div>
+      <div class="pillar-card">
+        <h4>⚠️ Structural Red Flag Radar</h4>
+        <p>Scans continuously for fatal tokenomic failure vectors: low float/high FDV dilution traps, whale concentration, and dormant developer repositories.</p>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <span>CryptoVision Executive Platform Documentation</span>
+      <span>Confidential &amp; Proprietary &bull; 2026</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- PAGE 2: EXECUTIVE SUMMARY & MODULE INVENTORY PART 1         -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="page-break"></div>
+
+  <h2 class="section-header">
+    <span class="sec-num">01</span> Executive Overview: What is CryptoVision?
+  </h2>
+  
+  <p>
+    <strong>CryptoVision</strong> is an institutional-grade crypto intelligence workstation and quantitative research terminal designed to solve the single largest crisis in digital asset investing: <em>information asymmetry, speculative hype, and predatory tokenomics</em>.
+  </p>
+  <p>
+    Over 90% of cryptocurrency projects launched in the market fail or result in severe capital impairment for investors. The primary cause is not market volatility, but deliberate obfuscation: low circulating supplies disguised as cheap tokens (the "High FDV" trap), misleading partnership claims unsupported by on-chain activity, dormant developer repositories, and opaque vesting cliffs where insider tokens are dumped on retail participants.
+  </p>
+  <p>
+    CryptoVision serves as the <strong>truth layer for digital assets</strong>. By integrating live telemetry across market feeds (CoinGecko), protocol liquidity and TVL (DeFiLlama), developer codebase velocity (GitHub REST APIs), and verified on-chain smart contracts, CryptoVision programmatically evaluates every asset through a deterministic mathematical lens. The integrated AI engine does not speculate or hallucinate metrics; it acts strictly as an analytical copilot that audits, cross-examines, and synthesizes verifiable evidence.
+  </p>
+
+  <div class="callout callout-gold">
+    <div class="callout-title">The CryptoVision Grounding Mandate</div>
+    "All Project Reality Scores, Red Flags, and Opportunity rankings are computed mathematically from raw telemetry data. The AI language layer only summarizes verified structured facts—it never hallucinates metrics or promises speculative price targets."
+  </div>
+
+  <h2 class="section-header" style="margin-top: 10px;">
+    <span class="sec-num">02</span> Website Elements &amp; Module Inventory (Part 1)
+  </h2>
+  <p>
+    CryptoVision is architected into 14 distinct specialized workstations, modules, and diagnostic utilities:
+  </p>
+
+  <div class="grid-2">
+    <!-- Feature 1 -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">📊 Market Overview &amp; Regime Engine</span>
+        <span class="feature-route">/overview</span>
+      </div>
+      <p class="feature-desc">Macro command center providing systemic health diagnostics:</p>
+      <ul class="feature-bullets">
+        <li><strong>Market Regime Engine:</strong> Classifies state as <em>BULLISH</em>, <em>BEARISH</em>, <em>NEUTRAL</em>, or <em>HIGH VOLATILITY</em> with confidence percentage.</li>
+        <li><strong>Macro Telemetry Bar:</strong> Total Crypto Market Cap, 24h Volume, BTC &amp; ETH Dominance.</li>
+        <li><strong>Trending Asset Discovery:</strong> High-velocity assets with 7-day sparkline micro-charts.</li>
+        <li><strong>Persona Switcher:</strong> Instant toggle across Explore, Research, and Analyst views.</li>
+      </ul>
+    </div>
+
+    <!-- Feature 2 -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">🗺️ Projects &amp; Visual Market Heatmap</span>
+        <span class="feature-route">/projects &amp; /market</span>
+      </div>
+      <p class="feature-desc">Visual intelligence station representing market structure:</p>
+      <ul class="feature-bullets">
+        <li><strong>Market Heatmap:</strong> Visual tile tree-map where box size reflects market cap and color reflects 24h gain/loss.</li>
+        <li><strong>Tabular Deep Explorer:</strong> Sortable by Market Cap Rank, FDV, Price Change (1h, 24h, 7d), Volume, and Sparklines.</li>
+        <li><strong>Instant Filtering &amp; Search:</strong> Sub-second query filtering by ticker symbol or project name.</li>
+      </ul>
+    </div>
+
+    <!-- Feature 3 -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">🛰️ Opportunity &amp; Discover Radar</span>
+        <span class="feature-route">/discover</span>
+      </div>
+      <p class="feature-desc">Pre-hype scanner identifying emerging assets before mainstream retail discovery:</p>
+      <ul class="feature-bullets">
+        <li><strong>Early Signals:</strong> Spikes in GitHub commits, volume accumulation, and relative strength.</li>
+        <li><strong>Opportunity Scoring:</strong> Proprietary Opportunity Scores (0–100) vs. structural risk.</li>
+        <li><strong>Risk Tier Filtration:</strong> Filter projects by Moderate, High, or Very High risk thresholds.</li>
+      </ul>
+    </div>
+
+    <!-- Feature 4 -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">📰 News &amp; Catalyst Intelligence</span>
+        <span class="feature-route">/news</span>
+      </div>
+      <p class="feature-desc">Verifiable news intelligence stream cross-examining headlines against blockchain facts:</p>
+      <ul class="feature-bullets">
+        <li><strong>Verification Badges:</strong> Labels news events as <span class="badge badge-green">🟢 On-Chain Supported</span>, <span class="badge badge-yellow">🟡 Mixed Evidence</span>, <span class="badge badge-red">🔴 Contradicted</span>, or <span class="badge badge-blue">⚪ Unverified</span>.</li>
+        <li><strong>Thematic Categories:</strong> Regulatory, Dev Releases, Token Unlocks, Exploits, Flows.</li>
+        <li><strong>Impacted Asset Mapping:</strong> Displays affected token tickers and underlying telemetry.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- PAGE 3: MODULE INVENTORY PART 2 (ANALYTICAL DEEP-DIVE)     -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="page-break"></div>
+
+  <h2 class="section-header">
+    <span class="sec-num">02</span> Website Elements &amp; Module Inventory (Part 2)
+  </h2>
+
+  <div class="grid-2">
+    <!-- Feature 5 -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">🌊 Narratives &amp; Sector Trends</span>
+        <span class="feature-route">/narratives</span>
+      </div>
+      <p class="feature-desc">Tracks macro capital rotation into emerging crypto sub-sectors:</p>
+      <ul class="feature-bullets">
+        <li><strong>Thematic Clusters:</strong> AI Compute, Real World Assets (RWA), Layer 2s, DePIN, Restaking.</li>
+        <li><strong>Narrative Momentum Meters:</strong> Quantifies 7d and 30d capital inflows and market cap expansion.</li>
+        <li><strong>Constituent Baskets:</strong> Lists leading and lagging protocols driving each macro narrative.</li>
+      </ul>
+    </div>
+
+    <!-- Feature 6 -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">🔍 Asset Intelligence Station</span>
+        <span class="feature-route">/asset/:coinId</span>
+      </div>
+      <p class="feature-desc">The flagship deep-dive workstation for individual digital assets:</p>
+      <ul class="feature-bullets">
+        <li><strong>Recharts Interactive Chart:</strong> Dynamic price series spanning 1D, 7D, 30D, 90D, and 1Y.</li>
+        <li><strong>Technical Indicators Suite:</strong> 14-period RSI, 20 &amp; 50 SMA crosses, MACD, Bollinger Bands.</li>
+        <li><strong>Claims vs. Reality Matrix:</strong> Audits marketing claims against on-chain evidence with verdicts.</li>
+        <li><strong>7D Project DNA:</strong> Tech, Adoption, Dev Velocity, Ecosystem, Tokenomics, Liquidity, Governance.</li>
+        <li><strong>Contrarian Thesis:</strong> Dedicated Bull Case, Bear Case, and Critical Unknowns.</li>
+        <li><strong>Assumption Sensitivity Lab:</strong> Interactive sliders simulating supply unlock or TVL shocks.</li>
+      </ul>
+    </div>
+
+    <!-- Feature 7 -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">⚠️ Risk Radar &amp; Failure Scanner</span>
+        <span class="feature-route">/risk</span>
+      </div>
+      <p class="feature-desc">Defensive surveillance center flagging structural vulnerabilities:</p>
+      <ul class="feature-bullets">
+        <li><strong>High FDV Traps:</strong> Flags assets where FDV exceeds market cap by &gt;4x, warning of dilution.</li>
+        <li><strong>Whale Concentration:</strong> Detects supply clustering where top wallets control liquidity.</li>
+        <li><strong>Developer Dormancy:</strong> Identifies codebases with declining commits over 4–12 weeks.</li>
+        <li><strong>Liquidity Slippage:</strong> Highlights low 24h volume-to-market cap ratios prone to exit traps.</li>
+      </ul>
+    </div>
+
+    <!-- Feature 8 -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">🤖 AI Research Analyst (Lab)</span>
+        <span class="feature-route">/research-lab</span>
+      </div>
+      <p class="feature-desc">Generative institutional memorandum copilot with verifiable data grounding:</p>
+      <ul class="feature-bullets">
+        <li><strong>Prompt Presets:</strong> Bitcoin Supply Absorption, Solana Decentralization, L2 Blob Gas Dynamics.</li>
+        <li><strong>Interactive Query Terminal:</strong> Conversational copilot synthesizing technicals and reality checks.</li>
+        <li><strong>Evidence-Backed Output:</strong> Every paragraph cites underlying metrics and confidence scores.</li>
+      </ul>
+    </div>
+
+    <!-- Feature 9 -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">📈 Strategy Backtest Lab</span>
+        <span class="feature-route">/research-lab</span>
+      </div>
+      <p class="feature-desc">Quantitative backtesting suite to validate trading rules before risking capital:</p>
+      <ul class="feature-bullets">
+        <li><strong>4 Strategies:</strong> Dollar-Cost Averaging (DCA), SMA Trend Following, RSI Mean Reversion, Channel Breakouts.</li>
+        <li><strong>Performance Metrics:</strong> Total Return vs. Benchmark, Sharpe Ratio, Max Drawdown %, Win Rate %, Profit Factor.</li>
+        <li><strong>Dual Equity Curve Chart:</strong> Visualizes portfolio growth against a buy-and-hold benchmark.</li>
+        <li><strong>Trade Ledger:</strong> Chronological record of entry/exit prices, reasons, and individual PnL.</li>
+      </ul>
+    </div>
+
+    <!-- Feature 10 -->
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">📋 12-Step Due Diligence Wizard</span>
+        <span class="feature-route">/due-diligence</span>
+      </div>
+      <p class="feature-desc">Comprehensive step-by-step institutional investment committee workflow:</p>
+      <ul class="feature-bullets">
+        <li><strong>12 Steps:</strong> Overview &rarr; Tech Stack &rarr; On-Chain Adoption &rarr; Dev Health &rarr; TVL &rarr; Tokenomics &rarr; Market Depth &rarr; News Audit &rarr; Red Flag Scan &rarr; Claims vs Reality &rarr; Bull/Bear &rarr; Memo Export.</li>
+        <li><strong>One-Click Memo Export:</strong> Copies a formatted markdown research memorandum to clipboard.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top: 4px;">
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">⚖️ Multi-Asset Comparison Lab</span>
+        <span class="feature-route">/compare</span>
+      </div>
+      <p class="feature-desc">Side-by-side benchmarking of up to 4 assets with normalized performance (rebased to 100) and cross-asset metric comparisons.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">🎓 Financial Modeling &amp; Academy</span>
+        <span class="feature-route">/learn</span>
+      </div>
+      <p class="feature-desc">Interactive calculators (AMM Impermanent Loss, Ruin Risk Sizing, Compounding APY) paired with plain-English real-world analogies.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">⭐ Portfolio &amp; Custom Watchlist</span>
+        <span class="feature-route">/watchlist</span>
+      </div>
+      <p class="feature-desc">Live pricing, portfolio cost-basis accounting, profit/loss calculations, custom alerts, and persistent tracking.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <span class="feature-title">🛡️ Trust Center &amp; Methodology</span>
+        <span class="feature-route">/trust</span>
+      </div>
+      <p class="feature-desc">Full transparency into scoring algorithms, multi-source provenance, anti-hallucination grounding, and analytical limits.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- PAGE 4: STAKEHOLDER BREAKDOWN & PERSONA ARCHITECTURE       -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="page-break"></div>
+
+  <h2 class="section-header">
+    <span class="sec-num">03</span> How CryptoVision is Useful: Stakeholder Breakdown
+  </h2>
+  <p>
+    CryptoVision bridges the gap between raw data and high-conviction decision making. It is engineered with a polymorphic architecture that tailors analytical depth according to user expertise:
+  </p>
+
+  <div class="grid-2">
+    <!-- Professionals Box -->
+    <div class="persona-card analyst">
+      <div class="persona-name">👔 For Institutional Professionals</div>
+      <div class="persona-target">Hedge Funds, VCs, Research Analysts, Quants &amp; Compliance</div>
+      <ul class="check-list">
+        <li><strong>Consolidated Diligence Cockpit:</strong> Replaces 5+ disconnected tools (Etherscan, DeFiLlama, GitHub, CoinGecko, TradingView) into a single verified workstation.</li>
+        <li><strong>Unbiased Contrarian Theses:</strong> Automatically generates the Bear Case and Key Unknowns, preventing internal analyst confirmation bias.</li>
+        <li><strong>Dilution &amp; Vesting Surveillance:</strong> Evaluates FDV-to-market cap ratios, unlock schedules, and supply inflation before allocating large liquidity.</li>
+        <li><strong>Algorithmic Strategy Validation:</strong> Tests execution strategies against historical candle data with full Sharpe, drawdown, and win rate reporting.</li>
+        <li><strong>Rapid IC Memo Generation:</strong> The 12-step Due Diligence wizard exports complete, formatted research memorandums in seconds.</li>
+        <li><strong>Verifiable News Auditing:</strong> Prevents institutional funds from getting trapped by fake partnership announcements or PR fluff.</li>
+      </ul>
+    </div>
+
+    <!-- Retail Users Box -->
+    <div class="persona-card explore">
+      <div class="persona-name">👤 For Everyday Users &amp; Retail Investors</div>
+      <div class="persona-target">Beginners, Casual Traders, DeFi Participants &amp; Long-Term HODLers</div>
+      <ul class="check-list">
+        <li><strong>Rug-Pull &amp; Scam Protection:</strong> The Risk Radar instantly alerts users to insider concentration and extreme dilution before they buy.</li>
+        <li><strong>Jargon-Free Financial Literacy:</strong> Plain-English explainers translate complex concepts (e.g. FDV, Impermanent Loss) into clear everyday analogies.</li>
+        <li><strong>Mathematical Risk Discipline:</strong> The Position Sizing calculator prevents traders from risking more than 1–2% of their net worth on single trades.</li>
+        <li><strong>Institutional-Grade Parity:</strong> Gives retail investors the exact same quantitative tools and telemetry previously restricted to Wall Street hedge funds.</li>
+        <li><strong>FOMO Immunity:</strong> Visual indicators show when assets are extremely overbought (RSI &gt; 70) or when claims are contradicted by data.</li>
+        <li><strong>Multi-Language &amp; Currency Support:</strong> View prices in local currencies (USD, INR, EUR, GBP, AED, JPY, SGD) and 8 regional languages.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub-header" style="margin-top: 14px;">Multi-Persona Research Experience Engine</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 16%;">Persona</th>
+        <th style="width: 25%;">Target Audience</th>
+        <th style="width: 32%;">Interface Presentation</th>
+        <th style="width: 27%;">Primary Value Delivered</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>EXPLORE</strong></td>
+        <td>Beginners &amp; Casual Investors</td>
+        <td>Visual analogies, plain-English summaries, high-level risk badges, simplified charts</td>
+        <td>Safety, jargon removal, anti-scam protection, fundamental understanding</td>
+      </tr>
+      <tr>
+        <td><strong>RESEARCH</strong></td>
+        <td>Allocators &amp; Due Diligence Analysts</td>
+        <td>Claims vs. Reality matrix, 7D Project DNA, Bull/Bear theses, 12-step diligence wizard</td>
+        <td>Structured auditing, tokenomic cliff analysis, investment committee memos</td>
+      </tr>
+      <tr>
+        <td><strong>ANALYST</strong></td>
+        <td>Quants, Fund Strategists &amp; Traders</td>
+        <td>Raw telemetry, backtesting engine, Sharpe ratios, sensitivity sliders, feature weights</td>
+        <td>Statistical rigor, quantitative backtesting, stress testing, edge discovery</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- PAGE 5: VALUE PROPOSITION, WHY CHECK IT & DELIVERABLES     -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="page-break"></div>
+
+  <h2 class="section-header">
+    <span class="sec-num">04</span> What It Helps With &amp; Why You Must Check It
+  </h2>
+
+  <div class="grid-3">
+    <div class="feature-card">
+      <div class="feature-title">🛡️ Capital Preservation</div>
+      <p class="feature-desc">
+        Crypto is an asymmetric market where losing 50% requires a 100% gain just to break even. CryptoVision acts as a shield against catastrophic drawdowns by scanning for liquidity black holes and token unlocks.
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-title">🔍 Cutting Through PR Smoke</div>
+      <p class="feature-desc">
+        Projects frequently claim millions of users or revolutionary throughput. CryptoVision verifies these claims against on-chain transactions, fee revenue, and real GitHub commits.
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-title">⚡ Asymmetric Alpha Discovery</div>
+      <p class="feature-desc">
+        Identifies projects with rising developer velocity, expanding TVL, and improving liquidity <em>before</em> they begin trending on social media or get listed on tier-1 exchanges.
+      </p>
+    </div>
+  </div>
+
+  <div class="callout callout-red">
+    <div class="callout-title">The Severe Cost of Not Checking CryptoVision</div>
+    Investors who buy tokens without auditing Fully Diluted Valuation (FDV) and vesting cliffs frequently suffer 70%–90% losses even during bull markets because insider unlock selling overwhelms organic buyer liquidity. Checking CryptoVision’s <strong>Risk Radar</strong> and <strong>Tokenomics Audit</strong> immediately exposes these structural traps before committing capital.
+  </div>
+
+  <h2 class="section-header" style="margin-top: 14px;">
+    <span class="sec-num">05</span> Tangible Value: What Do Users Get?
+  </h2>
+  <p>
+    When a user or professional utilizes CryptoVision, they walk away with concrete, actionable deliverables:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 26%;">Tangible Deliverable</th>
+        <th style="width: 42%;">Description &amp; Mechanism</th>
+        <th style="width: 32%;">Actionable Investor Benefit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Project Reality Score (0–100)</strong></td>
+        <td>Composite index synthesizing Technology, Adoption, Developer Health, Ecosystem, Tokenomics, Liquidity, and Governance.</td>
+        <td>Instant objective benchmark to compare any token against peers without personal bias.</td>
+      </tr>
+      <tr>
+        <td><strong>Red Flag Audit Report</strong></td>
+        <td>Surfaces structural flaws: Low circulating supply ratios, whale concentration, dormant codebases, and RSI exhaustion.</td>
+        <td>Avoids catastrophic rug pulls, insider dumping, and illiquid exit traps.</td>
+      </tr>
+      <tr>
+        <td><strong>Claims vs. Reality Matrix</strong></td>
+        <td>Verification of official marketing claims against hard on-chain telemetry (Supported, Mixed, or Contradicted).</td>
+        <td>Identifies dishonest management teams and hollow projects with zero real usage.</td>
+      </tr>
+      <tr>
+        <td><strong>Contrarian Investment Thesis</strong></td>
+        <td>Balanced synthesis comprising verified Bull Case triggers, Bear Case risks, and Critical Unknowns.</td>
+        <td>Prevents echo-chamber thinking; establishes clear stop-loss criteria and profit targets.</td>
+      </tr>
+      <tr>
+        <td><strong>Strategy Backtest Report</strong></td>
+        <td>Full quantitative audit of DCA, SMA, RSI, or Breakout strategies with equity curves, Sharpe ratio, drawdown, and win rate.</td>
+        <td>Validates if an entry/exit system is mathematically profitable before risking real funds.</td>
+      </tr>
+      <tr>
+        <td><strong>Exportable Research Memo</strong></td>
+        <td>Standardized Markdown due diligence memorandum generated with one click from the 12-step wizard.</td>
+        <td>Ready for presentation to Investment Committees, fund LPs, or personal records.</td>
+      </tr>
+      <tr>
+        <td><strong>Interactive Simulators</strong></td>
+        <td>Calculators for AMM Impermanent Loss, Position Sizing (Risk of Ruin), and Staking Compounding Yield.</td>
+        <td>Precise position sizing and accurate expected APY return modeling after fees.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- PAGE 6: WORKFLOW & SUMMARY CONCLUSION                       -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="page-break"></div>
+
+  <h2 class="section-header">
+    <span class="sec-num">06</span> Practical Workflow: How to Use CryptoVision
+  </h2>
+  
+  <p>To extract maximum value from CryptoVision, follow this recommended 4-stage operational workflow:</p>
+
+  <div class="grid-2">
+    <div class="feature-card">
+      <div class="feature-title">Phase 1: Macro &amp; Sector Triage</div>
+      <p class="feature-desc">
+        1. Open <code>/overview</code> to assess the current <strong>Market Regime</strong> (Bullish, Bearish, Volatile).<br>
+        2. Visit <code>/narratives</code> to identify which crypto sub-sectors (AI, RWA, L2s) have positive momentum.<br>
+        3. Check <code>/news</code> to verify if current market catalysts are on-chain supported or false hype.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-title">Phase 2: Asset Discovery &amp; Screening</div>
+      <p class="feature-desc">
+        1. Access <code>/discover</code> to scan for emerging tokens with surging GitHub commits and volume.<br>
+        2. Filter out projects with <em>Very High</em> risk ratings.<br>
+        3. Use <code>/projects</code> heatmap to gauge relative sector market cap weighting.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-title">Phase 3: Deep Due Diligence</div>
+      <p class="feature-desc">
+        1. Navigate to <code>/asset/:id</code> to inspect technicals, 7D Project DNA, and reality checks.<br>
+        2. Run <code>/due-diligence</code> through all 12 steps to systematically verify fundamentals and tokenomics.<br>
+        3. Audit the <strong>Risk Radar</strong> (<code>/risk</code>) to confirm no critical unlock cliffs or whale traps exist.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-title">Phase 4: Execution &amp; Monitoring</div>
+      <p class="feature-desc">
+        1. Use <code>/learn</code> position-sizing calculator to establish exact trade size based on 1% risk.<br>
+        2. Backtest your trading strategy in <code>/research-lab</code> to check historical drawdown and Sharpe.<br>
+        3. Add the asset to your <code>/watchlist</code> to track live PnL and alert triggers.
+      </p>
+    </div>
+  </div>
+
+  <div class="callout callout-green" style="margin-top: 14px;">
+    <div class="callout-title">Summary Verdict: The Professional Standard for Crypto</div>
+    CryptoVision fundamentally transforms how market participants interact with digital assets. By replacing speculative social media narratives with verifiable blockchain reality, deterministic scoring, and institutional-grade risk auditing, the platform empowers investors of all levels to protect capital, eliminate emotional bias, and uncover true asymmetric opportunities.
+  </div>
+
+  <div style="margin-top: 25px; border-top: 1px solid #e2e8f0; padding-top: 10px; display: flex; justify-content: space-between; font-size: 7.5pt; color: #94a3b8;">
+    <span>CryptoVision AI Platform Intelligence Suite</span>
+    <span>Generated: August 2026 &bull; All Rights Reserved</span>
+  </div>
+
+</body>
+</html>

@@ -87,8 +87,9 @@ function SelectionGrid<T extends { code: string; name: string; symbol?: string; 
 }
 
 export function SettingsPage() {
-  const { currency, language, setCurrency, setLanguage } = useAppStore();
+  const { currency, language, setCurrency, setLanguage, theme, setTheme } = useAppStore();
   const { data: coins } = useCoins(0, 30);
+
 
   // Quick Currency Converter State
   const [convertAmount, setConvertAmount] = useState(1);
@@ -240,45 +241,64 @@ export function SettingsPage() {
       </motion.div>
 
       {/* Theme Presets */}
-      <motion.div variants={fadeUp} className="bg-surface-1 border border-border rounded-2xl p-6 card-highlight">
-        <SectionHeader icon={Palette} title="Visual Theme" description="Color grading and contrast scheme." />
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <motion.div variants={fadeUp} className="glass-panel border border-white/12 rounded-2xl p-6 card-highlight shadow-xl">
+        <SectionHeader icon={Palette} title="Visual Theme" description="Color grading, frosted glass refraction, and contrast scheme." />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
-            { id: "dark-navy", label: "Deep Space Navy", primary: "#02071a", accent: "#4f8ef7", active: true },
-            { id: "dark-slate", label: "Obsidian Slate", primary: "#0b1220", accent: "#8b5cf6", active: false },
-            { id: "midnight", label: "Pure Midnight", primary: "#00050d", accent: "#2dd4a7", active: false },
-          ].map((theme) => (
-            <button
-              key={theme.id}
-              className={cn(
-                "relative flex flex-col gap-2.5 p-3.5 rounded-2xl border transition-all text-left",
-                theme.active
-                  ? "border-accent bg-accent/10 shadow-xs"
-                  : "border-border bg-surface-2/40 opacity-50 cursor-not-allowed"
-              )}
-              disabled={!theme.active}
-            >
-              <div
-                className="h-12 w-full rounded-xl flex items-center justify-center gap-1.5"
-                style={{ background: theme.primary, border: `1px solid ${theme.accent}50` }}
-              >
-                <div className="h-2.5 w-2.5 rounded-full" style={{ background: theme.accent }} />
-                <div className="h-1.5 w-10 rounded-full" style={{ background: theme.accent + "70" }} />
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-text-primary">{theme.label}</span>
-                {theme.active ? (
-                  <CheckCircle className="h-3.5 w-3.5 text-accent" />
-                ) : (
-                  <Badge variant="outline" className="text-[9px]">
-                    Soon
-                  </Badge>
+            {
+              id: "light",
+              label: "Light Crystal Glass",
+              description: "Frosted white porcelain glass, razor-sharp typography, and warm amber gold accents.",
+              primary: "#f4f3fa",
+              cardBg: "#ffffff",
+              accent: "#7c3aed",
+            },
+            {
+              id: "dark",
+              label: "Dark Imperial Glass",
+              description: "Deep amethyst cosmic void, luminous neon purple highlights, and radiant gold glints.",
+              primary: "#090317",
+              cardBg: "#1e0b40",
+              accent: "#c084fc",
+            },
+          ].map((themeOption) => {
+            const isSelected = theme === themeOption.id;
+            return (
+              <button
+                key={themeOption.id}
+                onClick={() => setTheme(themeOption.id as "light" | "dark")}
+                className={cn(
+                  "relative flex flex-col gap-3 p-4 rounded-2xl border transition-all text-left glass-card-hover",
+                  isSelected
+                    ? "border-gold/70 bg-gold/10 shadow-lg shadow-gold/10"
+                    : "border-border/60 bg-surface-0/60 hover:border-accent/40"
                 )}
-              </div>
-            </button>
-          ))}
+              >
+                <div
+                  className="h-16 w-full rounded-xl flex items-center justify-center gap-2 p-2 border"
+                  style={{ background: themeOption.primary, borderColor: themeOption.accent + "40" }}
+                >
+                  <div
+                    className="h-9 w-24 rounded-lg flex items-center justify-center gap-1.5 border shadow-sm"
+                    style={{ background: themeOption.cardBg, borderColor: themeOption.accent + "60" }}
+                  >
+                    <div className="h-2 w-2 rounded-full" style={{ background: themeOption.accent }} />
+                    <div className="h-1 w-10 rounded-full" style={{ background: themeOption.accent + "80" }} />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-extrabold text-text-primary block">{themeOption.label}</span>
+                    <span className="text-[11px] text-text-tertiary mt-0.5 line-clamp-1">{themeOption.description}</span>
+                  </div>
+                  {isSelected && <CheckCircle className="h-4 w-4 text-gold flex-shrink-0" />}
+                </div>
+              </button>
+            );
+          })}
         </div>
       </motion.div>
+
 
       {/* Platform Diagnostics */}
       <motion.div variants={fadeUp} className="bg-surface-1 border border-border rounded-2xl p-6 card-highlight">

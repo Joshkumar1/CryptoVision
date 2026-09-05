@@ -1,6 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { PortfolioHolding, CustomAlert, ResearchPersona, EvidenceAuditTrail } from "@/types";
+import type {
+  PortfolioHolding,
+  CustomAlert,
+  ResearchPersona,
+  EvidenceAuditTrail,
+  UserProfile,
+  UserThesis,
+  ThesisHistoryEntry,
+} from "@/types";
 
 interface AppState {
   sidebarCollapsed: boolean;
@@ -12,6 +20,16 @@ interface AppState {
   holdings: PortfolioHolding[];
   alerts: CustomAlert[];
   evidenceModalData: EvidenceAuditTrail | null;
+  theme: "light" | "dark";
+
+  // ── Authentication & User Profile ──
+  user: UserProfile | null;
+  isAuthenticated: boolean;
+  isAuthModalOpen: boolean;
+
+  // ── Living Thesis Memory ──
+  theses: Record<string, UserThesis>;
+  thesisHistory: Record<string, ThesisHistoryEntry[]>;
 
   toggleSidebar: () => void;
   setSearchQuery: (q: string) => void;
@@ -24,6 +42,14 @@ interface AppState {
   removeFromWatchlist: (coinId: string) => void;
   toggleWatchlist: (coinId: string) => void;
   isWatched: (coinId: string) => boolean;
+  toggleTheme: () => void;
+  setTheme: (theme: "light" | "dark") => void;
+
+  // Auth Actions
+  login: (profile?: Partial<UserProfile>) => void;
+  logout: () => void;
+  openAuthModal: () => void;
+  closeAuthModal: () => void;
 
   // Portfolio Actions
   addHolding: (holding: Omit<PortfolioHolding, "id">) => void;
@@ -34,7 +60,12 @@ interface AppState {
   addAlert: (alert: Omit<CustomAlert, "id" | "createdAt" | "triggered">) => void;
   removeAlert: (id: string) => void;
   dismissAlert: (id: string) => void;
+
+  // Thesis Actions
+  saveThesis: (thesis: UserThesis) => void;
+  addThesisHistoryEntry: (coinId: string, entry: ThesisHistoryEntry) => void;
 }
+
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -45,6 +76,18 @@ export const useAppStore = create<AppState>()(
       language: "en",
       persona: "RESEARCH",
       evidenceModalData: null,
+      theme: "dark",
+      user: {
+        id: "usr-quant-01",
+        name: "Alex Sterling",
+        email: "alex.sterling@vanguard-quant.io",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+        role: "Lead Portfolio Analyst",
+        tier: "INSTITUTIONAL",
+        persona: "RESEARCH",
+      },
+      isAuthenticated: true,
+      isAuthModalOpen: false,
       watchlist: ["bitcoin", "ethereum", "solana"],
       holdings: [
         {
@@ -121,6 +164,8 @@ export const useAppStore = create<AppState>()(
       },
 
       isWatched: (coinId) => get().watchlist.includes(coinId),
+      toggleTheme: () => set((s) => ({ theme: s.theme === "dark" ? "light" : "dark" })),
+      setTheme: (theme) => set({ theme }),
 
       // Portfolio Actions
       addHolding: (holding) =>
@@ -140,6 +185,94 @@ export const useAppStore = create<AppState>()(
       updateHolding: (id, updates) =>
         set((s) => ({
           holdings: s.holdings.map((h) => (h.id === id ? { ...h, ...updates } : h)),
+        })),
+
+      // Auth Actions
+      login: (customUser) => {
+        const defaultUser: UserProfile = {
+          id: `usr-${Date.now()}`,
+          name: "Institutional Investor",
+          email: "analyst@cryptovision.ai",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+          role: "Quant Strategist",
+          tier: "INSTITUTIONAL",
+          persona: "RESEARCH",
+        };
+        set({
+          user: { ...defaultUser, ...customUser },
+          isAuthenticated: true,
+          isAuthModalOpen: false,
+        });
+      },
+
+      logout: () =>
+        set({
+          user: null,
+          isAuthenticated: false,
+        }),
+
+      openAuthModal: () => set({ isAuthModalOpen: true }),
+      closeAuthModal: () => set({ isAuthModalOpen: false }),
+
+      // Thesis Actions
+      theses: {
+        bitcoin: {
+          coinId: "bitcoin",
+          title: "Sovereign Digital Store of Value Thesis",
+          coreHypothesis: "Institutional ETF adoption and post-halving programmatic supply scarcity create structural upward price pressure.",
+          keyAssumptions: [
+            "Institutional inflows remain net positive across 12-month horizon",
+            "Hash rate security expands despite reward halving",
+            "No hostile global sovereign regulatory bans",
+          ],
+          expectedCatalysts: [
+            "Corporate treasury balance sheet adoption announcements",
+            "Global central bank interest rate easing cycle",
+          ],
+          majorRisks: [
+            "Quantum computing cryptography timeline compression",
+            "Macroeconomic liquidity squeeze and risk-off contagion",
+          ],
+          openQuestions: [
+            "Will Layer 2 Bitcoin scaling (Lightning/BitVM) generate substantial protocol fee share?",
+          ],
+          lastUpdated: new Date().toISOString(),
+        },
+        solana: {
+          coinId: "solana",
+          title: "High-Throughput Global Execution Engine",
+          coreHypothesis: "Monolithic architecture and Firedancer client achieve dominant retail and DeFi market share.",
+          keyAssumptions: [
+            "Network stability maintained with zero major cluster halts",
+            "Fee revenue from priority fees exceeds hardware validator operational costs",
+          ],
+          expectedCatalysts: [
+            "Firedancer validator client mainnet transition",
+            "Institutional payments integration partnerships",
+          ],
+          majorRisks: [
+            "Hardware requirement validator centralization",
+            "Ecosystem incentive emission cliff tapering",
+          ],
+          openQuestions: [
+            "Can economic fee capture sustain validator profitability without inflation subsidies?",
+          ],
+          lastUpdated: new Date().toISOString(),
+        },
+      },
+      thesisHistory: {},
+
+      saveThesis: (thesis) =>
+        set((s) => ({
+          theses: { ...s.theses, [thesis.coinId]: thesis },
+        })),
+
+      addThesisHistoryEntry: (coinId, entry) =>
+        set((s) => ({
+          thesisHistory: {
+            ...s.thesisHistory,
+            [coinId]: [...(s.thesisHistory[coinId] || []), entry],
+          },
         })),
 
       // Alert Actions
@@ -174,7 +307,13 @@ export const useAppStore = create<AppState>()(
         sidebarCollapsed: state.sidebarCollapsed,
         holdings: state.holdings,
         alerts: state.alerts,
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+        theme: state.theme,
+        theses: state.theses,
+        thesisHistory: state.thesisHistory,
       }),
     }
   )
 );
+

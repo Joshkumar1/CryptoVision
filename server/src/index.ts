@@ -23,6 +23,23 @@ app.use("/api/emerging", emergingRouter);
 app.use("/api/narratives", narrativesRouter);
 app.use("/api/news", newsRouter);
 
+app.get("/", (_req, res) => {
+  res.json({
+    message: "CryptoVision AI API Server is running",
+    version: "2.5",
+    frontendUrl: "http://localhost:3000",
+    endpoints: [
+      "/health",
+      "/api/market",
+      "/api/assets",
+      "/api/intelligence",
+      "/api/emerging",
+      "/api/narratives",
+      "/api/news"
+    ]
+  });
+});
+
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
