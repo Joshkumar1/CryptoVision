@@ -2,8 +2,18 @@ import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { LoadingState } from "@/components/shared/LoadingState";
+import { ErrorBoundary, RouteErrorFallback } from "@/components/shared/ErrorBoundary";
 
 // ── Dynamic Route-Based Code-Splitting ──
+const ExploreModulePage = lazy(() =>
+  import("@/pages/ExploreModulePage").then((m) => ({ default: m.ExploreModulePage }))
+);
+const ResearchModulePage = lazy(() =>
+  import("@/pages/ResearchModulePage").then((m) => ({ default: m.ResearchModulePage }))
+);
+const AnalyzeModulePage = lazy(() =>
+  import("@/pages/AnalyzeModulePage").then((m) => ({ default: m.AnalyzeModulePage }))
+);
 const OverviewPage = lazy(() =>
   import("@/pages/OverviewPage").then((m) => ({ default: m.OverviewPage }))
 );
@@ -57,10 +67,13 @@ export const router = createBrowserRouter([
   // ── Flagship Institutional Landing Page (abtc.com-style reference) ──
   {
     path: "/",
+    errorElement: <RouteErrorFallback />,
     element: (
-      <Suspense fallback={<LoadingState message="Connecting to CryptoVision Institutional..." />}>
-        <FlagshipLandingPage />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingState message="Connecting to CryptoVision Institutional..." />}>
+          <FlagshipLandingPage />
+        </Suspense>
+      </ErrorBoundary>
     ),
   },
   {
@@ -73,7 +86,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/app",
-    element: <Navigate to="/overview" replace />,
+    element: <Navigate to="/explore" replace />,
   },
   {
     path: "/login",
@@ -86,23 +99,56 @@ export const router = createBrowserRouter([
   // ── Pro Terminal Workspace Routes (wrapped in AppShell) ──
   {
     element: <AppShell />,
+    errorElement: <RouteErrorFallback />,
     children: [
-      // ── Core Navigation Routes ──
+      // ── Primary Asset Intelligence Modules ──
       {
-        path: "overview",
+        path: "explore",
         element: (
-          <Suspense fallback={<LoadingState message="Loading Market Overview..." />}>
-            <OverviewPage />
+          <Suspense fallback={<LoadingState message="Loading Explore Market Intelligence..." />}>
+            <ExploreModulePage />
           </Suspense>
         ),
       },
       {
-        path: "discover",
+        path: "research",
         element: (
-          <Suspense fallback={<LoadingState message="Loading Discover Radar..." />}>
-            <OpportunitiesPage />
+          <Suspense fallback={<LoadingState message="Loading Research Asset Intelligence..." />}>
+            <ResearchModulePage />
           </Suspense>
         ),
+      },
+      {
+        path: "research/:assetId",
+        element: (
+          <Suspense fallback={<LoadingState message="Loading Research Asset Intelligence..." />}>
+            <ResearchModulePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "analyze",
+        element: (
+          <Suspense fallback={<LoadingState message="Loading Quantitative Analysis Workspace..." />}>
+            <AnalyzeModulePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "analyze/:assetId",
+        element: (
+          <Suspense fallback={<LoadingState message="Loading Quantitative Analysis Workspace..." />}>
+            <AnalyzeModulePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "overview",
+        element: <Navigate to="/explore" replace />,
+      },
+      {
+        path: "discover",
+        element: <Navigate to="/explore" replace />,
       },
       { path: "opportunities", element: <Navigate to="/discover" replace /> },
       {

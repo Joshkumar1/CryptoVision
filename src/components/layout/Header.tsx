@@ -31,9 +31,12 @@ import { formatPrice, cn } from "@/lib/utils";
 import type { Coin } from "@/types";
 
 const pageNames: Record<string, string> = {
-  "/overview": "Market Overview",
-  "/discover": "Discover Alpha",
-  "/opportunities": "Discover Alpha",
+  "/explore": "✦ Explore Market Intelligence",
+  "/research": "🔥 Research Asset Intelligence",
+  "/analyze": "〽 Quantitative Analysis Workspace",
+  "/overview": "Explore Market Intelligence",
+  "/discover": "Explore Market Intelligence",
+  "/opportunities": "Explore Market Intelligence",
   "/news": "News & Catalysts",
   "/projects": "Projects Explorer",
   "/market": "Projects Explorer",

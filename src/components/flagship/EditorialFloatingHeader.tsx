@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, Menu, X, ArrowUpRight, Shield, Activity, Sparkles, BookOpen, Compass, Cpu, Layers } from "lucide-react";
+import { GlobalCurrencySelector } from "@/components/shared/GlobalCurrencySelector";
 
 export const EditorialFloatingHeader: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -52,16 +53,24 @@ export const EditorialFloatingHeader: React.FC = () => {
           1. FLOATING IVORY CAPSULE HEADER (MATCHES THE REFERENCE)
           ══════════════════════════════════════════════════════════════ */}
       <header
-        className={`fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-[calc(100%-2rem)] max-w-3xl ${
-          scrolled ? "scale-[0.98] shadow-2xl" : "scale-100"
+        className={`fixed z-50 transition-all duration-500 ease-out ${
+          scrolled
+            ? "top-3 sm:top-5 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-3xl shadow-2xl"
+            : "top-0 left-0 right-0 w-full translate-x-0 max-w-full shadow-md"
         }`}
       >
-        <div className="pill-nav-ivory rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 flex items-center justify-between gap-3 md:gap-6 border border-white/40 shadow-2xl">
+        <div
+          className={`flex items-center justify-between transition-all duration-500 ease-out ${
+            scrolled
+              ? "pill-nav-ivory rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 border border-white/40 shadow-2xl gap-3 md:gap-6"
+              : "bg-[#f5f5f3] text-[#121212] rounded-none border-b border-black/15 px-4 sm:px-10 lg:px-14 py-3 sm:py-3.5 gap-4 md:gap-8 w-full"
+          }`}
+        >
           
           {/* Brand Mark (Left) */}
           <Link
             to="/"
-            className="flex items-center gap-2 group flex-shrink-0"
+            className="flex items-center gap-2.5 group flex-shrink-0"
             aria-label="CryptoVision Home"
           >
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#141414] text-white text-xs font-serif italic font-bold transition-transform group-hover:scale-110 shadow-sm">
@@ -75,40 +84,56 @@ export const EditorialFloatingHeader: React.FC = () => {
           </Link>
 
           {/* Center Editorial Navigation Links */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-7 text-xs font-medium text-[#2d2d2d]">
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-semibold tracking-wide text-[#2d2d2d]">
             <a
               href="#intelligence"
-              className="hover:text-black transition-colors hover:font-semibold"
+              className="hover:text-black transition-colors hover:font-bold"
             >
               Intelligence
             </a>
             <a
               href="#philosophy"
-              className="hover:text-black transition-colors hover:font-semibold"
+              className="hover:text-black transition-colors hover:font-bold"
             >
               Philosophy
             </a>
             <a
+              href="#calculator"
+              className="hover:text-black transition-colors hover:font-bold"
+            >
+              Profit Engine
+            </a>
+            <a
               href="#composure"
-              className="hover:text-black transition-colors hover:font-semibold"
+              className="hover:text-black transition-colors hover:font-bold"
             >
               Asset Dossiers
             </a>
             <a
               href="#library"
-              className="hover:text-black transition-colors hover:font-semibold"
+              className="hover:text-black transition-colors hover:font-bold"
             >
               Library
             </a>
+            <a
+              href="#advisory"
+              className="hover:text-black transition-colors hover:font-bold"
+            >
+              Advisory
+            </a>
           </nav>
 
-          {/* Right Action Island: Search + Dark Menu Capsule (Exact Reference Style) */}
+          {/* Right Action Island: Search + Global Currency Selector + Dark Menu Capsule */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            
+            {/* Global Currency Selector (Requirement 3) */}
+            <GlobalCurrencySelector />
+
             {/* Quick Search Button */}
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[#333333] hover:text-black hover:bg-black/5 transition-all"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-[#333333] hover:text-black hover:bg-black/5 transition-all cursor-pointer"
               aria-label="Search intelligence"
               title="Search intelligence"
             >
@@ -119,7 +144,7 @@ export const EditorialFloatingHeader: React.FC = () => {
             <button
               type="button"
               onClick={() => setMenuOpen(!menuOpen)}
-              className="inline-flex items-center gap-2 bg-[#121212] hover:bg-black text-white px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all shadow-md active:scale-95"
+              className="inline-flex items-center gap-2 bg-[#121212] hover:bg-black text-white px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all shadow-md active:scale-95 cursor-pointer"
             >
               <span>menu</span>
               <span className="flex items-center justify-center text-[10px] opacity-80">

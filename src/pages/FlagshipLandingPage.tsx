@@ -1,11 +1,17 @@
 import React from "react";
 import { EditorialFloatingHeader } from "@/components/flagship/EditorialFloatingHeader";
 import { FloatingHeroCanvas } from "@/components/flagship/FloatingHeroCanvas";
+import { InfiniteMarqueeTicker } from "@/components/flagship/InfiniteMarqueeTicker";
 import { UnrushedKnowledgeSection } from "@/components/flagship/UnrushedKnowledgeSection";
+import { GlobalInvestmentProfitCalculator } from "@/components/flagship/GlobalInvestmentProfitCalculator";
+import { InvestmentImpactSimulator } from "@/components/flagship/InvestmentImpactSimulator";
 import { ComposureAssetExplorer } from "@/components/flagship/ComposureAssetExplorer";
 import { EditorialResearchLibrary } from "@/components/flagship/EditorialResearchLibrary";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
+
+import { InstitutionalAdvisorySection } from "@/components/flagship/InstitutionalAdvisorySection";
+import { NumbersBehindSuccessSection } from "@/components/flagship/NumbersBehindSuccessSection";
 
 export const FlagshipLandingPage: React.FC = () => {
   return (
@@ -26,8 +32,26 @@ export const FlagshipLandingPage: React.FC = () => {
           <FloatingHeroCanvas />
         </div>
 
+        {/* Continuous Side-to-Side Horizontal Marquee Scrolling Band */}
+        <InfiniteMarqueeTicker />
+
         {/* The 3 Pillars of Composure ("No Rushing of Information") */}
         <UnrushedKnowledgeSection />
+
+        {/* Institutional Global Investment Impact Simulator (Historical Scenarios) */}
+        <div id="simulator">
+          <InvestmentImpactSimulator />
+        </div>
+
+        {/* Multi-Currency Global Investment Profit Calculator (Yesterday vs Today) */}
+        <div id="calculator">
+          <GlobalInvestmentProfitCalculator />
+        </div>
+
+        {/* Animated Numbers Behind Success Section */}
+        <div id="numbers">
+          <NumbersBehindSuccessSection />
+        </div>
 
         {/* Interactive Zen Asset Dossiers */}
         <ComposureAssetExplorer />
@@ -35,55 +59,12 @@ export const FlagshipLandingPage: React.FC = () => {
         {/* Due Diligence Library & Terminal Transition Gateway */}
         <EditorialResearchLibrary />
 
-      </main>
-
-      {/* ══════════════════════════════════════════════════════════════
-          3. EDITORIAL MINIMALIST FOOTER
-          ══════════════════════════════════════════════════════════════ */}
-      <footer className="bg-[#050506] border-t border-white/10 text-white py-16 px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-          
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-black text-xs font-serif font-bold">
-                ✦
-              </span>
-              <span className="font-sans font-bold text-base tracking-tight text-white">
-                CryptoVision
-              </span>
-            </div>
-            <p className="text-xs text-white/50 font-sans max-w-sm">
-              Institutional intelligence and multi-model alpha synthesized with unhurried conviction.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-8 text-xs font-sans text-white/60">
-            <Link to="/overview" className="hover:text-white transition-colors">
-              Pro Terminal
-            </Link>
-            <Link to="/discover" className="hover:text-white transition-colors">
-              Whale Radar
-            </Link>
-            <Link to="/news" className="hover:text-white transition-colors">
-              Catalysts
-            </Link>
-            <Link to="/due-diligence" className="hover:text-white transition-colors">
-              Due Diligence
-            </Link>
-            <Link to="/learn" className="hover:text-white transition-colors">
-              Academy
-            </Link>
-            <Link to="/settings" className="hover:text-white transition-colors">
-              Settings
-            </Link>
-          </div>
-
-          <div className="text-[11px] font-mono text-white/35">
-            © {new Date().getFullYear()} CRYPTOVISION // ALL RIGHTS RESERVED
-          </div>
-
+        {/* Institutional Advisory Callout Banner & Clean Minimalist Footer */}
+        <div id="advisory">
+          <InstitutionalAdvisorySection />
         </div>
-      </footer>
+
+      </main>
 
     </div>
   );

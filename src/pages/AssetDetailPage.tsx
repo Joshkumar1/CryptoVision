@@ -8,6 +8,8 @@ import { TechnicalSection } from "@/components/asset/TechnicalSection";
 import { IntelligenceSection } from "@/components/asset/IntelligenceSection";
 import { ResearchSnapshotCard } from "@/components/asset/ResearchSnapshotCard";
 import { FinancialIntelligenceSection } from "@/components/asset/FinancialIntelligenceSection";
+import { InvestmentImpactSimulator } from "@/components/flagship/InvestmentImpactSimulator";
+import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import { LoadingState } from "@/components/shared/LoadingState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Metric } from "@/components/shared/Metric";
@@ -292,6 +294,11 @@ export function AssetDetailPage() {
           </MetricGroup>
         </CardContent>
       </Card>
+
+      {/* ── Hypothetical Historical Investment Impact Simulator ── */}
+      <ErrorBoundary>
+        <InvestmentImpactSimulator assetId={coinId || "kryptos"} />
+      </ErrorBoundary>
 
       {/* ── Technical Indicators ── */}
       <TechnicalSection coinId={coinId || ""} currentPrice={price} />

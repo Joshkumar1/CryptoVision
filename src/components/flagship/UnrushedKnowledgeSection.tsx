@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Shield, Sparkles, Activity, ArrowUpRight, Cpu, CheckCircle2, Lock, Eye, Database } from "lucide-react";
+import { Shield, Sparkles, Activity, ArrowUpRight, Cpu } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const UnrushedKnowledgeSection: React.FC = () => {
   const principles = [
@@ -14,6 +15,7 @@ export const UnrushedKnowledgeSection: React.FC = () => {
         "Our ingestion pipeline processes 100,000 mempool events every second, applying mathematical noise-reduction filters to isolate the 3 verifiable wallet clusters that actually move macro markets.",
       icon: Activity,
       stat: "99.8% Noise Filtered",
+      glowColor: "from-[#00dc82]/20 to-transparent",
     },
     {
       number: "02",
@@ -25,6 +27,7 @@ export const UnrushedKnowledgeSection: React.FC = () => {
         "Only when all three independent neural reasoning paths converge above a 90% confidence threshold does the system emit an institutional alpha conviction dossier.",
       icon: Cpu,
       stat: "98.4% Model Alignment",
+      glowColor: "from-cyan-500/20 to-transparent",
     },
     {
       number: "03",
@@ -36,21 +39,53 @@ export const UnrushedKnowledgeSection: React.FC = () => {
         "No sentiment guessing, no influencer bias, and no undisclosed commercial sponsorships. Pure mathematical provenance recorded on decentralized ledgers.",
       icon: Shield,
       stat: "100% On-Chain Proofs",
+      glowColor: "from-purple-500/20 to-transparent",
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 35, scale: 0.96 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.7,
+        ease: [0.16, 1, 0.3, 1] as const,
+      },
+    },
+  };
+
   return (
-    <section id="philosophy" className="relative py-20 lg:py-28 bg-[#080809] text-white border-t border-white/10 overflow-hidden">
+    <section id="philosophy" className="relative py-20 lg:py-28 bg-[#080809] text-white border-t border-white/10 overflow-hidden select-none">
       
       {/* Background Ambient Glow */}
-      <div className="pointer-events-none absolute -top-40 right-1/4 w-[500px] h-[500px] rounded-full bg-[#00dc82]/[0.02] blur-[150px]" />
+      <div className="pointer-events-none absolute -top-40 right-1/4 w-[500px] h-[500px] rounded-full bg-[#00dc82]/[0.03] blur-[150px] animate-pulse-glow" />
+      <div className="pointer-events-none absolute top-1/2 -left-32 w-[400px] h-[400px] rounded-full bg-cyan-500/[0.02] blur-[140px]" />
       
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header with Editorial Serif */}
-        <div className="max-w-3xl mb-16 sm:mb-20">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#00dc82] block mb-3">
-            The Philosophy of Composure
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="max-w-3xl mb-16 sm:mb-20"
+        >
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#00dc82] block mb-3 flex items-center gap-2">
+            <Sparkles className="h-3.5 w-3.5 animate-pulse text-[#00dc82]" />
+            <span>The Philosophy of Composure</span>
           </span>
           <h2 className="font-editorial text-3xl sm:text-4xl lg:text-5xl font-normal text-white leading-tight">
             How systematic allocators build unshakeable conviction.
@@ -58,58 +93,82 @@ export const UnrushedKnowledgeSection: React.FC = () => {
           <p className="mt-4 text-sm sm:text-base text-white/60 font-sans leading-relaxed">
             Market volatility is not a hazard to be feared; it is the natural consequence of 24/7 global price discovery. The allocator's only defense is an unhurried, mathematically sound decision framework.
           </p>
-        </div>
+        </motion.div>
 
         {/* The Three Editorial Principles */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10"
+        >
           {principles.map((p) => {
             const Icon = p.icon;
             return (
-              <div
+              <motion.div
                 key={p.number}
-                className="serene-card rounded-3xl p-7 sm:p-8 flex flex-col justify-between group transition-all"
+                variants={itemVariants}
+                whileHover={{ y: -8, transition: { duration: 0.3, ease: "easeOut" } }}
+                className="serene-card rounded-3xl p-7 sm:p-8 flex flex-col justify-between group relative overflow-hidden glass-shine-overlay cursor-pointer"
               >
+                {/* Subtle Hover Gradient Glow inside Card */}
+                <div className={`absolute -top-24 -right-24 w-48 h-48 rounded-full bg-gradient-to-br ${p.glowColor} blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`} />
+
                 <div>
                   {/* Top Bar: Number + Stat Badge */}
                   <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-                    <span className="font-editorial text-2xl text-white/40 group-hover:text-white transition-colors">
+                    <span className="font-editorial text-2xl text-white/40 group-hover:text-white transition-colors duration-300">
                       {p.number}
                     </span>
-                    <span className="text-[10px] font-mono font-semibold text-[#00dc82] bg-[#00dc82]/10 border border-[#00dc82]/20 px-2.5 py-1 rounded-full">
+                    <span className="text-[10px] font-mono font-semibold text-[#00dc82] bg-[#00dc82]/10 border border-[#00dc82]/20 px-2.5 py-1 rounded-full group-hover:scale-105 transition-transform">
                       {p.stat}
                     </span>
                   </div>
 
                   {/* Title & Subtitle */}
-                  <h3 className="font-editorial text-2xl sm:text-3xl text-white mb-2 leading-snug">
-                    {p.title}
-                  </h3>
-                  <div className="text-xs font-mono text-[#00dc82]/80 uppercase tracking-wider mb-4">
-                    {p.subtitle}
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-[#00dc82] group-hover:bg-[#00dc82]/10 group-hover:border-[#00dc82]/30 transition-all duration-300">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-editorial text-2xl sm:text-3xl text-white leading-snug group-hover:text-[#00dc82] transition-colors duration-300">
+                        {p.title}
+                      </h3>
+                      <div className="text-xs font-mono text-[#00dc82]/80 uppercase tracking-wider mt-1">
+                        {p.subtitle}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Body Copy */}
-                  <p className="text-xs sm:text-sm text-white/60 font-sans leading-relaxed mb-4">
+                  <p className="text-xs sm:text-sm text-white/60 font-sans leading-relaxed my-4">
                     {p.description}
                   </p>
 
-                  <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-xs text-white/75 font-sans leading-relaxed">
+                  <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 group-hover:border-white/15 text-xs text-white/75 font-sans leading-relaxed transition-all">
                     <strong className="text-white font-medium block mb-1">Methodology:</strong>
                     {p.takeaway}
                   </div>
                 </div>
 
                 {/* Bottom link */}
-                <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-white/40 group-hover:text-white transition-colors">
+                <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-white/40 group-hover:text-white transition-colors duration-300">
                   <span>Explore Architecture</span>
-                  <ArrowUpRight className="h-4 w-4 text-white/30 group-hover:text-[#00dc82] transition-colors" />
+                  <motion.div
+                    whileHover={{ x: 3, y: -3 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <ArrowUpRight className="h-4 w-4 text-white/30 group-hover:text-[#00dc82] transition-colors" />
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
       </div>
     </section>
   );
 };
+

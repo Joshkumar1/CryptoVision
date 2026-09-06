@@ -1,0 +1,628 @@
+import type { AssetIntelligence } from "@/types/intelligence";
+
+// Unified intelligence repository providing authoritative data across EXPLORE, RESEARCH, and ANALYZE
+
+const MOCK_ASSETS_INTELLIGENCE: Record<string, AssetIntelligence> = {
+  bitcoin: {
+    identity: {
+      id: "bitcoin",
+      name: "Bitcoin",
+      symbol: "BTC",
+      logo: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+      category: "Store of Value / Layer 1",
+      assetClass: "CRYPTOCURRENCY",
+      launchDate: "January 3, 2009",
+      blockchain: "Bitcoin Blockchain (Proof of Work)",
+      socialLinks: {
+        website: "https://bitcoin.org",
+        whitepaper: "https://bitcoin.org/bitcoin.pdf",
+        twitter: "https://x.com/bitcoin",
+        github: "https://github.com/bitcoin/bitcoin",
+      },
+    },
+    market: {
+      priceUsd: 112450.25,
+      priceChange1h: 0.12,
+      priceChange24h: 2.48,
+      priceChange7d: 8.24,
+      priceChange30d: 14.60,
+      priceChange90d: 32.10,
+      priceChange1y: 86.20,
+      priceChangeAllTime: 1124500.0,
+      marketCapUsd: 2215000000000,
+      volume24hUsd: 48200000000,
+      btcDominance: 57.4,
+      ethDominance: 15.2,
+      circulatingSupply: 19780000,
+      totalSupply: 19780000,
+      maxSupply: 21000000,
+      athUsd: 115200.0,
+      athDate: "2026-08-14",
+      atlUsd: 67.81,
+      atlDate: "2013-07-06",
+      sparkline7d: [104000, 105200, 104800, 107500, 108900, 110200, 112450],
+    },
+    historical: {
+      priceHistory: [
+        { timestamp: 1725148800000, price: 60320, volume: 22000000000 },
+        { timestamp: 1735689600000, price: 94500, volume: 38000000000 },
+        { timestamp: 1748736000000, price: 102000, volume: 41000000000 },
+        { timestamp: 1756684800000, price: 112450, volume: 48200000000 },
+      ],
+      marketCapHistory: [],
+      volumeHistory: [],
+      drawdownPeriods: [
+        { period: "2021-2022 Bear Market", peakPrice: 69000, troughPrice: 15479, dropPercentage: 77.5, durationDays: 376, recoveryDays: 520 },
+        { period: "2017-2018 Bear Market", peakPrice: 19783, troughPrice: 3122, dropPercentage: 84.2, durationDays: 364, recoveryDays: 1095 },
+      ],
+      milestones: [
+        { date: "2009-01-03", title: "Genesis Block Mined", description: "Satoshi Nakamoto mined the genesis block containing the Times headline." },
+        { date: "2024-01-10", title: "Spot ETF Approval", description: "US SEC approved 11 spot Bitcoin ETFs, unlocking institutional capital." },
+      ],
+    },
+    fundamentals: {
+      purpose: "Provide a decentralized, tamper-proof digital store of value independent of central banks.",
+      problemSolved: "Eliminates the double-spending problem in digital currency without requiring a trusted intermediary.",
+      useCases: ["Sovereign Reserve Asset", "Cross-border Settlement", "Inflation Hedge", "Collateral"],
+      realWorldApps: ["Institutional Treasury Holding", "Remittance networks", "Nation-state adoption (El Salvador)"],
+      targetUsers: ["Institutional Funds", "Retail Investors", "High Net Worth Entities", "Central Banks"],
+      competitiveAdvantages: [
+        "Unrivaled Proof-of-Work hash rate security",
+        "Deepest global liquidity across digital assets",
+        "Strict 21M hard cap programmatic supply schedule",
+        "Immutability & 17+ years of uninterrupted uptime",
+      ],
+      limitations: [
+        "Lower transaction throughput (7 TPS on L1)",
+        "Proof-of-Work energy footprint",
+        "Limited native smart contract flexibility",
+      ],
+      founders: ["Satoshi Nakamoto (Pseudonymous)"],
+      coreOrganization: "Decentralized Open Source Community / Bitcoin Core Maintainers",
+      developmentTeam: "Global distributed independent developers funded by Brink, Spiral, & Kraken.",
+      majorInvestors: ["BlackRock", "Fidelity", "MicroStrategy", "Grayscale"],
+      strategicPartnerships: ["Lightning Network Ecosystem", "Jack Mallers Strike", "Coinbase Custody"],
+      developerActivity: {
+        commits4Weeks: 142,
+        githubStars: 78500,
+        forks: 36200,
+        mergedPRs: 38,
+        activeContributors: 42,
+        commentary: "Development activity remains consistent, indicating robust peer review, security audits, and continuous protocol maintenance.",
+      },
+    },
+    trustSignals: [
+      { id: "t1", title: "Long Operational History", type: "POSITIVE", whyItMatters: "Over 17 years of continuous operational uptime without a single consensus security failure proves protocol resilience." },
+      { id: "t2", title: "High Liquidity", type: "POSITIVE", whyItMatters: "High liquidity reduces the probability of significant price impact when entering or exiting a position." },
+      { id: "t3", title: "Decentralized Network", type: "POSITIVE", whyItMatters: "No central entity controls consensus, shielding the asset from single-point censorship or unilateral rule changes." },
+      { id: "t4", title: "Audited & Transparent Code", type: "POSITIVE", whyItMatters: "100% open-source repository audited by thousands of cryptographic researchers globally." },
+      { id: "r1", title: "Regulatory Uncertainty", type: "RISK", whyItMatters: "Evolving taxation, capital controls, and AML frameworks across sovereign jurisdictions create compliance friction." },
+    ],
+    tokenomics: {
+      maxSupply: 21000000,
+      circulatingSupply: 19780000,
+      totalSupply: 19780000,
+      inflationRatePercentage: 0.84,
+      distribution: [
+        { label: "Circulating Supply Mined", percentage: 94.2 },
+        { label: "Remaining Supply to be Mined (until 2140)", percentage: 5.8 },
+      ],
+      unlockSchedule: [
+        { date: "Every ~4 Years", event: "Block Reward Halving (Current: 3.125 BTC)", percentOfSupply: 0.05 },
+      ],
+      stakingMechanism: "None (Proof-of-Work Consensus)",
+      burningMechanism: "None (Unrecoverable lost keys effectively act as permanent supply burn)",
+      whaleConcentrationPercentage: 11.4,
+      summaryInsight: "Approximately 94.2% of the maximum supply is currently circulating, reducing future dilution pressure compared with early-stage assets.",
+    },
+    adoption: {
+      activeDailyUsers: 920000,
+      dailyTransactions: 480000,
+      dappCount: 24,
+      institutionalHolders: ["MicroStrategy (331,200 BTC)", "BlackRock IBIT (520,000 BTC)", "Fidelity FBTC"],
+      networkGrowthRate: 14.2,
+    },
+    risk: {
+      marketRisk: { category: "Market", level: "MODERATE", explanation: "Exhibits lower volatility than altcoins, but remains susceptible to broader macroeconomic risk-off cycles." },
+      technologyRisk: { category: "Technology", level: "LOW", explanation: "Battle-tested SHA-256 Proof-of-Work architecture with zero successful double-spend attacks in history." },
+      liquidityRisk: { category: "Liquidity", level: "LOW", explanation: "Enjoys the deepest liquidity pool in cryptocurrency markets with minimal slippage across worldwide venues." },
+      regulatoryRisk: { category: "Regulatory", level: "MODERATE", explanation: "Sovereign regulatory scrutiny persists regarding mining regulations, ETF approvals, and cross-border transfers." },
+      centralizationRisk: { category: "Centralization", level: "LOW", explanation: "Highly decentralized mining pool distribution and full-node validation topology." },
+      tokenomicsRisk: { category: "Tokenomics", level: "LOW", explanation: "Fixed mathematical 21M hard cap eliminates unpredictable monetary inflation or arbitrary token minting." },
+    },
+    intelligence: {
+      aiExecutiveSummary: {
+        whatIsIt: "Bitcoin is the largest decentralized digital asset, primarily positioned as a scarce digital store of value.",
+        whyItExists: "Created to enable peer-to-peer electronic payments without reliance on centralized banking systems.",
+        problemSolved: "Solves the double-spending problem through cryptographic proof-of-work consensus.",
+        whyItHasValue: "Its value stems from strict mathematical scarcity (21M cap), network security, global liquidity, and institutional adoption.",
+        biggestRisks: "Major risks include regulatory uncertainty, macroeconomic sensitivity, and energy consumption debates.",
+        fullSummary: "Bitcoin is the largest decentralized digital asset, primarily positioned as a scarce digital store of value. Its market strength is supported by network security, global liquidity, institutional adoption, and long operational history. Major risks include volatility, regulatory uncertainty, and macroeconomic sensitivity.",
+      },
+      observations: [
+        {
+          id: "obs-1",
+          timestamp: "10 mins ago",
+          topic: "Volume Expansion",
+          observation: "Bitcoin increased 2.48% over the last 24 hours while trading volume increased by 18%, indicating that price movement is accompanied by stronger market participation.",
+          confidenceScore: 0.94,
+          impact: "BULLISH",
+        },
+        {
+          id: "obs-2",
+          timestamp: "1 hour ago",
+          topic: "Volatility Regime",
+          observation: "Volatility is currently above its 90-day average, suggesting increased short-term uncertainty ahead of macro economic releases.",
+          confidenceScore: 0.88,
+          impact: "NEUTRAL",
+        },
+      ],
+    },
+  },
+
+  ethereum: {
+    identity: {
+      id: "ethereum",
+      name: "Ethereum",
+      symbol: "ETH",
+      logo: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+      category: "Smart Contract Platform / Layer 1",
+      assetClass: "CRYPTOCURRENCY",
+      launchDate: "July 30, 2015",
+      blockchain: "Ethereum Mainnet (Proof of Stake)",
+      socialLinks: {
+        website: "https://ethereum.org",
+        whitepaper: "https://ethereum.org/en/whitepaper/",
+        twitter: "https://x.com/ethereum",
+        github: "https://github.com/ethereum/go-ethereum",
+      },
+    },
+    market: {
+      priceUsd: 3480.50,
+      priceChange1h: -0.15,
+      priceChange24h: 3.82,
+      priceChange7d: 11.40,
+      priceChange30d: 19.20,
+      priceChange90d: 28.40,
+      priceChange1y: 64.50,
+      priceChangeAllTime: 82000.0,
+      marketCapUsd: 418000000000,
+      volume24hUsd: 24500000000,
+      btcDominance: 57.4,
+      ethDominance: 15.2,
+      circulatingSupply: 120200000,
+      totalSupply: 120200000,
+      maxSupply: null,
+      athUsd: 4878.26,
+      athDate: "2021-11-10",
+      atlUsd: 0.43,
+      atlDate: "2015-10-20",
+      sparkline7d: [3120, 3180, 3250, 3300, 3390, 3420, 3480.5],
+    },
+    historical: {
+      priceHistory: [
+        { timestamp: 1725148800000, price: 2420, volume: 14000000000 },
+        { timestamp: 1735689600000, price: 3350, volume: 21000000000 },
+        { timestamp: 1756684800000, price: 3480.5, volume: 24500000000 },
+      ],
+      marketCapHistory: [],
+      volumeHistory: [],
+      drawdownPeriods: [
+        { period: "2021-2022 Bear Market", peakPrice: 4878, troughPrice: 881, dropPercentage: 81.9, durationDays: 214, recoveryDays: null },
+      ],
+      milestones: [
+        { date: "2022-09-15", title: "The Merge", description: "Ethereum transitioned from Proof-of-Work to energy-efficient Proof-of-Stake." },
+        { date: "2024-05-23", title: "ETH Spot ETF Approval", description: "SEC approved 19b-4 forms for Ethereum spot ETFs in the United States." },
+      ],
+    },
+    fundamentals: {
+      purpose: "Enable a global, decentralized platform for smart contracts and decentralized applications.",
+      problemSolved: "Allows programmable, self-executing agreements without central server reliance.",
+      useCases: ["DeFi Infrastructure", "NFTs & Digital Ownership", "Layer 2 Settlement", "Staking Yield"],
+      realWorldApps: ["Uniswap", "Aave", "MakerDAO/Sky", "Arbitrum & Optimism L2 networks"],
+      targetUsers: ["DeFi Developers", "Yield Farmers", "Institutional Stakers", "Web3 Builders"],
+      competitiveAdvantages: [
+        "First-mover advantage in Turing-complete smart contracts",
+        "Largest developer community and dApp ecosystem",
+        "EIP-1559 fee burning mechanism creating deflationary pressure during high gas usage",
+        "Billion-dollar L2 scaling ecosystem",
+      ],
+      limitations: [
+        "Layer 1 gas fee spikes during high traffic",
+        "Layer 2 liquidity fragmentation",
+        "Complex upgrade coordination across client implementations",
+      ],
+      founders: ["Vitalik Buterin", "Gavin Wood", "Charles Hoskinson", "Joseph Lubin"],
+      coreOrganization: "Ethereum Foundation",
+      developmentTeam: "Independent client teams (Geth, Nethermind, Besu, Prysm, Lighthouse).",
+      majorInvestors: ["Andreessen Horowitz (a16z)", "Paradigm", "Polychain Capital"],
+      strategicPartnerships: ["Visa (USDC Settlement)", "PayPal (PYUSD)", "BlackRock BUIDL Fund"],
+      developerActivity: {
+        commits4Weeks: 380,
+        githubStars: 46200,
+        forks: 19800,
+        mergedPRs: 92,
+        activeContributors: 114,
+        commentary: "High developer activity across client implementations reflects robust innovation and protocol scaling velocity.",
+      },
+    },
+    trustSignals: [
+      { id: "te1", title: "Proven Smart Contract Standard", type: "POSITIVE", whyItMatters: "EVM (Ethereum Virtual Machine) is the global industry standard adopted across 50+ blockchains." },
+      { id: "te2", title: "High Staking Participation", type: "POSITIVE", whyItMatters: "Over 34 million ETH staked secures consensus with economic slashable penalties against bad actors." },
+      { id: "te3", title: "Deflationary Mechanics (EIP-1559)", type: "POSITIVE", whyItMatters: "Base fee burning burns ETH on every transaction, offsetting issuance during high network activity." },
+      { id: "re1", title: "Layer 2 Value Capture Tension", type: "RISK", whyItMatters: "Migration of user activity to Layer 2 rollups can temporarily reduce Layer 1 fee burn volume." },
+    ],
+    tokenomics: {
+      maxSupply: null,
+      circulatingSupply: 120200000,
+      totalSupply: 120200000,
+      inflationRatePercentage: -0.12,
+      distribution: [
+        { label: "Circulating Supply", percentage: 83.3 },
+        { label: "Staked in Consensus Layer", percentage: 16.7 },
+      ],
+      unlockSchedule: [
+        { date: "Continuous", event: "Staking Rewards & EIP-1559 Dynamic Burn", percentOfSupply: 0.01 },
+      ],
+      stakingMechanism: "Proof-of-Stake (32 ETH Validator Threshold)",
+      burningMechanism: "EIP-1559 Base Fee Burn",
+      whaleConcentrationPercentage: 22.1,
+      summaryInsight: "EIP-1559 base fee burning dynamic creates net deflationary supply behavior when network gas demand exceeds 16 gwei.",
+    },
+    adoption: {
+      activeDailyUsers: 480000,
+      dailyTransactions: 1180000,
+      dappCount: 4200,
+      institutionalHolders: ["BlackRock BUIDL", "Franklin Templeton", "Grayscale ETHE"],
+      networkGrowthRate: 18.5,
+    },
+    risk: {
+      marketRisk: { category: "Market", level: "MODERATE", explanation: "Correlated with BTC market cycles but sensitive to DeFi total value locked (TVL) trends." },
+      technologyRisk: { category: "Technology", level: "LOW", explanation: "Successfully executed Proof-of-Stake merge; ongoing rollups-centric roadmap lowers execution risks." },
+      liquidityRisk: { category: "Liquidity", level: "LOW", explanation: "Deep liquidity across centralized exchanges and automated market makers." },
+      regulatoryRisk: { category: "Regulatory", level: "MODERATE", explanation: "Staking services face regulatory evaluation regarding security classification in select regions." },
+      centralizationRisk: { category: "Centralization", level: "MODERATE", explanation: "Lido staking pool concentration and MEV-boost relay reliance require ongoing decentralization efforts." },
+      tokenomicsRisk: { category: "Tokenomics", level: "LOW", explanation: "Dynamic supply balance driven by transaction activity rather than arbitrary issuance." },
+    },
+    intelligence: {
+      aiExecutiveSummary: {
+        whatIsIt: "Ethereum is the leading decentralized smart contract platform powering DeFi, NFTs, and Layer 2 networks.",
+        whyItExists: "Built to expand blockchain technology beyond static money into programmable decentralized applications.",
+        problemSolved: "Enables trustless execution of complex financial agreements without centralized intermediaries.",
+        whyItHasValue: "Value is sustained by network gas utility, staking yield, dApp ecosystem lock-in, and ETH burn dynamics.",
+        biggestRisks: "Risks include Layer 2 liquidity fragmentation, MEV centralization concerns, and regulatory staking scrutiny.",
+        fullSummary: "Ethereum is the leading smart contract ecosystem. Its value is sustained by dApp utilization, fee burning mechanics, staker economic security, and institutional Layer 2 adoption.",
+      },
+      observations: [
+        {
+          id: "obs-eth-1",
+          timestamp: "15 mins ago",
+          topic: "Staking Growth",
+          observation: "Ethereum total staked volume reached a new record high of 34.2M ETH, reinforcing consensus security and locking supply.",
+          confidenceScore: 0.96,
+          impact: "BULLISH",
+        },
+      ],
+    },
+  },
+
+  solana: {
+    identity: {
+      id: "solana",
+      name: "Solana",
+      symbol: "SOL",
+      logo: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
+      category: "High-Throughput Layer 1",
+      assetClass: "CRYPTOCURRENCY",
+      launchDate: "March 16, 2020",
+      blockchain: "Solana Monolithic L1 (Proof of History + PoS)",
+      socialLinks: {
+        website: "https://solana.com",
+        whitepaper: "https://solana.com/solana-whitepaper.pdf",
+        twitter: "https://x.com/solana",
+        github: "https://github.com/solana-labs/solana",
+      },
+    },
+    market: {
+      priceUsd: 198.40,
+      priceChange1h: 0.45,
+      priceChange24h: 6.12,
+      priceChange7d: 18.30,
+      priceChange30d: 34.80,
+      priceChange90d: 62.10,
+      priceChange1y: 142.50,
+      priceChangeAllTime: 38000.0,
+      marketCapUsd: 92800000000,
+      volume24hUsd: 8400000000,
+      btcDominance: 57.4,
+      ethDominance: 15.2,
+      circulatingSupply: 468000000,
+      totalSupply: 585000000,
+      maxSupply: null,
+      athUsd: 259.96,
+      athDate: "2021-11-06",
+      atlUsd: 0.50,
+      atlDate: "2020-05-11",
+      sparkline7d: [168, 172, 179, 185, 191, 194, 198.4],
+    },
+    historical: {
+      priceHistory: [
+        { timestamp: 1725148800000, price: 130, volume: 3200000000 },
+        { timestamp: 1735689600000, price: 188, volume: 6400000000 },
+        { timestamp: 1756684800000, price: 198.4, volume: 8400000000 },
+      ],
+      marketCapHistory: [],
+      volumeHistory: [],
+      drawdownPeriods: [
+        { period: "FTX Contagion Crash 2022", peakPrice: 259, troughPrice: 9.6, dropPercentage: 96.3, durationDays: 410, recoveryDays: 580 },
+      ],
+      milestones: [
+        { date: "2020-03-16", title: "Mainnet Beta Launch", description: "Solana mainnet beta launched with Proof-of-History clock mechanism." },
+        { date: "2024-09-20", title: "Firedancer Testnet", description: "Jump Crypto introduced independent C++ validator client Firedancer." },
+      ],
+    },
+    fundamentals: {
+      purpose: "Provide ultra-fast, low-cost decentralized execution for sub-second consumer applications.",
+      problemSolved: "Solves high fee and slow speed constraints of earlier smart contract architectures without sharding.",
+      useCases: ["High-Frequency DeFi", "Consumer Payments", "DePIN Infrastructure", "Web3 Gaming"],
+      realWorldApps: ["Jupiter Exchange", "Raydium", "Helium Network", "Solana Pay (Shopify)"],
+      targetUsers: ["Retail Traders", "DePIN Operators", "High-Frequency Algo Traders", "Mobile Web3 Users"],
+      competitiveAdvantages: [
+        "Sub-second block confirmation times (~400ms)",
+        "Micro-cent transaction fees (<$0.001)",
+        "Proof-of-History cryptographic clock synchronization",
+        "Strong retail user engagement & mobile Saga ecosystem",
+      ],
+      limitations: [
+        "Higher hardware requirement for full validator nodes",
+        "Historical mainnet out-of-memory downtime incidents",
+        "State bloat management complexity",
+      ],
+      founders: ["Anatoly Yakovenko", "Raj Gokal"],
+      coreOrganization: "Solana Foundation & Solana Labs",
+      developmentTeam: "Solana Labs, Anza, & Jump Crypto (Firedancer).",
+      majorInvestors: ["Multicoin Capital", "Polychain", "a16z", "Jump Crypto"],
+      strategicPartnerships: ["Visa (USDC on Solana)", "Shopify (Solana Pay)", "Google Cloud Validator"],
+      developerActivity: {
+        commits4Weeks: 410,
+        githubStars: 12400,
+        forks: 3800,
+        mergedPRs: 110,
+        activeContributors: 88,
+        commentary: "Development activity has accelerated significantly with dual-client engineering (Firedancer & Anza Agave).",
+      },
+    },
+    trustSignals: [
+      { id: "ts1", title: "Dual Validator Client Diversity", type: "POSITIVE", whyItMatters: "Firedancer independent client eliminates single-implementation software bug failure points." },
+      { id: "ts2", title: "High Consumer & Retail Adoption", type: "POSITIVE", whyItMatters: "Top daily DEX volume share demonstrates strong organic retail user participation." },
+      { id: "rs1", title: "High Hardware Requirement", type: "RISK", whyItMatters: "Demanding validator node requirements limit non-datacenter residential validation." },
+    ],
+    tokenomics: {
+      maxSupply: null,
+      circulatingSupply: 468000000,
+      totalSupply: 585000000,
+      inflationRatePercentage: 4.8,
+      distribution: [
+        { label: "Circulating Supply", percentage: 80.0 },
+        { label: "Staked / Locked / Treasury", percentage: 20.0 },
+      ],
+      unlockSchedule: [
+        { date: "Annual Disabling Inflation Schedule", event: "Disabling inflation rate drops by 15% annually until 1.5% long-term floor", percentOfSupply: 0.15 },
+      ],
+      stakingMechanism: "Delegated Proof-of-Stake",
+      burningMechanism: "50% of transaction fees burned per block",
+      whaleConcentrationPercentage: 18.6,
+      summaryInsight: "Solana inflation follows a deterministic disinflationary schedule reducing issuance annually towards a 1.5% long-term target.",
+    },
+    adoption: {
+      activeDailyUsers: 1450000,
+      dailyTransactions: 38000000,
+      dappCount: 1850,
+      institutionalHolders: ["Multicoin", "VanEck SOL ETF Filing", "21Shares"],
+      networkGrowthRate: 34.2,
+    },
+    risk: {
+      marketRisk: { category: "Market", level: "HIGH", explanation: "Exhibits higher beta relative to BTC; price moves strongly during bull cycles but experiences steeper drawdowns." },
+      technologyRisk: { category: "Technology", level: "MODERATE", explanation: "Historical network congestion issues addressed via priority fees and QUIC; Firedancer client upgrades ongoing." },
+      liquidityRisk: { category: "Liquidity", level: "LOW", explanation: "Ranks among top 5 global assets in spot and futures trading volume." },
+      regulatoryRisk: { category: "Regulatory", level: "MODERATE", explanation: "Subject to evolving SEC classification discussions during past enforcement filings." },
+      centralizationRisk: { category: "Centralization", level: "MODERATE", explanation: "Nakamoto coefficient is ~19; validator hosting concentrated in high-performance datacenters." },
+      tokenomicsRisk: { category: "Tokenomics", level: "MODERATE", explanation: "Staking inflation rate remains ~4.8%, creating moderate ongoing token dilutive pressure." },
+    },
+    intelligence: {
+      aiExecutiveSummary: {
+        whatIsIt: "Solana is a high-performance monolithic Layer 1 blockchain optimized for fast speed and low transaction cost.",
+        whyItExists: "Designed to support global consumer-scale decentralized applications without Layer 2 scaling fragmentation.",
+        problemSolved: "Eliminates high gas fees and multi-second transaction delays.",
+        whyItHasValue: "Value is driven by high DEX transaction throughput, user adoption, DePIN ecosystem usage, and staking yield.",
+        biggestRisks: "Risks include validator hardware intensity, past network stability incidents, and ongoing inflation rate dilution.",
+        fullSummary: "Solana is a high-throughput Layer 1 blockchain. Its strength lies in sub-second confirmation speed, sub-penny fees, and high retail trading adoption.",
+      },
+      observations: [
+        {
+          id: "obs-sol-1",
+          timestamp: "25 mins ago",
+          topic: "Network Throughput",
+          observation: "Solana processed 38M daily transactions with an average fee below $0.0005, outpacing competing Layer 1 platforms in active user count.",
+          confidenceScore: 0.92,
+          impact: "BULLISH",
+        },
+      ],
+    },
+  },
+
+  kryptos: {
+    identity: {
+      id: "kryptos",
+      name: "Kryptos Protocol",
+      symbol: "KRYPTOS",
+      logo: "https://assets.coingecko.com/coins/images/325/large/Tether.png",
+      category: "Sovereign AI Reserve Protocol",
+      assetClass: "CRYPTOCURRENCY",
+      launchDate: "November 14, 2025",
+      blockchain: "Kryptos Sovereign Engine (Zero-Knowledge Proof)",
+      socialLinks: {
+        website: "https://kryptos.vision",
+        whitepaper: "https://kryptos.vision/whitepaper.pdf",
+        twitter: "https://x.com/kryptos_ai",
+        github: "https://github.com/kryptos-protocol",
+      },
+    },
+    market: {
+      priceUsd: 42.50,
+      priceChange1h: 0.85,
+      priceChange24h: 5.40,
+      priceChange7d: 22.10,
+      priceChange30d: 48.60,
+      priceChange90d: 110.20,
+      priceChange1y: 280.00,
+      priceChangeAllTime: 425.00,
+      marketCapUsd: 18500000000,
+      volume24hUsd: 1850000000,
+      btcDominance: 57.4,
+      ethDominance: 15.2,
+      circulatingSupply: 435000000,
+      totalSupply: 500000000,
+      maxSupply: 1000000000,
+      athUsd: 45.20,
+      athDate: "2026-09-02",
+      atlUsd: 8.10,
+      atlDate: "2025-11-20",
+      sparkline7d: [34.5, 36.2, 38.0, 39.5, 40.8, 41.6, 42.5],
+    },
+    historical: {
+      priceHistory: [
+        { timestamp: 1735689600000, price: 10.5, volume: 450000000 },
+        { timestamp: 1756684800000, price: 42.5, volume: 1850000000 },
+      ],
+      marketCapHistory: [],
+      volumeHistory: [],
+      drawdownPeriods: [
+        { period: "Q1 2026 Consolidation", peakPrice: 28.5, troughPrice: 18.2, dropPercentage: 36.1, durationDays: 45, recoveryDays: 60 },
+      ],
+      milestones: [
+        { date: "2025-11-14", title: "Genesis Launch", description: "Kryptos Sovereign Engine deployed Zero-Knowledge AI telemetry nodes." },
+      ],
+    },
+    fundamentals: {
+      purpose: "Autonomous AI-orchestrated liquidity intelligence and cross-chain sovereign reserve verification.",
+      problemSolved: "Reconciles fragmented blockchain data into verifiably true institutional intelligence using Zero-Knowledge proofs.",
+      useCases: ["Institutional Intelligence Gas", "Zero-Knowledge Telemetry Staking", "Risk Governance"],
+      realWorldApps: ["CryptoVision Terminal", "Institutional Risk Radar", "ZK Liquidity Engine"],
+      targetUsers: ["Hedge Funds", "Risk Analysts", "Asset Managers", "Family Offices"],
+      competitiveAdvantages: [
+        "Native ZK-ML zero-knowledge machine learning verification",
+        "Sub-millisecond risk telemetry engine",
+        "Institutional treasury reserve respaldo",
+      ],
+      limitations: [
+        "Early-stage network history compared with BTC/ETH",
+        "Higher math computation verification complexity",
+      ],
+      founders: ["Kryptos Sovereign Engineering Group"],
+      coreOrganization: "Kryptos Foundation",
+      developmentTeam: "Core ZK Cryptographers & AI Systems Engineers.",
+      majorInvestors: ["Deepmind Alumni Fund", "Sovereign AI Labs", "Quantum Capital"],
+      strategicPartnerships: ["Chainlink Oracle Network", "Arweave Storage", "EigenLayer"],
+      developerActivity: {
+        commits4Weeks: 290,
+        githubStars: 8900,
+        forks: 1450,
+        mergedPRs: 64,
+        activeContributors: 36,
+        commentary: "Accelerated development cadence across Zero-Knowledge circuit repositories and API middleware.",
+      },
+    },
+    trustSignals: [
+      { id: "tk1", title: "Zero-Knowledge Audited Circuits", type: "POSITIVE", whyItMatters: "Verifiable mathematical proofs ensure raw data telemetry cannot be tampered with or altered." },
+      { id: "tk2", title: "Transparent Reserve Backing", type: "POSITIVE", whyItMatters: "Real-time on-chain proof of reserve maintains 1:1 asset collateral transparency." },
+      { id: "rk1", title: "Early Protocol History", type: "RISK", whyItMatters: "Under 2 years of live mainnet operational history compared with legacy multi-year protocols." },
+    ],
+    tokenomics: {
+      maxSupply: 1000000000,
+      circulatingSupply: 435000000,
+      totalSupply: 500000000,
+      inflationRatePercentage: 2.1,
+      distribution: [
+        { label: "Community & Ecosystem", percentage: 45.0 },
+        { label: "Protocol Reserve & Treasury", percentage: 25.0 },
+        { label: "Core Contributors & Founders", percentage: 18.0 },
+        { label: "Strategic Investors", percentage: 12.0 },
+      ],
+      unlockSchedule: [
+        { date: "Quarterly Linear Vesting", event: "Core Contributor 4-year linear unlock with 1-year cliff", percentOfSupply: 1.25 },
+      ],
+      stakingMechanism: "ZK Telemetry Proof-of-Stake",
+      burningMechanism: "25% of intelligence API query fees burned perpetually",
+      whaleConcentrationPercentage: 14.2,
+      summaryInsight: "Approximately 43.5% of total supply is circulating; token fee burning offsets linear contributor vesting schedule.",
+    },
+    adoption: {
+      activeDailyUsers: 185000,
+      dailyTransactions: 940000,
+      dappCount: 140,
+      institutionalHolders: ["Kryptos Sovereign Fund", "Apex Digital Assets"],
+      networkGrowthRate: 42.8,
+    },
+    risk: {
+      marketRisk: { category: "Market", level: "MODERATE", explanation: "High institutional demand cushions selloffs, though price discovery remains active." },
+      technologyRisk: { category: "Technology", level: "LOW", explanation: "ZK-ML verification circuits independently audited by top formal verification firms." },
+      liquidityRisk: { category: "Liquidity", level: "MODERATE", explanation: "Growing liquidity across tier-1 exchanges; order book depth expanding steadily." },
+      regulatoryRisk: { category: "Regulatory", level: "LOW", explanation: "Utility-first design structured specifically for institutional compliance guidelines." },
+      centralizationRisk: { category: "Centralization", level: "LOW", explanation: "Distributed ZK prover node mesh operates across global geographic regions." },
+      tokenomicsRisk: { category: "Tokenomics", level: "MODERATE", explanation: "Vesting unlocks monitored through public smart contract schedules." },
+    },
+    intelligence: {
+      aiExecutiveSummary: {
+        whatIsIt: "Kryptos Protocol is a sovereign AI reserve network providing verifiable Zero-Knowledge financial intelligence.",
+        whyItExists: "Designed to eliminate trust assumptions and data distortion in institutional crypto asset evaluation.",
+        problemSolved: "Transforms unverified raw market data into cryptographically proven actionable intelligence.",
+        whyItHasValue: "Value is sustained by intelligence API fee burns, ZK prover staking, and institutional adoption.",
+        biggestRisks: "Main risks center on protocol age and ZK circuit computational scaling requirements.",
+        fullSummary: "Kryptos Protocol is a sovereign AI intelligence network. Its strength relies on Zero-Knowledge mathematical verification, transparent reserve ratios, and high institutional utility.",
+      },
+      observations: [
+        {
+          id: "obs-kry-1",
+          timestamp: "5 mins ago",
+          topic: "Reserve Growth",
+          observation: "Kryptos ZK prover network registered a 22.1% week-over-week increase in intelligence query fee burning.",
+          confidenceScore: 0.98,
+          impact: "BULLISH",
+        },
+      ],
+    },
+  },
+};
+
+export class AssetIntelligenceService {
+  /**
+   * Retrieves full unified AssetIntelligence model for any asset ID.
+   * Gracefully falls back if asset is not pre-cached in mock dictionary.
+   */
+  public static getAssetIntelligence(assetId: string = "bitcoin"): AssetIntelligence {
+    const key = assetId.toLowerCase();
+    if (MOCK_ASSETS_INTELLIGENCE[key]) {
+      return MOCK_ASSETS_INTELLIGENCE[key];
+    }
+
+    // Default fallback asset mapping for unrecognized IDs
+    const base = MOCK_ASSETS_INTELLIGENCE["bitcoin"];
+    return {
+      ...base,
+      identity: {
+        ...base.identity,
+        id: assetId,
+        name: assetId.charAt(0).toUpperCase() + assetId.slice(1),
+        symbol: assetId.substring(0, 4).toUpperCase(),
+      },
+    };
+  }
+
+  /**
+   * Returns list of all available assets with unified intelligence models
+   */
+  public static getAllAssets(): AssetIntelligence[] {
+    return Object.values(MOCK_ASSETS_INTELLIGENCE);
+  }
+}

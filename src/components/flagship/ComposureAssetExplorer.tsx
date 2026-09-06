@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, CheckCircle2, Shield, Activity, Calendar, Coins, TrendingUp, Cpu } from "lucide-react";
+import { ArrowUpRight, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface AssetDossier {
   symbol: string;
@@ -106,17 +107,24 @@ export const ComposureAssetExplorer: React.FC = () => {
   const [activeAsset, setActiveAsset] = useState<AssetDossier>(ASSET_DOSSIERS[0]);
 
   return (
-    <section id="composure" className="relative py-20 lg:py-28 bg-[#080809] text-white border-t border-white/10 overflow-hidden">
+    <section id="composure" className="relative py-20 lg:py-28 bg-[#080809] text-white border-t border-white/10 overflow-hidden select-none">
       
       {/* Soft Background Radial */}
-      <div className="pointer-events-none absolute bottom-0 left-1/3 w-[600px] h-[600px] rounded-full bg-white/[0.015] blur-[160px]" />
+      <div className="pointer-events-none absolute bottom-0 left-1/3 w-[600px] h-[600px] rounded-full bg-[#00dc82]/[0.02] blur-[160px] animate-pulse-glow" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-12 sm:mb-16">
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#00dc82] block mb-3">
-            Interactive Composure Dossiers
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="max-w-3xl mb-12 sm:mb-16"
+        >
+          <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#00dc82] block mb-3 flex items-center gap-2">
+            <Sparkles className="h-3.5 w-3.5 text-[#00dc82] animate-pulse" />
+            <span>Interactive Composure Dossiers</span>
           </span>
           <h2 className="font-editorial text-3xl sm:text-4xl lg:text-5xl font-normal text-white leading-tight mb-4">
             Unrushed intelligence for core sovereign assets.
@@ -124,7 +132,7 @@ export const ComposureAssetExplorer: React.FC = () => {
           <p className="text-white/60 font-sans text-sm sm:text-base leading-relaxed text-balance">
             Rather than chasing volatile micro-cap speculation, institutional compounding requires deep, methodical understanding of fundamental protocol moats and confirmed structural catalysts.
           </p>
-        </div>
+        </motion.div>
 
         {/* Asset Switcher Pill Navigation */}
         <div className="flex flex-wrap items-center gap-2 mb-8 sm:mb-10">
@@ -135,130 +143,158 @@ export const ComposureAssetExplorer: React.FC = () => {
                 key={asset.symbol}
                 type="button"
                 onClick={() => setActiveAsset(asset)}
-                className={`flex items-center gap-2.5 px-5 py-2.5 rounded-full text-xs font-mono tracking-wider transition-all ${
+                className={`relative flex items-center gap-2.5 px-5 py-2.5 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer ${
                   isSelected
-                    ? "bg-white text-black font-semibold shadow-lg scale-105"
+                    ? "text-black font-semibold shadow-lg"
                     : "bg-white/[0.03] text-white/55 hover:text-white hover:bg-white/[0.07] border border-white/10"
                 }`}
               >
-                <span className="font-bold">{asset.symbol}</span>
-                <span className="opacity-70">// {asset.name}</span>
+                {isSelected && (
+                  <motion.div
+                    layoutId="activeAssetPill"
+                    className="absolute inset-0 bg-white rounded-full shadow-md z-0"
+                    transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                  />
+                )}
+                <span className="relative z-10 font-bold">{asset.symbol}</span>
+                <span className="relative z-10 opacity-70">// {asset.name}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Main Dossier Presentation Card */}
-        <div className="serene-card rounded-3xl p-6 sm:p-10 lg:p-12 border border-white/15 shadow-2xl overflow-hidden">
-          
-          {/* Cinematic Atmospheric Banner */}
-          <div className="relative h-44 sm:h-56 -mx-6 sm:-mx-10 lg:-mx-12 -mt-6 sm:-mt-10 lg:-mt-12 mb-8 overflow-hidden">
-            <img
-              src={activeAsset.image}
-              alt={activeAsset.name}
-              className="w-full h-full object-cover filter contrast-[1.03] brightness-[0.88] transition-all duration-700"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#090a0d] via-[#090a0d]/50 to-transparent" />
-            <div className="absolute bottom-5 left-6 sm:left-10 lg:left-12 right-6 flex items-end justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2.5 mb-1.5">
-                  <span className="h-2 w-2 rounded-full bg-[#00dc82]" />
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#00dc82]">
-                    {activeAsset.category}
-                  </span>
-                </div>
-                <h3 className="font-editorial text-2xl sm:text-3xl lg:text-4xl text-white drop-shadow-md">
-                  {activeAsset.thesisTitle}
-                </h3>
-              </div>
-              <Link
-                to={`/overview`}
-                className="hidden sm:inline-flex items-center gap-2 bg-white/15 hover:bg-white text-white hover:text-black px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md transition-all flex-shrink-0"
-              >
-                <span>Inspect in Terminal</span>
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Core Macro Thesis */}
-          <div className="mb-10">
-            <h4 className="font-mono text-xs uppercase tracking-wider text-white/40 mb-3">
-              Fundamental Macro Thesis
-            </h4>
-            <p className="font-sans text-sm sm:text-base text-white/80 leading-relaxed max-w-4xl text-balance">
-              {activeAsset.macroThesis}
-            </p>
-          </div>
-
-          {/* 3 Columns: Metrics + Catalysts + Risk Profile */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4 border-t border-white/10">
+        {/* Main Dossier Presentation Card with AnimatePresence */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeAsset.symbol}
+            initial={{ opacity: 0, y: 15, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -15, scale: 0.98 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
+            className="serene-card rounded-3xl p-6 sm:p-10 lg:p-12 border border-white/15 shadow-2xl overflow-hidden glass-shine-overlay"
+          >
             
-            {/* Column 1: Network Health Metrics (5 cols) */}
-            <div className="lg:col-span-4 space-y-4">
-              <h4 className="font-mono text-xs uppercase tracking-wider text-white/40 mb-2">
-                Institutional Health Metrics
-              </h4>
-              
-              {activeAsset.metrics.map((m, idx) => (
-                <div key={idx} className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <div className="text-[11px] font-mono text-white/50">{m.label}</div>
-                  <div className="text-xl font-mono font-bold text-white mt-0.5">{m.value}</div>
-                  <div className="text-[11px] text-white/60 mt-1 font-sans">{m.context}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Column 2: Confirmed Catalysts (5 cols) */}
-            <div className="lg:col-span-5 space-y-4">
-              <h4 className="font-mono text-xs uppercase tracking-wider text-white/40 mb-2">
-                Confirmed Structural Catalysts
-              </h4>
-
-              {activeAsset.catalysts.map((c, idx) => (
-                <div key={idx} className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <div className="flex items-center justify-between text-xs font-mono mb-1">
-                    <span className="font-semibold text-[#00dc82]">{c.title}</span>
-                    <span className="text-white/40">{c.date}</span>
+            {/* Cinematic Atmospheric Banner */}
+            <div className="relative h-44 sm:h-56 -mx-6 sm:-mx-10 lg:-mx-12 -mt-6 sm:-mt-10 lg:-mt-12 mb-8 overflow-hidden">
+              <motion.img
+                initial={{ scale: 1.08 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                src={activeAsset.image}
+                alt={activeAsset.name}
+                className="w-full h-full object-cover filter contrast-[1.03] brightness-[0.88]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#090a0d] via-[#090a0d]/50 to-transparent" />
+              <div className="absolute bottom-5 left-6 sm:left-10 lg:left-12 right-6 flex items-end justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2.5 mb-1.5">
+                    <span className="h-2 w-2 rounded-full bg-[#00dc82] animate-pulse" />
+                    <span className="font-mono text-xs uppercase tracking-widest text-[#00dc82]">
+                      {activeAsset.category}
+                    </span>
                   </div>
-                  <p className="text-xs text-white/65 font-sans leading-relaxed">
-                    {c.impact}
-                  </p>
+                  <h3 className="font-editorial text-2xl sm:text-3xl lg:text-4xl text-white drop-shadow-md">
+                    {activeAsset.thesisTitle}
+                  </h3>
                 </div>
-              ))}
+                <Link
+                  to={`/overview`}
+                  className="hidden sm:inline-flex items-center gap-2 bg-white/15 hover:bg-white text-white hover:text-black px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-md transition-all flex-shrink-0"
+                >
+                  <span>Inspect in Terminal</span>
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
             </div>
 
-            {/* Column 3: Stress-Tested Risk Gauges (3 cols) */}
-            <div className="lg:col-span-3 space-y-4">
-              <h4 className="font-mono text-xs uppercase tracking-wider text-white/40 mb-2">
-                Risk Profile
+            {/* Core Macro Thesis */}
+            <div className="mb-10">
+              <h4 className="font-mono text-xs uppercase tracking-wider text-white/40 mb-3">
+                Fundamental Macro Thesis
               </h4>
-
-              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-4">
-                <div>
-                  <div className="text-[10px] font-mono text-white/40 uppercase">Daily VaR (99% Conf.)</div>
-                  <div className="text-lg font-mono font-bold text-[#00dc82] mt-0.5">{activeAsset.riskProfile.var}</div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-mono text-white/40 uppercase">Max 90D Drawdown</div>
-                  <div className="text-lg font-mono font-bold text-white mt-0.5">{activeAsset.riskProfile.maxDrawdown}</div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-mono text-white/40 uppercase">Whale Concentration</div>
-                  <div className="text-xs font-mono font-semibold text-white/80 mt-0.5">{activeAsset.riskProfile.whaleConcentration}</div>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-black/40 border border-white/5 text-[10px] font-mono text-white/40 text-center">
-                DATA PROVENANCE: 100% REPRODUCIBLE
-              </div>
+              <p className="font-sans text-sm sm:text-base text-white/80 leading-relaxed max-w-4xl text-balance">
+                {activeAsset.macroThesis}
+              </p>
             </div>
 
-          </div>
+            {/* 3 Columns: Metrics + Catalysts + Risk Profile */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4 border-t border-white/10">
+              
+              {/* Column 1: Network Health Metrics (4 cols) */}
+              <div className="lg:col-span-4 space-y-4">
+                <h4 className="font-mono text-xs uppercase tracking-wider text-white/40 mb-2">
+                  Institutional Health Metrics
+                </h4>
+                
+                {activeAsset.metrics.map((m, idx) => (
+                  <motion.div
+                    key={idx}
+                    whileHover={{ scale: 1.02, x: 4 }}
+                    className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all cursor-default"
+                  >
+                    <div className="text-[11px] font-mono text-white/50">{m.label}</div>
+                    <div className="text-xl font-mono font-bold text-white mt-0.5">{m.value}</div>
+                    <div className="text-[11px] text-white/60 mt-1 font-sans">{m.context}</div>
+                  </motion.div>
+                ))}
+              </div>
 
-        </div>
+              {/* Column 2: Confirmed Catalysts (5 cols) */}
+              <div className="lg:col-span-5 space-y-4">
+                <h4 className="font-mono text-xs uppercase tracking-wider text-white/40 mb-2">
+                  Confirmed Structural Catalysts
+                </h4>
+
+                {activeAsset.catalysts.map((c, idx) => (
+                  <motion.div
+                    key={idx}
+                    whileHover={{ scale: 1.02, x: 4 }}
+                    className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-[#00dc82]/30 transition-all cursor-default"
+                  >
+                    <div className="flex items-center justify-between text-xs font-mono mb-1">
+                      <span className="font-semibold text-[#00dc82]">{c.title}</span>
+                      <span className="text-white/40">{c.date}</span>
+                    </div>
+                    <p className="text-xs text-white/65 font-sans leading-relaxed">
+                      {c.impact}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Column 3: Stress-Tested Risk Gauges (3 cols) */}
+              <div className="lg:col-span-3 space-y-4">
+                <h4 className="font-mono text-xs uppercase tracking-wider text-white/40 mb-2">
+                  Risk Profile
+                </h4>
+
+                <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-4">
+                  <div>
+                    <div className="text-[10px] font-mono text-white/40 uppercase">Daily VaR (99% Conf.)</div>
+                    <div className="text-lg font-mono font-bold text-[#00dc82] mt-0.5">{activeAsset.riskProfile.var}</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-mono text-white/40 uppercase">Max 90D Drawdown</div>
+                    <div className="text-lg font-mono font-bold text-white mt-0.5">{activeAsset.riskProfile.maxDrawdown}</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-mono text-white/40 uppercase">Whale Concentration</div>
+                    <div className="text-xs font-mono font-semibold text-white/80 mt-0.5">{activeAsset.riskProfile.whaleConcentration}</div>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-black/40 border border-white/5 text-[10px] font-mono text-white/40 text-center">
+                  DATA PROVENANCE: 100% REPRODUCIBLE
+                </div>
+              </div>
+
+            </div>
+
+          </motion.div>
+        </AnimatePresence>
 
       </div>
     </section>
   );
 };
+

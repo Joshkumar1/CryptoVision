@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, Sparkles, X, Eye, Download, Cookie, Check, Coins, TrendingUp } from "lucide-react";
+import { ArrowUpRight, Sparkles, X, Eye, Download, Cookie, Check, ShieldCheck, Layers, Maximize2, RefreshCw } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-interface CoinData {
-  id: "btc" | "eth" | "sol";
+interface CoinAsset {
+  id: string;
   name: string;
   symbol: string;
   tag: string;
@@ -13,6 +14,7 @@ interface CoinData {
   marketCap: string;
   volume24h: string;
   image: string;
+  renderVariantImage: string;
   bgGlow: string;
   borderGlow: string;
   shadowGlow: string;
@@ -23,67 +25,26 @@ interface CoinData {
   terminalRoute: string;
 }
 
-const COINS: Record<string, CoinData> = {
-  btc: {
-    id: "btc",
-    name: "Bitcoin",
-    symbol: "BTC",
-    tag: "Monetary Property",
-    badge: "Sovereign Scarcity",
-    price: "$91,450.20",
-    change24h: "+3.84%",
-    marketCap: "$1.81 Trillion",
-    volume24h: "$34.8B",
-    image: "/editorial/crypto_bitcoin_macro.jpg",
-    bgGlow: "from-amber-500/25 via-yellow-500/15 to-orange-600/20",
-    borderGlow: "from-amber-400/50 via-yellow-400/30 to-orange-500/40",
-    shadowGlow: "shadow-[0_0_80px_rgba(245,158,11,0.2)]",
-    accentText: "text-amber-400",
-    thesis: "Bitcoin functions as pristine, unencumbered monetary property. Fixed mathematical issuance and global custody absorption establish an asymmetric thermodynamic reserve asset for institutional treasuries.",
-    whyItMatters: "Acts as the ultimate counterparty-free reserve capital, neutralizing sovereign fiat dilution without reliance on central banking policy.",
-    keyMetric: { label: "Liquid Free Float", value: "11.2%", detail: "All-time low circulating supply on centralized exchanges" },
-    terminalRoute: "/market?asset=bitcoin",
-  },
-  eth: {
-    id: "eth",
-    name: "Ethereum",
-    symbol: "ETH",
-    tag: "Smart Contract L1",
-    badge: "Settlement Layer",
-    price: "$2,740.85",
-    change24h: "+4.12%",
-    marketCap: "$330.5 Billion",
-    volume24h: "$18.6B",
-    image: "/editorial/crypto_ethereum_coin.jpg",
-    bgGlow: "from-cyan-500/25 via-blue-500/15 to-indigo-600/20",
-    borderGlow: "from-cyan-400/50 via-blue-400/30 to-indigo-500/40",
-    shadowGlow: "shadow-[0_0_80px_rgba(6,182,212,0.2)]",
-    accentText: "text-cyan-400",
-    thesis: "Ethereum provides the sovereign smart contract foundation for global decentralized finance, securing billions in collateral with deflationary fee burns and native staking yield.",
-    whyItMatters: "The native risk-free yield rate of Web3, powering institutional tokenized real-world assets (RWAs) and layer-2 state rollups.",
-    keyMetric: { label: "Staked Supply Ratio", value: "28.6%", detail: "34.5M ETH locked securing the consensus engine" },
-    terminalRoute: "/market?asset=ethereum",
-  },
-  sol: {
-    id: "sol",
-    name: "Solana",
-    symbol: "SOL",
-    tag: "High-Speed Monolith",
-    badge: "Parallel Engine",
-    price: "$188.60",
-    change24h: "+6.45%",
-    marketCap: "$88.9 Billion",
-    volume24h: "$7.2B",
-    image: "/editorial/crypto_solana_titanium.jpg",
-    bgGlow: "from-emerald-500/25 via-teal-500/15 to-purple-600/20",
-    borderGlow: "from-emerald-400/50 via-teal-400/30 to-purple-500/40",
-    shadowGlow: "shadow-[0_0_80px_rgba(16,185,129,0.2)]",
-    accentText: "text-emerald-400",
-    thesis: "Single-state synchronization at the speed of light. Hardware-parallelized validation allows real-time consumer payments and decentralized central limit order books without rollup fragmentation.",
-    whyItMatters: "Delivers sub-second finality and sustained 2,800+ real economic TPS, enabling institutional-grade high-frequency decentralized trading.",
-    keyMetric: { label: "True Non-Vote TPS", value: "2,840 TPS", detail: "Sustained real economic transactions per second" },
-    terminalRoute: "/discover",
-  },
+const KRYPTOS_4K_ASSET: CoinAsset = {
+  id: "kryptos",
+  name: "Kryptos Protocol",
+  symbol: "KRYPTOS",
+  tag: "Decentralized Digital Asset",
+  badge: "4K Sovereign Reserve",
+  price: "$104,250.00",
+  change24h: "+8.92%",
+  marketCap: "$2.15 Trillion",
+  volume24h: "$42.6B",
+  image: "/editorial/kryptos_protocol_4k_coin.png",
+  renderVariantImage: "/editorial/kryptos_protocol_4k_coin_render.jpg",
+  bgGlow: "from-cyan-500/30 via-blue-600/20 to-emerald-500/25",
+  borderGlow: "from-cyan-400/60 via-blue-400/40 to-emerald-400/50",
+  shadowGlow: "shadow-[0_0_100px_rgba(6,182,212,0.25)]",
+  accentText: "text-cyan-400",
+  thesis: "Kryptos Protocol functions as pristine, unencumbered 4K cryptographic monetary property. Fixed mathematical issuance and institutional custody absorption establish an asymmetric thermodynamic reserve asset for sovereign treasuries.",
+  whyItMatters: "Acts as the ultimate counterparty-free reserve capital, neutralizing sovereign fiat dilution without reliance on central banking policy.",
+  keyMetric: { label: "Liquid Free Float", value: "8.4%", detail: "All-time low circulating supply on centralized exchanges" },
+  terminalRoute: "/market?asset=kryptos",
 };
 
 // Cookie helper utilities
@@ -100,258 +61,293 @@ function setCookie(name: string, value: string, days = 365) {
 }
 
 export const FloatingHeroCanvas: React.FC = () => {
-  const [selectedCoinId, setSelectedCoinId] = useState<"btc" | "eth" | "sol">("btc");
+  const [activeImageVariant, setActiveImageVariant] = useState<"master" | "render">("master");
   const [showModal, setShowModal] = useState(false);
   const [cookieToast, setCookieToast] = useState<string | null>(null);
 
-  // Initialize selected coin from browser cookie on mount
+  // Initialize cookie settings on mount
   useEffect(() => {
-    const savedCoin = getCookie("cv_selected_coin");
-    if (savedCoin && (savedCoin === "btc" || savedCoin === "eth" || savedCoin === "sol")) {
-      setSelectedCoinId(savedCoin);
-    } else {
-      // Default to Bitcoin and save initial cookie
-      setCookie("cv_selected_coin", "btc");
-    }
+    setCookie("cv_selected_coin", "kryptos");
+    setCookie("cv_asset_mode", "4K_ultra_hd");
   }, []);
 
-  const currentCoin = COINS[selectedCoinId] || COINS.btc;
+  const currentAsset = KRYPTOS_4K_ASSET;
+  const activeImageUrl = activeImageVariant === "master" ? currentAsset.image : currentAsset.renderVariantImage;
 
-  // Handle switching coin & update cookie
-  const handleSelectCoin = (id: "btc" | "eth" | "sol") => {
-    setSelectedCoinId(id);
-    setCookie("cv_selected_coin", id);
-    setCookieToast(`Cookie updated: cv_selected_coin="${id}"`);
+  // Handle switching 4K render views
+  const handleToggleVariant = () => {
+    const nextVariant = activeImageVariant === "master" ? "render" : "master";
+    setActiveImageVariant(nextVariant);
+    setCookie("cv_image_variant", nextVariant);
+    setCookieToast(`Switched 4K perspective to ${nextVariant === "master" ? "Physical 4K Master" : "Raytraced Render"}`);
     setTimeout(() => setCookieToast(null), 3000);
   };
 
-  // Handle downloading coin image & update download cookie
+  // Handle downloading 4K coin image asset & update download cookies
   const handleDownloadCoinImage = () => {
-    setCookie("cv_selected_coin", currentCoin.id);
-    setCookie("cv_last_downloaded_coin", currentCoin.id);
+    setCookie("cv_selected_coin", currentAsset.id);
+    setCookie("cv_last_downloaded_coin", currentAsset.id);
+    setCookie("cv_download_quality", "4K_ULTRA_HD");
     setCookie("cv_download_timestamp", new Date().toISOString());
 
     // Trigger image file download
     const link = document.createElement("a");
-    link.href = currentCoin.image;
-    link.download = `${currentCoin.id}_${currentCoin.name.toLowerCase()}_coin_asset.jpg`;
+    link.href = activeImageUrl;
+    link.download = `kryptos_protocol_4k_${activeImageVariant}_coin_asset.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
-    setCookieToast(`Downloaded ${currentCoin.name} coin image & saved to cookies!`);
+    setCookieToast(`Downloaded 4K Kryptos Protocol coin image & saved preference to cookies!`);
     setTimeout(() => setCookieToast(null), 4000);
   };
 
   // Handle downloading cookie session data as JSON
   const handleDownloadCookieData = () => {
     const cookiePayload = {
-      cookieKey: "cv_selected_coin",
-      activeCoin: currentCoin.id,
-      coinName: currentCoin.name,
-      symbol: currentCoin.symbol,
-      price: currentCoin.price,
-      marketCap: currentCoin.marketCap,
-      volume24h: currentCoin.volume24h,
-      imageAsset: currentCoin.image,
+      assetId: currentAsset.id,
+      assetName: currentAsset.name,
+      symbol: currentAsset.symbol,
+      resolution: "3840x2160 (4K Ultra HD)",
+      activeVariant: activeImageVariant,
+      price: currentAsset.price,
+      marketCap: currentAsset.marketCap,
+      volume24h: currentAsset.volume24h,
+      imageAssetPath: activeImageUrl,
       downloadTimestamp: new Date().toISOString(),
       domain: window.location.hostname || "localhost",
       path: "/",
       sameSite: "Lax",
       expires: "365 days",
-      cookieHeader: `cv_selected_coin=${currentCoin.id}; Path=/; Max-Age=31536000; SameSite=Lax`,
+      cookieHeader: `cv_selected_coin=${currentAsset.id}; cv_asset_mode=4K_ultra_hd; Path=/; Max-Age=31536000; SameSite=Lax`,
     };
 
     const blob = new Blob([JSON.stringify(cookiePayload, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${currentCoin.id}_coin_cookie_data.json`;
+    link.download = `kryptos_4k_asset_cookie_data.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    setCookieToast(`Exported ${currentCoin.name} cookie dataset file!`);
+    setCookieToast(`Exported 4K Kryptos coin cookie dataset file!`);
     setTimeout(() => setCookieToast(null), 4000);
   };
 
   return (
-    <section className="relative min-h-screen w-full flex flex-col items-center justify-start overflow-hidden bg-gradient-to-b from-[#061412] via-[#070c14] to-[#040608] text-white pt-28 pb-24 px-4 sm:px-6 select-none">
+    <section className="relative min-h-screen w-full flex flex-col items-center justify-start overflow-hidden bg-gradient-to-b from-[#051118] via-[#070c14] to-[#040608] text-white pt-24 pb-24 px-4 sm:px-6 select-none">
       
       {/* ══════════════════════════════════════════════════════════════
-          1. DYNAMIC COLORED BACKGROUND (RESPONDS TO ACTIVE COIN)
+          1. DYNAMIC ATMOSPHERIC 4K LIGHTING & GLOW BACKDROP
           ══════════════════════════════════════════════════════════════ */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none transition-colors duration-1000">
-        <div className="absolute inset-0 glass-grid-pattern opacity-20" />
+        <div className="absolute inset-0 glass-grid-pattern opacity-25" />
         
-        {/* Dynamic ambient color glow matching active coin */}
+        {/* Animated particle dots */}
+        <div className="absolute top-1/4 left-1/5 w-2 h-2 rounded-full bg-cyan-400/40 animate-particle-1" />
+        <div className="absolute top-1/3 right-1/4 w-3 h-3 rounded-full bg-emerald-400/30 animate-particle-2" />
+        <div className="absolute bottom-1/3 left-1/3 w-2.5 h-2.5 rounded-full bg-blue-400/30 animate-particle-3" />
+        
+        {/* Top flagship ambient glow */}
         <div
-          className={`absolute -top-32 left-1/2 -translate-x-1/2 w-[850px] h-[550px] rounded-full bg-gradient-to-b ${currentCoin.bgGlow} blur-[130px] transition-all duration-700`}
+          className={`absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[580px] rounded-full bg-gradient-to-b ${currentAsset.bgGlow} blur-[140px] transition-all duration-700 animate-pulse-glow`}
         />
         
-        {/* Left side ambient color pool */}
-        <div className="absolute top-1/3 -left-32 w-[550px] h-[550px] rounded-full bg-gradient-to-tr from-[#059669]/15 via-[#0284c7]/10 to-transparent blur-[140px]" />
+        {/* Left side cyan accent pool */}
+        <div className="absolute top-1/3 -left-32 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#06b6d4]/20 via-[#3b82f6]/15 to-transparent blur-[150px]" />
         
-        {/* Right side atmospheric accent */}
-        <div className="absolute top-1/2 -right-32 w-[600px] h-[600px] rounded-full bg-gradient-to-bl from-[#6366f1]/15 via-[#8b5cf6]/10 to-transparent blur-[140px]" />
+        {/* Right side emerald atmospheric pulse */}
+        <div className="absolute top-1/2 -right-32 w-[650px] h-[650px] rounded-full bg-gradient-to-bl from-[#10b981]/20 via-[#6366f1]/15 to-transparent blur-[150px]" />
         
-        {/* Bottom subtle grounding glow */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[300px] bg-gradient-to-t from-[#040608] via-transparent to-transparent" />
+        {/* Bottom subtle grounding vignette */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[320px] bg-gradient-to-t from-[#040608] via-transparent to-transparent" />
       </div>
 
       {/* Floating Toast Notification for Cookie & Download Feedback */}
-      {cookieToast && (
-        <div className="fixed top-24 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-xs font-mono text-white shadow-2xl animate-in fade-in slide-in-from-top-3 duration-300">
-          <Cookie className="h-4 w-4 text-[#00dc82]" />
-          <span>{cookieToast}</span>
-          <Check className="h-3.5 w-3.5 text-[#00dc82]" />
-        </div>
-      )}
+      <AnimatePresence>
+        {cookieToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-24 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-black/90 backdrop-blur-md border border-cyan-500/30 text-xs font-mono text-white shadow-2xl"
+          >
+            <Cookie className="h-4 w-4 text-cyan-400" />
+            <span>{cookieToast}</span>
+            <Check className="h-3.5 w-3.5 text-emerald-400" />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ══════════════════════════════════════════════════════════════
-          2. CENTERPIECE: EDITORIAL DISPLAY TYPOGRAPHY
+          2. CENTERPIECE: EDITORIAL DISPLAY TYPOGRAPHY & FLAGSHIP BADGE
           ══════════════════════════════════════════════════════════════ */}
-      <div className="relative z-20 max-w-4xl mx-auto text-center flex flex-col items-center justify-center px-4 pt-4 pb-8">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as const }}
+        className="relative z-20 max-w-4xl mx-auto text-center flex flex-col items-center justify-center px-4 pt-2 pb-6"
+      >
         
-        {/* Coin Selection Tabs (According to Selected Coin) */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-          {(["btc", "eth", "sol"] as const).map((coinId) => {
-            const coin = COINS[coinId];
-            const isSelected = selectedCoinId === coinId;
-            return (
-              <button
-                key={coin.id}
-                type="button"
-                onClick={() => handleSelectCoin(coin.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono tracking-wide transition-all cursor-pointer ${
-                  isSelected
-                    ? "bg-white text-black font-bold shadow-[0_0_25px_rgba(255,255,255,0.35)] scale-105"
-                    : "bg-white/[0.06] text-white/70 hover:text-white hover:bg-white/[0.12] border border-white/15"
-                }`}
-              >
-                <span className="font-bold">{coin.name}</span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded ${isSelected ? "bg-black/10 text-black font-semibold" : "bg-white/10 text-white/60"}`}>
-                  {coin.symbol}
-                </span>
-                {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-[#00dc82]" />}
-              </button>
-            );
-          })}
-        </div>
+        {/* 4K Flagship Kryptos Protocol Pill */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono tracking-wider uppercase mb-6 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)]"
+        >
+          <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+          <span className="font-bold">Kryptos Protocol</span>
+          <span className="text-white/40">•</span>
+          <span className="text-white/90">4K Ultra HD Reserve Asset</span>
+        </motion.div>
 
         {/* High-Contrast Editorial Serif Headline */}
-        <h1 className="font-editorial text-[clamp(2.4rem,5.6vw,4.8rem)] font-normal text-white leading-[1.08] tracking-tight max-w-3xl">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
+          className="font-editorial text-[clamp(2.5rem,5.8vw,5.2rem)] font-normal text-white leading-[1.06] tracking-tight max-w-4xl"
+        >
           Clarity that gives ambitious allocators a sharper edge.
-        </h1>
+        </motion.h1>
 
         {/* Subtitle with High-Contrast Bold Highlights */}
-        <p className="mt-5 max-w-2xl text-xs sm:text-sm md:text-base text-white/65 font-sans leading-relaxed text-balance">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] as const }}
+          className="mt-5 max-w-2xl text-xs sm:text-sm md:text-base text-white/70 font-sans leading-relaxed text-balance"
+        >
           From mempool anomalies to multi-model consensus, we synthesize{" "}
           <strong className="text-white font-medium">on-chain liquidity</strong>,{" "}
           <strong className="text-white font-medium">catalyst intelligence</strong>, and{" "}
           <strong className="text-white font-medium">verifiable risk</strong> that help capital move with poise and unhurried conviction.
-        </p>
+        </motion.p>
 
         {/* Action Button Island */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-          <Link
-            to={currentCoin.terminalRoute}
-            className="group inline-flex items-center gap-3 bg-[#f5f5f3] hover:bg-white text-[#111111] px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:shadow-[0_0_40px_rgba(255,255,255,0.25)] active:scale-95"
-          >
-            <span>Launch {currentCoin.name} Terminal</span>
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#111111] text-white text-[10px] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-              <ArrowUpRight className="h-3 w-3" />
-            </span>
-          </Link>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+          className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
+        >
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+            <Link
+              to={currentAsset.terminalRoute}
+              className="group inline-flex items-center gap-3 bg-[#f5f5f3] hover:bg-white text-[#111111] px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider transition-all shadow-[0_0_35px_rgba(255,255,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.3)]"
+            >
+              <span>Launch Kryptos Terminal</span>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#111111] text-white text-[10px] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                <ArrowUpRight className="h-3 w-3" />
+              </span>
+            </Link>
+          </motion.div>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             type="button"
             onClick={handleDownloadCoinImage}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-xs font-medium text-white hover:text-black hover:bg-white border border-white/20 hover:border-white bg-white/[0.05] backdrop-blur-md transition-all shadow-sm cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-xs font-medium text-white hover:text-black hover:bg-white border border-cyan-400/30 hover:border-white bg-white/[0.06] backdrop-blur-md transition-all shadow-sm cursor-pointer"
           >
-            <Download className="h-3.5 w-3.5" />
-            <span>Download {currentCoin.name} Coin</span>
-          </button>
-        </div>
+            <Download className="h-3.5 w-3.5 text-cyan-400 group-hover:text-black" />
+            <span>Download 4K Coin Image</span>
+          </motion.button>
+        </motion.div>
 
-      </div>
+      </motion.div>
 
       {/* ══════════════════════════════════════════════════════════════
-          3. SINGLE STANDOUT IMAGE OF THE COIN ON COLORED BACKDROP
+          3. FEATURED PERFECT 4K KRYPTOS PROTOCOL COIN SHOWCASE
           ══════════════════════════════════════════════════════════════ */}
-      <div className="relative z-20 w-full max-w-4xl mx-auto mt-2 px-2 sm:px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
+        className="relative z-20 w-full max-w-4xl mx-auto mt-2 px-2 sm:px-4"
+      >
+
         
         {/* Glowing Colored Backdrop Frame */}
-        <div className={`relative rounded-3xl p-[1px] bg-gradient-to-b ${currentCoin.borderGlow} ${currentCoin.shadowGlow} group transition-all duration-700`}>
+        <div className={`relative rounded-3xl p-[1.5px] bg-gradient-to-b ${currentAsset.borderGlow} ${currentAsset.shadowGlow} group transition-all duration-700`}>
           
           {/* Main Visual Container */}
-          <div className="relative overflow-hidden rounded-3xl bg-[#0b1016]/95 backdrop-blur-xl border border-white/10">
+          <div className="relative overflow-hidden rounded-3xl bg-[#090e15]/95 backdrop-blur-xl border border-white/10">
             
-            {/* The One Real Image of the Coin */}
-            <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden bg-black/40 flex items-center justify-center">
+            {/* The Perfect 4K Kryptos Coin Image */}
+            <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden bg-black/50 flex items-center justify-center">
               <img
-                key={currentCoin.id}
-                src={currentCoin.image}
-                alt={`${currentCoin.name} (${currentCoin.symbol}) Official Coin Asset`}
-                className="w-full h-full object-cover object-center filter contrast-[1.05] brightness-[1.02] transition-all duration-700 ease-out group-hover:scale-[1.03]"
+                key={activeImageUrl}
+                src={activeImageUrl}
+                alt="Kryptos Protocol Decentralized Digital Asset 4K Coin"
+                className="w-full h-full object-cover object-center filter contrast-[1.06] brightness-[1.03] transition-all duration-700 ease-out group-hover:scale-[1.025]"
                 loading="eager"
               />
 
               {/* Gradient lighting & color integration overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#080d14] via-black/20 to-transparent opacity-85" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#060a0f] via-black/15 to-transparent opacity-85" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35 pointer-events-none" />
 
-              {/* TOP-LEFT: Active Coin & Live Feed Pill */}
-              <div className="absolute top-3 left-3 sm:top-5 sm:left-5 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-white/20 shadow-lg text-[10px] sm:text-xs font-mono text-white/95">
-                <span className="h-2 w-2 rounded-full bg-[#00dc82] animate-pulse shadow-[0_0_8px_#00dc82]" />
-                <span className="tracking-wide uppercase font-bold">{currentCoin.name}</span>
+              {/* TOP-LEFT: 4K Kryptos Protocol Live Feed Pill */}
+              <div className="absolute top-3 left-3 sm:top-5 sm:left-5 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/85 backdrop-blur-md border border-cyan-400/40 shadow-xl text-[10px] sm:text-xs font-mono text-white/95">
+                <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_#06b6d4]" />
+                <span className="tracking-wide uppercase font-bold text-white">Kryptos Protocol</span>
                 <span className="text-white/40">|</span>
-                <span className={currentCoin.accentText}>{currentCoin.badge}</span>
+                <span className="text-cyan-300 font-semibold">4K ULTRA HD DIGITAL ASSET</span>
               </div>
 
-              {/* TOP-RIGHT: Active Browser Cookie Status Indicator */}
-              <div className="absolute top-3 right-3 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-white/20 shadow-lg text-[10px] sm:text-xs font-mono text-white/80">
-                <Cookie className="h-3.5 w-3.5 text-[#00dc82]" />
-                <span className="text-white/50 hidden sm:inline">Cookie:</span>
-                <span className="font-semibold text-[#00dc82]">cv_coin="{currentCoin.id}"</span>
+              {/* TOP-RIGHT: 4K Angle Switcher & Cookie Pill */}
+              <div className="absolute top-3 right-3 sm:top-5 sm:right-5 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleToggleVariant}
+                  title="Toggle between 4K Physical Master & 4K Raytraced Render"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/85 hover:bg-black backdrop-blur-md border border-white/25 hover:border-cyan-400 text-[10px] sm:text-xs font-mono text-white transition-all shadow-lg cursor-pointer"
+                >
+                  <RefreshCw className="h-3 w-3 text-cyan-400" />
+                  <span>{activeImageVariant === "master" ? "4K Physical Coin" : "4K Raytraced Render"}</span>
+                </button>
               </div>
 
               {/* BOTTOM FLOATING TELEMETRY & DOWNLOAD ACTIONS BAR */}
-              <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-black/80 backdrop-blur-lg border border-white/20 shadow-2xl">
+              <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-black/85 backdrop-blur-lg border border-white/20 shadow-2xl">
                 
                 {/* Left Coin Details & Real-Time Price */}
                 <div className="max-w-xl">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-[10px] sm:text-[11px] font-mono uppercase tracking-widest font-bold ${currentCoin.accentText}`}>
-                      {currentCoin.symbol} Spot Liquidity
+                    <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest font-bold text-cyan-400">
+                      KRYPTOS Sovereign Liquidity
                     </span>
                     <span className="text-[10px] font-mono text-emerald-400 font-medium">
-                      {currentCoin.change24h} (24h)
+                      {currentAsset.change24h} (24h)
                     </span>
                   </div>
                   <div className="text-2xl sm:text-3xl md:text-4xl font-mono font-bold text-white tracking-tight">
-                    {currentCoin.price}
+                    {currentAsset.price}
                   </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-3 text-[11px] sm:text-xs text-white/70 font-sans">
-                    <span>Market Cap: <strong className="text-white font-mono">{currentCoin.marketCap}</strong></span>
+                  <div className="mt-1 flex flex-wrap items-center gap-3 text-[11px] sm:text-xs text-white/75 font-sans">
+                    <span>Market Cap: <strong className="text-white font-mono">{currentAsset.marketCap}</strong></span>
                     <span className="text-white/30">•</span>
-                    <span>24h Vol: <strong className="text-white font-mono">{currentCoin.volume24h}</strong></span>
+                    <span>24h Vol: <strong className="text-white font-mono">{currentAsset.volume24h}</strong></span>
                   </div>
                 </div>
 
-                {/* Right Action Island: Download Coin Image & Download Cookie */}
+                {/* Right Action Island: Download 4K Image & Download Cookie */}
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   
-                  {/* Download Image Button */}
+                  {/* Download 4K Image Button */}
                   <button
                     type="button"
                     onClick={handleDownloadCoinImage}
-                    title="Download this coin image asset and save to cookies"
-                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#f0f0f0] text-black text-xs font-mono font-semibold transition-all shadow-lg hover:shadow-white/20 active:scale-95 cursor-pointer"
+                    title="Download this 4K Kryptos coin image asset and save to cookies"
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#f0f0f0] text-black text-xs font-mono font-semibold transition-all shadow-lg hover:shadow-cyan-400/20 active:scale-95 cursor-pointer"
                   >
                     <Download className="h-3.5 w-3.5" />
-                    <span>Download Image</span>
+                    <span>Download 4K Image</span>
                   </button>
 
                   {/* Download Cookie / Session Data */}
@@ -361,18 +357,18 @@ export const FloatingHeroCanvas: React.FC = () => {
                     title="Download active coin cookie session configuration"
                     className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-mono transition-all border border-white/15 cursor-pointer"
                   >
-                    <Cookie className="h-3.5 w-3.5 text-[#00dc82]" />
+                    <Cookie className="h-3.5 w-3.5 text-cyan-400" />
                     <span className="hidden md:inline">Download Cookie</span>
                   </button>
 
-                  {/* Inspect Dossier */}
+                  {/* Inspect 4K Dossier */}
                   <button
                     type="button"
                     onClick={() => setShowModal(true)}
-                    title="Inspect deep on-chain dossier"
+                    title="Inspect 4K resolution coin dossier"
                     className="inline-flex items-center justify-center p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all border border-white/15 cursor-pointer"
                   >
-                    <Eye className="h-3.5 w-3.5" />
+                    <Maximize2 className="h-3.5 w-3.5 text-cyan-400" />
                   </button>
 
                 </div>
@@ -388,41 +384,41 @@ export const FloatingHeroCanvas: React.FC = () => {
         {/* Cookie Persistence & Asset Download Info */}
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-center text-[11px] font-mono text-white/50">
           <span className="flex items-center gap-1.5">
-            <Cookie className="h-3 w-3 text-[#00dc82]" />
-            <span>Preference persistently stored in browser cookies</span>
+            <Cookie className="h-3 w-3 text-cyan-400" />
+            <span>Active Cookie: cv_selected_coin="kryptos"</span>
           </span>
           <span className="text-white/20">•</span>
           <span className="flex items-center gap-1.5">
-            <Download className="h-3 w-3 text-emerald-400" />
-            <span>High-res coin asset download ready</span>
+            <ShieldCheck className="h-3 w-3 text-emerald-400" />
+            <span>4K Ultra-HD Master Asset Verified</span>
           </span>
         </div>
 
-      </div>
+      </motion.div>
 
       {/* ══════════════════════════════════════════════════════════════
-          4. INTERACTIVE KNOWLEDGE DOSSIER MODAL
+          4. INTERACTIVE 4K KRYPTOS COIN DOSSIER & FULLSCREEN MODAL
           ══════════════════════════════════════════════════════════════ */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-2xl rounded-3xl bg-[#0c1219] border border-white/20 p-6 sm:p-8 shadow-2xl text-white overflow-hidden">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-lg flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="relative w-full max-w-3xl rounded-3xl bg-[#0a1017] border border-cyan-500/30 p-6 sm:p-8 shadow-2xl text-white overflow-hidden max-h-[90vh] overflow-y-auto">
             
             {/* Header */}
             <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-5 mb-5">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl overflow-hidden border border-white/20 flex-shrink-0 shadow-lg bg-black">
+                <div className="w-20 h-20 rounded-2xl overflow-hidden border border-cyan-400/40 flex-shrink-0 shadow-xl bg-black">
                   <img
-                    src={currentCoin.image}
-                    alt={currentCoin.name}
+                    src={activeImageUrl}
+                    alt={currentAsset.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div>
-                  <span className={`inline-block text-[10px] font-mono uppercase tracking-widest px-2.5 py-0.5 rounded-full mb-1 border ${currentCoin.accentText} bg-white/5 border-white/20`}>
-                    {currentCoin.name} ({currentCoin.symbol}) // {currentCoin.badge}
+                  <span className="inline-block text-[10px] font-mono uppercase tracking-widest px-2.5 py-0.5 rounded-full mb-1 border text-cyan-300 bg-cyan-500/10 border-cyan-400/30">
+                    {currentAsset.name} ({currentAsset.symbol}) // 4K SOVEREIGN ASSET
                   </span>
-                  <h3 className="font-editorial text-2xl text-white leading-tight">
-                    {currentCoin.name} Sovereign Dossier
+                  <h3 className="font-editorial text-2xl sm:text-3xl text-white leading-tight">
+                    Kryptos Protocol 4K Dossier
                   </h3>
                 </div>
               </div>
@@ -437,6 +433,18 @@ export const FloatingHeroCanvas: React.FC = () => {
               </button>
             </div>
 
+            {/* High Resolution Image View in Modal */}
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/15 mb-6 bg-black">
+              <img
+                src={activeImageUrl}
+                alt="4K Kryptos Protocol Image Preview"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-3 left-3 px-3 py-1 rounded-md bg-black/80 text-[10px] font-mono text-cyan-400 border border-cyan-400/30">
+                RESOLUTION: 3840 x 2160 (4K MASTER)
+              </div>
+            </div>
+
             {/* Structured Content */}
             <div className="space-y-4">
               <div>
@@ -444,7 +452,7 @@ export const FloatingHeroCanvas: React.FC = () => {
                   Core Allocation Thesis
                 </h4>
                 <p className="text-sm font-sans text-white/85 leading-relaxed">
-                  {currentCoin.thesis}
+                  {currentAsset.thesis}
                 </p>
               </div>
 
@@ -453,21 +461,21 @@ export const FloatingHeroCanvas: React.FC = () => {
                   Institutional Significance
                 </h4>
                 <p className="text-xs sm:text-sm font-sans text-white/70 leading-relaxed">
-                  {currentCoin.whyItMatters}
+                  {currentAsset.whyItMatters}
                 </p>
               </div>
 
               {/* Key Metric Card */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 flex items-center justify-between gap-4">
+              <div className="rounded-2xl border border-cyan-400/30 bg-cyan-950/20 p-4 sm:p-5 flex items-center justify-between gap-4">
                 <div>
                   <div className="text-[10px] font-mono uppercase tracking-widest text-white/40">
-                    {currentCoin.keyMetric.label}
+                    {currentAsset.keyMetric.label}
                   </div>
-                  <div className={`text-2xl sm:text-3xl font-mono font-bold mt-0.5 ${currentCoin.accentText}`}>
-                    {currentCoin.keyMetric.value}
+                  <div className="text-2xl sm:text-3xl font-mono font-bold mt-0.5 text-cyan-400">
+                    {currentAsset.keyMetric.value}
                   </div>
                   <div className="text-[11px] text-white/50 mt-1 font-sans">
-                    {currentCoin.keyMetric.detail}
+                    {currentAsset.keyMetric.detail}
                   </div>
                 </div>
 
@@ -475,16 +483,16 @@ export const FloatingHeroCanvas: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleDownloadCoinImage}
-                    className="inline-flex items-center justify-center gap-2 bg-white text-black px-4 py-2 rounded-full text-xs font-semibold hover:bg-white/90 transition-all"
+                    className="inline-flex items-center justify-center gap-2 bg-white text-black px-4 py-2 rounded-full text-xs font-semibold hover:bg-white/90 transition-all cursor-pointer"
                   >
                     <Download className="h-3.5 w-3.5" />
-                    <span>Download Asset</span>
+                    <span>Download 4K Asset</span>
                   </button>
 
                   <Link
-                    to={currentCoin.terminalRoute}
+                    to={currentAsset.terminalRoute}
                     onClick={() => setShowModal(false)}
-                    className="inline-flex items-center justify-center gap-1 text-white/70 hover:text-white text-xs font-mono"
+                    className="inline-flex items-center justify-center gap-1 text-cyan-300 hover:text-white text-xs font-mono"
                   >
                     <span>Terminal View</span>
                     <ArrowUpRight className="h-3 w-3" />
@@ -496,8 +504,8 @@ export const FloatingHeroCanvas: React.FC = () => {
             {/* Footer with Cookie Persistence Confirmation */}
             <div className="mt-6 pt-4 border-t border-white/10 flex justify-between items-center text-[10px] font-mono text-white/40">
               <span className="flex items-center gap-1.5">
-                <Cookie className="h-3.5 w-3.5 text-[#00dc82]" />
-                <span>COOKIE ACTIVE: cv_selected_coin="{currentCoin.id}"</span>
+                <Cookie className="h-3.5 w-3.5 text-cyan-400" />
+                <span>COOKIE STORED: cv_selected_coin="kryptos"</span>
               </span>
               <button
                 type="button"
@@ -515,5 +523,3 @@ export const FloatingHeroCanvas: React.FC = () => {
     </section>
   );
 };
-
-

@@ -21,12 +21,12 @@ import {
 } from "lucide-react";
 
 // Primary Navigation according to Product Identity:
-// Home | Discover | News | Projects | Narratives | Compare | Research Lab | Learn
+// ✦ EXPLORE | 🔥 RESEARCH | 〽 ANALYZE | News | Narratives | Compare | Research Lab | Learn
 const PRIMARY_NAV = [
-  { label: "Dashboard",    href: "/overview",     icon: LayoutDashboard },
-  { label: "Discover",     href: "/discover",     icon: Compass },
+  { label: "✦ EXPLORE",    href: "/explore",      icon: Compass },
+  { label: "🔥 RESEARCH",   href: "/research",     icon: Flame },
+  { label: "〽 ANALYZE",    href: "/analyze",      icon: BarChart3 },
   { label: "News",         href: "/news",         icon: Newspaper },
-  { label: "Projects",     href: "/projects",     icon: BarChart3 },
   { label: "Narratives",   href: "/narratives",   icon: Layers },
   { label: "Compare",      href: "/compare",      icon: GitCompareArrows },
   { label: "Research Lab", href: "/research-lab", icon: FlaskConical },
