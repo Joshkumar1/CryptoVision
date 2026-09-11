@@ -4,7 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CurrencyPreferenceService, SUPPORTED_CURRENCIES_MAP } from "@/lib/currency/CurrencyPreferenceService";
 import type { CurrencyDefinition } from "@/lib/currency/CurrencyPreferenceService";
 
-export const GlobalCurrencySelector: React.FC = () => {
+interface GlobalCurrencySelectorProps {
+  className?: string;
+}
+
+export const GlobalCurrencySelector: React.FC<GlobalCurrencySelectorProps> = ({ className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentCurrency, setCurrentCurrency] = useState<CurrencyDefinition>(CurrencyPreferenceService.getSelectedCurrency());
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,15 +39,15 @@ export const GlobalCurrencySelector: React.FC = () => {
 
   return (
     <>
-      {/* HEADER TRIGGER BUTTON (Matches Refactoring UI Pill design) */}
+      {/* HEADER TRIGGER BUTTON */}
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-xs font-mono text-white transition-all cursor-pointer shadow-sm hover:border-[#00dc82]/40"
+        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#121212] hover:bg-black text-white text-xs font-mono transition-all cursor-pointer shadow-sm active:scale-95 shrink-0 ${className || ""}`}
         title="Select Display Currency (Project-Wide)"
       >
-        <span className="text-sm">{currentCurrency.flag}</span>
-        <span className="font-bold text-white">{currentCurrency.code}</span>
+        <span className="text-xs sm:text-sm">{currentCurrency.flag}</span>
+        <span className="font-bold text-white tracking-tight">{currentCurrency.code}</span>
         <span className="text-[#00dc82] font-semibold">{currentCurrency.symbol}</span>
       </button>
 

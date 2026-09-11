@@ -52,94 +52,79 @@ export const EditorialFloatingHeader: React.FC = () => {
       {/* ══════════════════════════════════════════════════════════════
           1. FLOATING IVORY CAPSULE HEADER (MATCHES THE REFERENCE)
           ══════════════════════════════════════════════════════════════ */}
-      <header
-        className={`fixed z-50 transition-all duration-500 ease-out ${
-          scrolled
-            ? "top-3 sm:top-5 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-3xl shadow-2xl"
-            : "top-0 left-0 right-0 w-full translate-x-0 max-w-full shadow-md"
-        }`}
-      >
-        <div
-          className={`flex items-center justify-between transition-all duration-500 ease-out ${
-            scrolled
-              ? "pill-nav-ivory rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 border border-white/40 shadow-2xl gap-3 md:gap-6"
-              : "bg-[#f5f5f3] text-[#121212] rounded-none border-b border-black/15 px-4 sm:px-10 lg:px-14 py-3 sm:py-3.5 gap-4 md:gap-8 w-full"
-          }`}
-        >
+      <header className="fixed z-50 top-3 sm:top-4 left-1/2 -translate-x-1/2 w-fit max-w-[calc(100vw-1.5rem)] px-1 pointer-events-none transition-all duration-300 ease-out">
+        <div className="pill-nav-ivory rounded-full px-3.5 sm:px-5 lg:px-6 py-2 sm:py-2.5 border border-white/60 shadow-2xl flex items-center justify-between gap-2.5 sm:gap-4 lg:gap-6 w-auto max-w-full pointer-events-auto">
           
           {/* Brand Mark (Left) */}
           <Link
             to="/"
-            className="flex items-center gap-2.5 group flex-shrink-0"
+            className="flex items-center gap-2 group shrink-0"
             aria-label="CryptoVision Home"
           >
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#141414] text-white text-xs font-serif italic font-bold transition-transform group-hover:scale-110 shadow-sm">
               ✦
             </span>
-            <div className="flex flex-col">
-              <span className="font-sans font-bold text-sm sm:text-base tracking-tight text-[#141414] leading-tight flex items-center gap-1">
-                CryptoVision
-              </span>
-            </div>
+            <span className="font-sans font-bold text-sm sm:text-base tracking-tight text-[#141414] leading-tight">
+              CryptoVision
+            </span>
           </Link>
 
           {/* Center Editorial Navigation Links */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-semibold tracking-wide text-[#2d2d2d]">
+          <nav className="hidden lg:flex items-center gap-3.5 xl:gap-5 text-xs font-semibold tracking-wide text-[#2d2d2d] shrink-0">
             <a
               href="#intelligence"
-              className="hover:text-black transition-colors hover:font-bold"
+              className="hover:text-black transition-colors hover:font-bold whitespace-nowrap"
             >
               Intelligence
             </a>
             <a
               href="#philosophy"
-              className="hover:text-black transition-colors hover:font-bold"
+              className="hover:text-black transition-colors hover:font-bold whitespace-nowrap"
             >
               Philosophy
             </a>
             <a
               href="#calculator"
-              className="hover:text-black transition-colors hover:font-bold"
+              className="hover:text-black transition-colors hover:font-bold whitespace-nowrap"
             >
               Profit Engine
             </a>
             <a
               href="#operations"
-              className="hover:text-black transition-colors hover:font-bold"
+              className="hover:text-black transition-colors hover:font-bold whitespace-nowrap"
             >
               Operations
             </a>
             <a
               href="#composure"
-              className="hover:text-black transition-colors hover:font-bold"
+              className="hover:text-black transition-colors hover:font-bold whitespace-nowrap"
             >
               Asset Dossiers
             </a>
             <a
               href="#library"
-              className="hover:text-black transition-colors hover:font-bold"
+              className="hover:text-black transition-colors hover:font-bold whitespace-nowrap"
             >
               Library
             </a>
             <a
               href="#advisory"
-              className="hover:text-black transition-colors hover:font-bold"
+              className="hover:text-black transition-colors hover:font-bold whitespace-nowrap"
             >
               Advisory
             </a>
           </nav>
 
           {/* Right Action Island: Search + Global Currency Selector + Dark Menu Capsule */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-            
-            {/* Global Currency Selector (Requirement 3) */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Global Currency Selector (Matches dark luxury pill style) */}
             <GlobalCurrencySelector />
 
             {/* Quick Search Button */}
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[#333333] hover:text-black hover:bg-black/5 transition-all cursor-pointer"
+              className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-[#333333] hover:text-black hover:bg-black/5 transition-all cursor-pointer"
               aria-label="Search intelligence"
               title="Search intelligence"
             >
@@ -150,7 +135,7 @@ export const EditorialFloatingHeader: React.FC = () => {
             <button
               type="button"
               onClick={() => setMenuOpen(!menuOpen)}
-              className="inline-flex items-center gap-2 bg-[#121212] hover:bg-black text-white px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all shadow-md active:scale-95 cursor-pointer"
+              className="inline-flex items-center gap-1.5 sm:gap-2 bg-[#121212] hover:bg-black text-white px-3 sm:px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all shadow-md active:scale-95 cursor-pointer whitespace-nowrap"
             >
               <span>menu</span>
               <span className="flex items-center justify-center text-[10px] opacity-80">
