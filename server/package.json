@@ -13,13 +13,13 @@
     "dotenv": "^16.4.7",
     "axios": "^1.7.9",
     "node-cache": "^5.1.2",
-    "express-rate-limit": "^7.5.0"
-  },
-  "devDependencies": {
+    "express-rate-limit": "^7.5.0",
+    "typescript": "^5.7.0",
     "@types/express": "^5.0.0",
     "@types/cors": "^2.8.17",
-    "@types/node": "^22.0.0",
-    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0"
+  },
+  "devDependencies": {
     "tsx": "^4.19.0"
   }
 }
