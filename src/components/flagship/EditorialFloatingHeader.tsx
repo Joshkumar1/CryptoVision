@@ -52,9 +52,14 @@ export const EditorialFloatingHeader: React.FC = () => {
       {/* ══════════════════════════════════════════════════════════════
           1. FLOATING IVORY CAPSULE HEADER (MATCHES THE REFERENCE)
           ══════════════════════════════════════════════════════════════ */}
-      <header className="fixed z-50 top-3 sm:top-4 left-1/2 -translate-x-1/2 w-fit max-w-[calc(100vw-1.5rem)] px-1 pointer-events-none transition-all duration-300 ease-out">
-        <div className="pill-nav-ivory rounded-full px-3.5 sm:px-5 lg:px-6 py-2 sm:py-2.5 border border-white/60 shadow-2xl flex items-center justify-between gap-2.5 sm:gap-4 lg:gap-6 w-auto max-w-full pointer-events-auto">
-          
+      <header className="fixed z-50 top-0 left-0 right-0 flex justify-center pointer-events-none transition-all duration-500 ease-out">
+        <div
+          className={`pointer-events-auto flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            scrolled
+              ? "pill-nav-ivory rounded-full px-3.5 sm:px-5 lg:px-6 py-2 sm:py-2.5 border border-white/60 shadow-2xl gap-2.5 sm:gap-4 lg:gap-6 mt-3 sm:mt-4 w-auto max-w-[calc(100vw-1.5rem)]"
+              : "bg-[#f5f5f3] text-[#121212] rounded-none border-b border-black/15 px-6 sm:px-10 lg:px-16 py-3 sm:py-3.5 gap-4 md:gap-8 w-full shadow-sm mt-0"
+          }`}
+        >
           {/* Brand Mark (Left) */}
           <Link
             to="/"
@@ -70,7 +75,11 @@ export const EditorialFloatingHeader: React.FC = () => {
           </Link>
 
           {/* Center Editorial Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-3.5 xl:gap-5 text-xs font-semibold tracking-wide text-[#2d2d2d] shrink-0">
+          <nav
+            className={`hidden lg:flex items-center text-xs font-semibold tracking-wide text-[#2d2d2d] shrink-0 transition-all duration-300 ${
+              scrolled ? "gap-3.5 xl:gap-5" : "gap-5 xl:gap-8"
+            }`}
+          >
             <a
               href="#intelligence"
               className="hover:text-black transition-colors hover:font-bold whitespace-nowrap"
