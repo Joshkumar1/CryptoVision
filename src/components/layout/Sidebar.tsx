@@ -18,17 +18,14 @@ import {
   PanelLeft,
   Sparkles,
   Flame,
-  Zap,
-  Boxes,
 } from "lucide-react";
 
 // Primary Navigation according to Product Identity:
-// ✦ EXPLORE | 🔥 RESEARCH | 〽 ANALYZE | ⚡ Operations | News | Narratives | Compare | Research Lab | Learn
+// ✦ EXPLORE | 🔥 RESEARCH | 〽 ANALYZE | News | Narratives | Compare | Research Lab | Learn
 const PRIMARY_NAV = [
   { label: "✦ EXPLORE",    href: "/explore",      icon: Compass },
   { label: "🔥 RESEARCH",   href: "/research",     icon: Flame },
   { label: "〽 ANALYZE",    href: "/analyze",      icon: BarChart3 },
-  { label: "⚡ Operations", href: "/events",       icon: Zap },
   { label: "News",         href: "/news",         icon: Newspaper },
   { label: "Narratives",   href: "/narratives",   icon: Layers },
   { label: "Compare",      href: "/compare",      icon: GitCompareArrows },
