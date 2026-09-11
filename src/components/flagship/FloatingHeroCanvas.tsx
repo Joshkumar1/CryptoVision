@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, Sparkles, X, Eye, Download, Cookie, Check, ShieldCheck, Layers, Maximize2, RefreshCw } from "lucide-react";
+import { ArrowUpRight, Sparkles, X, Eye, Download, Cookie, Check, ShieldCheck, Layers, Maximize2, RefreshCw, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface CoinAsset {
@@ -60,7 +60,11 @@ function setCookie(name: string, value: string, days = 365) {
   document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
 }
 
-export const FloatingHeroCanvas: React.FC = () => {
+export interface FloatingHeroCanvasProps {
+  onSwitchHeroMode?: () => void;
+}
+
+export const FloatingHeroCanvas: React.FC<FloatingHeroCanvasProps> = ({ onSwitchHeroMode }) => {
   const [activeImageVariant, setActiveImageVariant] = useState<"master" | "render">("master");
   const [showModal, setShowModal] = useState(false);
   const [cookieToast, setCookieToast] = useState<string | null>(null);
@@ -213,18 +217,34 @@ export const FloatingHeroCanvas: React.FC = () => {
         className="relative z-20 max-w-4xl mx-auto text-center flex flex-col items-center justify-center px-4 pt-2 pb-6"
       >
         
-        {/* 4K Flagship Kryptos Protocol Pill */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono tracking-wider uppercase mb-6 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)]"
-        >
-          <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
-          <span className="font-bold">Kryptos Protocol</span>
-          <span className="text-white/40">•</span>
-          <span className="text-white/90">4K Ultra HD Reserve Asset</span>
-        </motion.div>
+        {/* 4K Flagship Kryptos Protocol Pill & View Switcher */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono tracking-wider uppercase backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)]"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+            <span className="font-bold">Kryptos Protocol</span>
+            <span className="text-white/40">•</span>
+            <span className="text-white/90">4K Sovereign Reserve</span>
+          </motion.div>
+
+          {onSwitchHeroMode && (
+            <motion.button
+              type="button"
+              onClick={onSwitchHeroMode}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 hover:text-white hover:bg-indigo-500/25 text-xs font-mono tracking-wider uppercase backdrop-blur-md transition-all cursor-pointer shadow-[0_0_20px_rgba(99,102,241,0.2)]"
+            >
+              <Zap className="h-3.5 w-3.5 text-indigo-400" />
+              <span>Switch to 3D Dashboard (Picture 1)</span>
+            </motion.button>
+          )}
+        </div>
 
         {/* High-Contrast Editorial Serif Headline with Phenomenon Studio Word Reveal */}
         <motion.h1

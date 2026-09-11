@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCoins, useMarketOverview } from "@/hooks/useMarketData";
 import { useAppStore } from "@/stores/appStore";
@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MarketHeatmap } from "@/components/market/MarketHeatmap";
+import { EventPerformanceShowcase } from "@/components/flagship/EventPerformanceShowcase";
 import { formatPrice, formatMarketCap, formatPercentage, cn } from "@/lib/utils";
 import {
   Search,
@@ -26,6 +27,7 @@ import {
   TrendingDown,
   ArrowUpDown,
   SlidersHorizontal,
+  Zap,
 } from "lucide-react";
 import type { Coin } from "@/types";
 import { AreaChart, Area, ResponsiveContainer } from "recharts";
@@ -53,10 +55,12 @@ function MiniSparkline({ data, positive }: { data: number[]; positive: boolean }
 }
 
 export function MarketPage() {
+  const [searchParams] = useSearchParams();
+  const initialView = searchParams.get("tab") === "telemetry" ? "telemetry" : "heatmap";
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
-  // Primary / Default view is now Market Heatmap
-  const [viewMode, setViewMode] = useState<"heatmap" | "table">("heatmap");
+  // Primary view switcher: Heatmap vs Table vs 3D Telemetry Dashboard
+  const [viewMode, setViewMode] = useState<"heatmap" | "table" | "telemetry">(initialView);
 
   const { data: coins, isLoading, error, refetch } = useCoins(page, 50);
   const { data: marketData } = useMarketOverview();
@@ -139,31 +143,43 @@ export function MarketPage() {
         </div>
 
         <div className="flex items-center gap-3 self-end sm:self-auto">
-          {/* Primary View Toggle: Heatmap vs Table */}
+          {/* Primary View Toggle: Heatmap vs Table vs 3D Telemetry Dashboard */}
           <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-xl border border-white/10 backdrop-blur-md shadow-inner">
             <button
               onClick={() => setViewMode("heatmap")}
               className={cn(
-                "flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-lg transition-all",
+                "flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg transition-all cursor-pointer",
                 viewMode === "heatmap"
                   ? "bg-accent/20 text-accent border border-accent/40 shadow-sm backdrop-blur-md"
                   : "text-text-tertiary hover:text-white hover:bg-white/[0.06]"
               )}
             >
               <LayoutGrid className="h-4 w-4" />
-              Primary Heatmap
+              <span>Primary Heatmap</span>
             </button>
             <button
               onClick={() => setViewMode("table")}
               className={cn(
-                "flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-lg transition-all",
+                "flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg transition-all cursor-pointer",
                 viewMode === "table"
                   ? "bg-accent/20 text-accent border border-accent/40 shadow-sm backdrop-blur-md"
                   : "text-text-tertiary hover:text-white hover:bg-white/[0.06]"
               )}
             >
               <List className="h-4 w-4" />
-              Table View
+              <span>Table View</span>
+            </button>
+            <button
+              onClick={() => setViewMode("telemetry")}
+              className={cn(
+                "flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg transition-all cursor-pointer",
+                viewMode === "telemetry"
+                  ? "bg-indigo-500/25 text-indigo-300 border border-indigo-500/40 shadow-sm backdrop-blur-md"
+                  : "text-text-tertiary hover:text-indigo-300 hover:bg-indigo-500/10"
+              )}
+            >
+              <Zap className="h-4 w-4 text-indigo-400" />
+              <span>3D Dashboard</span>
             </button>
           </div>
 
@@ -175,7 +191,11 @@ export function MarketPage() {
 
       {/* ── Content View ── */}
       {viewMode === "heatmap" ? (
-        <MarketHeatmap coins={coins ?? []} />
+        <MarketHeatmap coins={coins ?? []} onSwitchToTelemetry={() => setViewMode("telemetry")} />
+      ) : viewMode === "telemetry" ? (
+        <div className="rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+          <EventPerformanceShowcase />
+        </div>
       ) : (
         <div className="space-y-4">
           {/* ── Perfectly Formatted Table Container ── */}
