@@ -142,6 +142,16 @@ export const NumbersBehindSuccessSection: React.FC = () => {
     return () => clearInterval(timer);
   }, [isVisible]);
 
+  // Subtle live telemetry pulse fluctuation once visible
+  const [liveTick, setLiveTick] = useState(0);
+  useEffect(() => {
+    if (!isVisible) return;
+    const interval = setInterval(() => {
+      setLiveTick((prev) => (prev + 1) % 100);
+    }, 1800);
+    return () => clearInterval(interval);
+  }, [isVisible]);
+
   return (
     <section
       ref={sectionRef}
@@ -156,11 +166,11 @@ export const NumbersBehindSuccessSection: React.FC = () => {
         {/* Subtle background grid pattern */}
         <div className="absolute inset-0 glass-grid-pattern opacity-20" />
         
-        {/* Bottom-Left Corner: Glowing Emerald Light Pool */}
-        <div className="absolute -bottom-24 -left-24 w-[650px] h-[650px] rounded-full bg-gradient-to-tr from-[#00dc82]/35 via-[#34d399]/20 to-transparent blur-[140px] animate-pulse-glow" />
+        {/* Bottom-Left Corner: Glowing Emerald Light Pool (Matching Screenshot) */}
+        <div className="absolute -bottom-28 -left-28 w-[720px] h-[720px] rounded-full bg-gradient-to-tr from-[#00dc82]/45 via-[#10b981]/25 to-transparent blur-[150px] animate-pulse-glow" />
 
         {/* Bottom-Right Corner: Glowing Silver/Cyan Beam Accent */}
-        <div className="absolute -bottom-24 -right-24 w-[650px] h-[650px] rounded-full bg-gradient-to-tl from-cyan-400/30 via-blue-500/15 to-transparent blur-[140px] animate-pulse-glow" />
+        <div className="absolute -bottom-28 -right-28 w-[720px] h-[720px] rounded-full bg-gradient-to-tl from-cyan-400/35 via-blue-500/20 to-transparent blur-[150px] animate-pulse-glow" />
         
         {/* Top subtle vignette */}
         <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#07080b] via-transparent to-transparent" />
@@ -169,7 +179,7 @@ export const NumbersBehindSuccessSection: React.FC = () => {
       <div className="relative z-10 max-w-7xl mx-auto">
         
         {/* ══════════════════════════════════════════════════════════════
-            2. HIGH-IMPACT DISPLAY HEADLINE
+            2. HIGH-IMPACT DISPLAY HEADLINE WITH TEXT SHIMMER
             ══════════════════════════════════════════════════════════════ */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -186,9 +196,9 @@ export const NumbersBehindSuccessSection: React.FC = () => {
               <span>Institutional Provenance Metrics</span>
             </div>
 
-            {/* Main Headline matching reference typography */}
+            {/* Main Headline with Shimmer Sweep */}
             <h2 className="font-editorial text-[clamp(2.6rem,5.5vw,4.8rem)] font-normal text-white/95 leading-[1.05] tracking-tight">
-              The Numbers Behind Success
+              <span className="animate-text-shimmer">The Numbers Behind Success</span>
             </h2>
           </div>
 
@@ -198,7 +208,7 @@ export const NumbersBehindSuccessSection: React.FC = () => {
         </motion.div>
 
         {/* ══════════════════════════════════════════════════════════════
-            3. ANIMATED 4-CARD METRIC GRID WITH SCROLL COUNTERS
+            3. ANIMATED 4-CARD METRIC GRID WITH SCROLL COUNTERS & WAVEFORMS
             ══════════════════════════════════════════════════════════════ */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {STAT_METRICS.map((metric, idx) => {
@@ -229,8 +239,9 @@ export const NumbersBehindSuccessSection: React.FC = () => {
                     <div className="p-3 rounded-2xl bg-white/[0.05] border border-white/10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                       {metric.icon}
                     </div>
-                    <span className={`text-[10px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-full border bg-white/[0.04] ${metric.accentText} ${metric.accentBorder}`}>
-                      {metric.badge}
+                    <span className={`text-[10px] font-mono uppercase tracking-widest px-2.5 py-1 rounded-full border bg-white/[0.04] ${metric.accentText} ${metric.accentBorder} flex items-center gap-1.5`}>
+                      <span className="h-1.5 w-1.5 rounded-full bg-current animate-pulse" />
+                      <span>{metric.badge}</span>
                     </span>
                   </div>
 
@@ -248,11 +259,41 @@ export const NumbersBehindSuccessSection: React.FC = () => {
                   <p className="mt-1 text-xs text-white/55 font-sans leading-relaxed">
                     {metric.sublabel}
                   </p>
+
+                  {/* Live Mini SVG Telemetry Sparkline Waveform */}
+                  <div className="mt-5 w-full h-8 flex items-end relative overflow-hidden">
+                    <svg className="w-full h-full overflow-visible" viewBox="0 0 100 24" preserveAspectRatio="none">
+                      <path
+                        d={
+                          idx === 0
+                            ? "M0,18 Q15,4 30,14 T60,8 T85,16 T100,6"
+                            : idx === 1
+                            ? "M0,12 Q20,20 40,8 T70,16 T100,4"
+                            : idx === 2
+                            ? "M0,16 Q25,6 50,14 T75,4 T100,10"
+                            : "M0,20 Q20,10 40,16 T60,6 T80,12 T100,2"
+                        }
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        className={`${metric.accentText} opacity-40 group-hover:opacity-100 transition-opacity`}
+                      />
+                      <circle
+                        cx={((liveTick * (idx + 1) * 7) % 90) + 5}
+                        cy="10"
+                        r="2.5"
+                        className="fill-current animate-telemetry-pulse"
+                      />
+                    </svg>
+                  </div>
                 </div>
 
                 {/* Bottom Footer Detail */}
-                <div className="mt-8 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-white/50">
-                  <span>{metric.trend}</span>
+                <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-white/50">
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>{metric.trend}</span>
+                  </span>
                   <ArrowUpRight className="h-3.5 w-3.5 text-white/30 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 </div>
 

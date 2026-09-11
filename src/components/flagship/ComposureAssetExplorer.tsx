@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { CapsuleBarAssetOverview } from "@/components/flagship/CapsuleBarAssetOverview";
 
 interface AssetDossier {
   symbol: string;
@@ -215,6 +216,21 @@ export const ComposureAssetExplorer: React.FC = () => {
               <p className="font-sans text-sm sm:text-base text-white/80 leading-relaxed max-w-4xl text-balance">
                 {activeAsset.macroThesis}
               </p>
+            </div>
+
+            {/* Live Inflow & Price Capsule Representation (Matching User Visual Reference) */}
+            <div className="mb-10">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="h-2 w-2 rounded-full bg-[#f97316] animate-pulse" />
+                <h4 className="font-mono text-xs uppercase tracking-wider text-white/50">
+                  Monthly Capital Inflows & Telemetry Overview
+                </h4>
+              </div>
+              <CapsuleBarAssetOverview
+                initialAssetSymbol={activeAsset.symbol}
+                showAssetTabs={false}
+                className="max-w-none shadow-2xl"
+              />
             </div>
 
             {/* 3 Columns: Metrics + Catalysts + Risk Profile */}

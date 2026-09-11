@@ -44,32 +44,61 @@ app.use("/api/admin", adminRouter);
 app.use("/api/security", securityRouter);
 app.use("/api/sentiment", sentimentRouter);
 
-app.get("/", (_req, res) => {
-  res.json({
-    message: "CryptoVision AI API Server is running",
-    version: "3.0",
-    frontendUrl: "http://localhost:3000",
-    providers: { registered, skipped },
-    endpoints: [
-      "/health",
-      "/api/market",
-      "/api/assets",
-      "/api/intelligence",
-      "/api/emerging",
-      "/api/narratives",
-      "/api/news",
-      "/api/admin/health",
-      "/api/admin/providers",
-      "/api/security/:coinId",
-      "/api/sentiment/fear-greed",
-      "/api/sentiment/fear-greed/history",
-    ]
-  });
-});
+import path from "node:path";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Locate frontend build directory (whether run from root or from server/)
+const candidateDistPaths = [
+  path.resolve(__dirname, "../../dist"),
+  path.resolve(process.cwd(), "dist"),
+  path.resolve(process.cwd(), "../dist"),
+];
+const clientDistPath = candidateDistPaths.find((p) => fs.existsSync(p));
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString(), providers: registered.length });
 });
+
+if (clientDistPath) {
+  console.log(`[CryptoVision] Serving static client build from: ${clientDistPath}`);
+  app.use(express.static(clientDistPath));
+
+  // Catch-all route for client-side Single Page Application (SPA) routing (Express 5 compatible)
+  app.use((req, res, next) => {
+    if (req.method !== "GET" && req.method !== "HEAD") return next();
+    if (req.path.startsWith("/api") || req.path === "/health") {
+      return next();
+    }
+    res.sendFile(path.join(clientDistPath, "index.html"));
+  });
+} else {
+  app.get("/", (_req, res) => {
+    res.json({
+      message: "CryptoVision AI API Server is running (API mode)",
+      version: "3.0",
+      frontendUrl: "http://localhost:3000",
+      providers: { registered, skipped },
+      endpoints: [
+        "/health",
+        "/api/market",
+        "/api/assets",
+        "/api/intelligence",
+        "/api/emerging",
+        "/api/narratives",
+        "/api/news",
+        "/api/admin/health",
+        "/api/admin/providers",
+        "/api/security/:coinId",
+        "/api/sentiment/fear-greed",
+        "/api/sentiment/fear-greed/history",
+      ]
+    });
+  });
+}
 
 // ── Start Server & Background Pipeline ────────────────────────────────
 app.listen(PORT, () => {

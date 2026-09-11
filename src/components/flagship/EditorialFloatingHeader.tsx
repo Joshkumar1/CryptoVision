@@ -104,6 +104,12 @@ export const EditorialFloatingHeader: React.FC = () => {
               Profit Engine
             </a>
             <a
+              href="#operations"
+              className="hover:text-black transition-colors hover:font-bold"
+            >
+              Operations
+            </a>
+            <a
               href="#composure"
               className="hover:text-black transition-colors hover:font-bold"
             >
@@ -229,6 +235,17 @@ export const EditorialFloatingHeader: React.FC = () => {
                     className="text-white/80 group-hover:text-white group-hover:translate-x-2 transition-all inline-flex items-center gap-4"
                   >
                     <span>Due Diligence Dossier</span>
+                  </Link>
+                  <ArrowUpRight className="h-5 w-5 text-white/30 group-hover:text-[#00dc82] transition-colors" />
+                </div>
+
+                <div className="group flex items-center justify-between border-b border-white/5 pb-2">
+                  <Link
+                    to="/events"
+                    onClick={() => setMenuOpen(false)}
+                    className="text-white/80 group-hover:text-white group-hover:translate-x-2 transition-all inline-flex items-center gap-4"
+                  >
+                    <span>Event Operations Dashboard</span>
                   </Link>
                   <ArrowUpRight className="h-5 w-5 text-white/30 group-hover:text-[#00dc82] transition-colors" />
                 </div>

@@ -13,9 +13,9 @@ import { ChangeIndicator } from "@/components/shared/ChangeIndicator";
 import { ScoreRing } from "@/components/shared/ScoreRing";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatMarketCap, formatPrice, formatPercentage, formatConfidence, cn } from "@/lib/utils";
+import { CapsuleBarAssetOverview } from "@/components/flagship/CapsuleBarAssetOverview";
 import {
   TrendingUp,
   Flame,
@@ -237,6 +237,9 @@ export function OverviewPage() {
             />
           </MetricGroup>
         )}
+
+        {/* Institutional Capsule Bar Asset Overview (Reference Spec) */}
+        <CapsuleBarAssetOverview showAssetTabs={true} />
 
         {/* Live Capital Assets Pulse Table */}
         <div className="serene-card rounded-2xl border border-white/10 shadow-xl overflow-hidden">

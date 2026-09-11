@@ -64,6 +64,27 @@ export const FloatingHeroCanvas: React.FC = () => {
   const [activeImageVariant, setActiveImageVariant] = useState<"master" | "render">("master");
   const [showModal, setShowModal] = useState(false);
   const [cookieToast, setCookieToast] = useState<string | null>(null);
+  const [cardTilt, setCardTilt] = useState({ rotateX: 0, rotateY: 0, glareX: 50, glareY: 50 });
+
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -5;
+    const rotateY = ((x - centerX) / centerX) * 5;
+    setCardTilt({
+      rotateX,
+      rotateY,
+      glareX: (x / rect.width) * 100,
+      glareY: (y / rect.height) * 100,
+    });
+  };
+
+  const handleCardMouseLeave = () => {
+    setCardTilt({ rotateX: 0, rotateY: 0, glareX: 50, glareY: 50 });
+  };
 
   // Initialize cookie settings on mount
   useEffect(() => {
@@ -205,21 +226,30 @@ export const FloatingHeroCanvas: React.FC = () => {
           <span className="text-white/90">4K Ultra HD Reserve Asset</span>
         </motion.div>
 
-        {/* High-Contrast Editorial Serif Headline */}
+        {/* High-Contrast Editorial Serif Headline with Phenomenon Studio Word Reveal */}
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4 }}
           className="font-editorial text-[clamp(2.5rem,5.8vw,5.2rem)] font-normal text-white leading-[1.06] tracking-tight max-w-4xl"
         >
-          Clarity that gives ambitious allocators a sharper edge.
+          {["Clarity", "that", "gives", "ambitious", "allocators", "a", "sharper", "edge."].map((word, idx) => (
+            <span key={idx} className="word-reveal-mask mx-1 sm:mx-1.5">
+              <span
+                className="word-reveal-item"
+                style={{ animationDelay: `${0.15 + idx * 0.08}s` }}
+              >
+                {word}
+              </span>
+            </span>
+          ))}
         </motion.h1>
 
         {/* Subtitle with High-Contrast Bold Highlights */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] as const }}
+          transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
           className="mt-5 max-w-2xl text-xs sm:text-sm md:text-base text-white/70 font-sans leading-relaxed text-balance"
         >
           From mempool anomalies to multi-model consensus, we synthesize{" "}
@@ -232,7 +262,7 @@ export const FloatingHeroCanvas: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+          transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
           className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
         >
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
@@ -262,21 +292,37 @@ export const FloatingHeroCanvas: React.FC = () => {
       </motion.div>
 
       {/* ══════════════════════════════════════════════════════════════
-          3. FEATURED PERFECT 4K KRYPTOS PROTOCOL COIN SHOWCASE
+          3. FEATURED PERFECT 4K KRYPTOS PROTOCOL COIN SHOWCASE (3D GYRO TILT)
           ══════════════════════════════════════════════════════════════ */}
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
+        transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
         className="relative z-20 w-full max-w-4xl mx-auto mt-2 px-2 sm:px-4"
       >
 
-        
-        {/* Glowing Colored Backdrop Frame */}
-        <div className={`relative rounded-3xl p-[1.5px] bg-gradient-to-b ${currentAsset.borderGlow} ${currentAsset.shadowGlow} group transition-all duration-700`}>
-          
+        {/* Glowing Colored Backdrop Frame with 3D Mouse Gyro Tilt & Orbit Ring */}
+        <div
+          onMouseMove={handleCardMouseMove}
+          onMouseLeave={handleCardMouseLeave}
+          style={{
+            transform: `perspective(1000px) rotateX(${cardTilt.rotateX}deg) rotateY(${cardTilt.rotateY}deg)`,
+            transition: "transform 0.15s ease-out",
+          }}
+          className={`relative rounded-3xl p-[1.5px] bg-gradient-to-b ${currentAsset.borderGlow} ${currentAsset.shadowGlow} group transition-all duration-500`}
+        >
+          {/* Concentric Celestial Orbit Ring Around Card */}
+          <div className="pointer-events-none absolute -inset-6 sm:-inset-8 rounded-[2.5rem] border border-cyan-400/20 animate-orbit-rotate opacity-40 [border-style:dashed]" />
+
           {/* Main Visual Container */}
           <div className="relative overflow-hidden rounded-3xl bg-[#090e15]/95 backdrop-blur-xl border border-white/10">
+            {/* Dynamic Glare Reflection following cursor */}
+            <div
+              className="pointer-events-none absolute inset-0 z-10 opacity-0 group-hover:opacity-35 transition-opacity duration-300"
+              style={{
+                background: `radial-gradient(circle at ${cardTilt.glareX}% ${cardTilt.glareY}%, rgba(255,255,255,0.3), transparent 65%)`,
+              }}
+            />
             
             {/* The Perfect 4K Kryptos Coin Image */}
             <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden bg-black/50 flex items-center justify-center">

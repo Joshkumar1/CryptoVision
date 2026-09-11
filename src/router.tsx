@@ -62,6 +62,9 @@ const LoginPage = lazy(() =>
 const FlagshipLandingPage = lazy(() =>
   import("@/pages/FlagshipLandingPage").then((m) => ({ default: m.FlagshipLandingPage }))
 );
+const EventDashboardPage = lazy(() =>
+  import("@/pages/EventDashboardPage").then((m) => ({ default: m.EventDashboardPage }))
+);
 
 export const router = createBrowserRouter([
   // ── Flagship Institutional Landing Page (abtc.com-style reference) ──
@@ -75,6 +78,19 @@ export const router = createBrowserRouter([
         </Suspense>
       </ErrorBoundary>
     ),
+  },
+  {
+    path: "/events",
+    errorElement: <RouteErrorFallback />,
+    element: (
+      <Suspense fallback={<LoadingState message="Connecting to Event Operations..." />}>
+        <EventDashboardPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/event-dashboard",
+    element: <Navigate to="/events" replace />,
   },
   {
     path: "/home",

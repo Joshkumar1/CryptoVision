@@ -31,34 +31,59 @@ export const InstitutionalAdvisorySection: React.FC = () => {
             ══════════════════════════════════════════════════════════════ */}
         <div className="relative rounded-[2.5rem] sm:rounded-[3.2rem] bg-gradient-to-r from-[#175263] via-[#144757] to-[#1b5d6f] p-8 sm:p-12 md:p-16 overflow-hidden shadow-2xl border border-white/10 text-white">
           
-          {/* Animated Soft Organic Warm Peach Background Shape (Right Side) */}
+          {/* Animated Soft Organic Warm Peach Background Shape with Fluid Morphing */}
           <div className="pointer-events-none absolute top-0 right-0 w-full md:w-3/5 h-full overflow-hidden select-none">
-            <svg
-              className="absolute -right-10 -bottom-10 w-[620px] h-[620px] text-[#f4d2c1] opacity-90 transition-all duration-700 animate-morph-shape"
-              viewBox="0 0 500 500"
-              fill="currentColor"
-            >
-              <path d="M420,320Q360,440,240,440Q120,440,70,320Q20,200,100,100Q180,0,300,40Q420,80,450,200Q480,320,420,320Z" />
-            </svg>
             
-            {/* Animated Floating Paper Airplane (Line-Art SVG matching reference video) */}
-            <div className="absolute top-12 right-24 sm:right-36 z-20 animate-paper-plane">
+            {/* Morphing Fluid Peach Liquid Blob */}
+            <div className="absolute -right-16 -bottom-16 w-[640px] h-[640px] bg-gradient-to-br from-[#f4d2c1] via-[#f7ded1] to-[#eed0c0] opacity-90 transition-all duration-700 animate-morph-fluid shadow-2xl" />
+
+            {/* Aerodynamic Looping Paper Plane with Curved Dashed Contrail */}
+            <div className="absolute top-8 right-16 sm:right-32 z-20">
+              
+              {/* SVG Dashed Contrail */}
               <svg
-                className="w-14 h-14 text-[#f4d2c1] stroke-current drop-shadow-[0_8px_16px_rgba(0,0,0,0.3)]"
-                viewBox="0 0 64 64"
+                className="absolute -top-12 -left-28 w-48 h-32 pointer-events-none overflow-visible"
+                viewBox="0 0 180 120"
                 fill="none"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
               >
-                <path d="M58 6L6 28L26 38L36 58L58 6Z" />
-                <path d="M26 38L58 6" />
+                <path
+                  d="M10,110 C50,115 80,40 130,55 C155,62 165,30 175,20"
+                  stroke="#f4d2c1"
+                  strokeWidth="2"
+                  strokeDasharray="6 6"
+                  className="animate-dash-draw"
+                />
               </svg>
+
+              {/* Looping Paper Plane */}
+              <div className="animate-plane-swoop filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.35)]">
+                <svg
+                  className="w-16 h-16 text-[#f4d2c1] stroke-current"
+                  viewBox="0 0 64 64"
+                  fill="none"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M58 6L6 28L26 38L36 58L58 6Z" />
+                  <path d="M26 38L58 6" />
+                </svg>
+              </div>
+
+            </div>
+
+            {/* Concentric Celestial Orbit Rings & Orbiting Satellite (Halo Lab Reference) */}
+            <div className="absolute top-16 right-1/3 w-32 h-32 rounded-full border border-[#f4d2c1]/30 animate-orbit-rotate pointer-events-none flex items-center justify-center">
+              <div className="w-20 h-20 rounded-full border border-[#f4d2c1]/20 animate-orbit-reverse flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-[#175263] border border-[#f4d2c1]" />
+              </div>
+              {/* Orbiting Satellite Node */}
+              <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-[#f4d2c1] shadow-[0_0_12px_#f4d2c1] animate-pulse" />
             </div>
 
             {/* Animated Floating Ambient Orbs & Pulsing Dots */}
-            <div className="absolute top-10 right-1/2 w-4 h-4 rounded-full bg-[#f4d2c1]/60 animate-pulse-dot" />
-            <div className="absolute bottom-20 right-1/4 w-3 h-3 rounded-full bg-[#175263] border border-[#f4d2c1]/40 animate-pulse-dot" />
+            <div className="absolute top-10 right-1/2 w-4 h-4 rounded-full bg-[#f4d2c1]/70 animate-pulse-dot" />
+            <div className="absolute bottom-20 right-1/4 w-3.5 h-3.5 rounded-full bg-[#175263] border border-[#f4d2c1]/60 animate-telemetry-pulse" />
             <div className="absolute top-1/3 right-12 w-6 h-6 rounded-full border-2 border-[#175263]/30 animate-float-slow" />
           </div>
 
@@ -79,7 +104,7 @@ export const InstitutionalAdvisorySection: React.FC = () => {
               <div className="mt-8 w-full max-w-md">
                 {submitted ? (
                   <div className="flex items-center gap-3 p-4 rounded-full bg-[#0d3642]/90 border border-emerald-400/40 text-emerald-300 text-sm font-medium animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-xl">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0" />
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0 animate-bounce" />
                     <span>Request received! Our advisory desk will reach out shortly.</span>
                   </div>
                 ) : (
@@ -97,14 +122,17 @@ export const InstitutionalAdvisorySection: React.FC = () => {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="bg-[#f4d2c1] hover:bg-[#fae1d4] active:scale-95 text-[#173e4a] font-extrabold text-xs uppercase tracking-wider px-8 py-3.5 rounded-full transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer flex-shrink-0 group"
+                      className="bg-[#f4d2c1] hover:bg-[#fae1d4] active:scale-95 text-[#173e4a] font-extrabold text-xs uppercase tracking-wider px-8 py-3.5 rounded-full transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer flex-shrink-0 group relative overflow-hidden"
                     >
                       {loading ? (
-                        <span className="animate-pulse">Sending...</span>
+                        <div className="flex items-center gap-2">
+                          <span className="inline-block animate-plane-swoop">✈</span>
+                          <span>Dispatching...</span>
+                        </div>
                       ) : (
                         <>
                           <span>Submit</span>
-                          <Send className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                          <Send className="h-3.5 w-3.5 group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform" />
                         </>
                       )}
                     </button>
@@ -119,15 +147,15 @@ export const InstitutionalAdvisorySection: React.FC = () => {
               <div className="relative max-w-sm sm:max-w-md w-full animate-float-slow">
                 
                 {/* Visual Glass Frame for Smartphone Card */}
-                <div className="relative rounded-3xl overflow-hidden border border-white/25 bg-[#0a1820]/90 shadow-2xl transition-transform duration-500 hover:scale-[1.02]">
+                <div className="relative rounded-3xl overflow-hidden border border-white/25 bg-[#0a1820]/90 shadow-2xl transition-transform duration-500 hover:scale-[1.02] group">
                   <img
                     src="/editorial/cryptovision_advisory_illustration.png"
                     alt="CryptoVision AI Platform & Mobile Terminal Interface"
-                    className="w-full h-auto object-cover filter brightness-[1.02] contrast-[1.04]"
+                    className="w-full h-auto object-cover filter brightness-[1.02] contrast-[1.04] transition-transform duration-700 group-hover:scale-105"
                   />
                   
                   {/* Floating speech bubble banner overlay matching reference video */}
-                  <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-[#124958]/95 backdrop-blur-md border border-white/20 text-white shadow-2xl animate-float-delayed">
+                  <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-[#124958]/95 backdrop-blur-md border border-white/20 text-white shadow-2xl animate-float-delayed hover:bg-[#155465] transition-colors">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#f4d2c1] text-[#173e4a] text-[10px] font-bold">
                         ★

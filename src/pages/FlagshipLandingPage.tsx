@@ -12,6 +12,7 @@ import { ArrowUpRight } from "lucide-react";
 
 import { InstitutionalAdvisorySection } from "@/components/flagship/InstitutionalAdvisorySection";
 import { NumbersBehindSuccessSection } from "@/components/flagship/NumbersBehindSuccessSection";
+import { EventPerformanceShowcase } from "@/components/flagship/EventPerformanceShowcase";
 
 export const FlagshipLandingPage: React.FC = () => {
   return (
@@ -51,6 +52,11 @@ export const FlagshipLandingPage: React.FC = () => {
         {/* Animated Numbers Behind Success Section */}
         <div id="numbers">
           <NumbersBehindSuccessSection />
+        </div>
+
+        {/* 3D Isometric Event Performance Dashboard Showcase (Visual Reference Spec) */}
+        <div id="operations">
+          <EventPerformanceShowcase />
         </div>
 
         {/* Interactive Zen Asset Dossiers */}
