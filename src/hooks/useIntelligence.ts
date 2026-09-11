@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { IntelligenceScore, RealityCheck, RedFlag, FinancialIntelligence } from "@/types";
 import { generateFinancialIntelligence } from "@/lib/financialIntelligenceEngine";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const API = import.meta.env.VITE_API_URL || "";
 
 async function fetchJson<T>(path: string): Promise<T> {
   const res = await fetch(`${API}${path}`);

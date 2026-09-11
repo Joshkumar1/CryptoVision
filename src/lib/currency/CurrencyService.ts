@@ -97,4 +97,23 @@ export class CurrencyService {
       maximumFractionDigits: converted >= 100 ? 2 : 4,
     }).format(converted);
   }
+
+  /**
+   * Format large monetary value into compact notation (e.g. $2.15T or ₹18.5T)
+   * Prevents numbers from colliding or overflowing cards and tables.
+   */
+  public static formatCompactValue(valueInUsd: number, currency: CurrencyDefinition | string): string {
+    const currDef = typeof currency === "string"
+      ? (SUPPORTED_CURRENCIES_MAP[currency] || SUPPORTED_CURRENCIES_MAP.USD)
+      : currency;
+
+    const converted = valueInUsd * currDef.rateToUsd;
+
+    return new Intl.NumberFormat(currDef.locale, {
+      style: "currency",
+      currency: currDef.code,
+      notation: "compact",
+      maximumFractionDigits: 2,
+    }).format(converted);
+  }
 }

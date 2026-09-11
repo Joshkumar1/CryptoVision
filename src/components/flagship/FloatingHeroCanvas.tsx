@@ -158,7 +158,7 @@ export const FloatingHeroCanvas: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen w-full flex flex-col items-center justify-start overflow-hidden bg-gradient-to-b from-[#051118] via-[#070c14] to-[#040608] text-white pt-24 pb-24 px-4 sm:px-6 select-none">
+    <section className="relative min-h-screen w-full flex flex-col items-center justify-start overflow-hidden bg-gradient-to-b from-[#051118] via-[#070c14] to-[#040608] text-white pt-36 sm:pt-40 pb-24 px-4 sm:px-6 select-none">
       
       {/* ══════════════════════════════════════════════════════════════
           1. DYNAMIC ATMOSPHERIC 4K LIGHTING & GLOW BACKDROP

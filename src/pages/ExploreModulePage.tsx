@@ -104,24 +104,24 @@ export const ExploreModulePage: React.FC = () => {
 
       {/* ── 1. GLOBAL MARKET OVERVIEW BAR ── */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
-        <div className="p-4 rounded-2xl bg-[#0b0e17] border border-white/10">
-          <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block mb-1">
+        <div className="p-4 rounded-2xl bg-[#0b0e17] border border-white/10 overflow-hidden">
+          <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block mb-1 truncate">
             Total Market Cap
           </span>
-          <span className="text-sm font-bold font-mono text-white">
-            {CurrencyService.formatValue(2.85e12, currency)}
+          <span className="text-sm font-bold font-mono text-white block truncate">
+            {CurrencyService.formatCompactValue(2.85e12, currency)}
           </span>
-          <span className="text-[10px] font-mono text-[#00dc82] block mt-0.5">+2.48% (24H)</span>
+          <span className="text-[10px] font-mono text-[#00dc82] block mt-0.5 truncate">+2.48% (24H)</span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0b0e17] border border-white/10">
-          <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block mb-1">
+        <div className="p-4 rounded-2xl bg-[#0b0e17] border border-white/10 overflow-hidden">
+          <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block mb-1 truncate">
             24h Market Volume
           </span>
-          <span className="text-sm font-bold font-mono text-white">
-            {CurrencyService.formatValue(1.14e11, currency)}
+          <span className="text-sm font-bold font-mono text-white block truncate">
+            {CurrencyService.formatCompactValue(1.14e11, currency)}
           </span>
-          <span className="text-[10px] font-mono text-white/40 block mt-0.5">Global Spot + Derivatives</span>
+          <span className="text-[10px] font-mono text-white/40 block mt-0.5 truncate">Global Spot + Derivatives</span>
         </div>
 
         <div className="p-4 rounded-2xl bg-[#0b0e17] border border-white/10">
@@ -265,8 +265,8 @@ export const ExploreModulePage: React.FC = () => {
           {filteredAssets.map((asset) => {
             const isPos = asset.market.priceChange24h >= 0;
             const priceFormatted = CurrencyService.formatValue(asset.market.priceUsd, currency);
-            const mcapFormatted = CurrencyService.formatValue(asset.market.marketCapUsd, currency);
-            const volFormatted = CurrencyService.formatValue(asset.market.volume24hUsd, currency);
+            const mcapFormatted = CurrencyService.formatCompactValue(asset.market.marketCapUsd, currency);
+            const volFormatted = CurrencyService.formatCompactValue(asset.market.volume24hUsd, currency);
 
             return (
               <div
@@ -302,14 +302,14 @@ export const ExploreModulePage: React.FC = () => {
 
                 {/* Price & 24h Change */}
                 <div className="flex items-baseline justify-between pt-2 border-t border-white/5">
-                  <div>
-                    <span className="text-xl font-bold font-mono text-white">
+                  <div className="min-w-0 overflow-hidden pr-2">
+                    <span className="text-xl font-bold font-mono text-white block truncate">
                       {priceFormatted}
                     </span>
                   </div>
 
                   <div className={cn(
-                    "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono font-bold",
+                    "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono font-bold shrink-0",
                     isPos ? "bg-[#00dc82]/15 text-[#00dc82] border border-[#00dc82]/30" : "bg-rose-500/15 text-rose-400 border border-rose-500/30"
                   )}>
                     {isPos ? <ArrowUpRight className="h-3.5 w-3.5" /> : <ArrowDownRight className="h-3.5 w-3.5" />}
@@ -318,14 +318,14 @@ export const ExploreModulePage: React.FC = () => {
                 </div>
 
                 {/* Market Cap & Volume */}
-                <div className="grid grid-cols-2 gap-2 text-xs font-mono pt-2 border-t border-white/5">
-                  <div>
-                    <span className="text-[10px] text-white/40 block">Market Cap</span>
-                    <span className="text-white/90 font-bold">{mcapFormatted}</span>
+                <div className="grid grid-cols-2 gap-3 text-xs font-mono pt-2 border-t border-white/5">
+                  <div className="min-w-0 overflow-hidden">
+                    <span className="text-[10px] text-white/40 block truncate">Market Cap</span>
+                    <span className="text-white/90 font-bold block truncate" title={mcapFormatted}>{mcapFormatted}</span>
                   </div>
-                  <div>
-                    <span className="text-[10px] text-white/40 block">24h Volume</span>
-                    <span className="text-white/90 font-bold">{volFormatted}</span>
+                  <div className="min-w-0 overflow-hidden">
+                    <span className="text-[10px] text-white/40 block truncate">24h Volume</span>
+                    <span className="text-white/90 font-bold block truncate" title={volFormatted}>{volFormatted}</span>
                   </div>
                 </div>
 
